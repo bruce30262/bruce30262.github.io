@@ -316,12 +316,12 @@
 
 <p>According to the description, our goal is to read the book’s content. To achieve this, we’ll have to know the book title first, which can only be viewed by the <strong>“head librarian” ( = admin)</strong>. So the main challenge is to prove that we’re the head librarian.</p>
 
-<p>To prove that we’re the admin, we’ll have to guess the correct value of a 4 byte data ( which is read from <code class="highlighter-rouge">/dev/urandom</code>) for <strong>10 times continuously</strong>. This seems impossible, since we have no output information of the random value. I was kind of stuck at that point for quite a while, until I found something weird in the function which check the user input:</p>
+<p>To prove that we’re the admin, we’ll have to guess the correct value of a 4 byte data ( which is read from <code class="language-plaintext highlighter-rouge">/dev/urandom</code>) for <strong>10 times continuously</strong>. This seems impossible, since we have no output information of the random value. I was kind of stuck at that point for quite a while, until I found something weird in the function which check the user input:</p>
 
 <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">signed</span> <span class="n">__int64</span> <span class="kr">__fastcall</span> <span class="nf">check_invalid_char</span><span class="p">(</span><span class="kt">char</span> <span class="n">a1</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="kt">signed</span> <span class="n">__int64</span> <span class="n">result</span><span class="p">;</span> <span class="c1">// rax@2
-</span>
+    <span class="kt">signed</span> <span class="n">__int64</span> <span class="n">result</span><span class="p">;</span> <span class="c1">// rax@2</span>
+
     <span class="k">if</span> <span class="p">(</span> <span class="n">a1</span> <span class="o">&gt;</span> <span class="sc">'/'</span> <span class="p">)</span>
     <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span> <span class="n">a1</span> <span class="o">&gt;</span> <span class="sc">'9'</span> <span class="p">)</span>
@@ -335,8 +335,8 @@
             <span class="p">}</span>
             <span class="k">else</span>
             <span class="p">{</span>
-                <span class="kr">__asm</span> <span class="p">{</span> <span class="n">syscall</span> <span class="p">}</span> <span class="c1">// &lt;-- WTF?
-</span>                <span class="n">result</span> <span class="o">=</span> <span class="mh">0xFFFFFFFFLL</span><span class="p">;</span>
+                <span class="kr">__asm</span> <span class="p">{</span> <span class="n">syscall</span> <span class="p">}</span> <span class="c1">// &lt;-- WTF?</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="mh">0xFFFFFFFFLL</span><span class="p">;</span>
             <span class="p">}</span>
         <span class="p">}</span>
         <span class="k">else</span>
@@ -351,9 +351,9 @@
     <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div></div>
-<p>The input checking function will check every character to make sure that it is a valid hex char. Once it found out that the character was invalid, it will <code class="highlighter-rouge">return -1</code>. What really caught my eye was the pseudo code <code class="highlighter-rouge">__asm { syscall }</code>. Why did it use the <code class="highlighter-rouge">syscall</code> instruction? Let’s check the assembly:</p>
+<p>The input checking function will check every character to make sure that it is a valid hex char. Once it found out that the character was invalid, it will <code class="language-plaintext highlighter-rouge">return -1</code>. What really caught my eye was the pseudo code <code class="language-plaintext highlighter-rouge">__asm { syscall }</code>. Why did it use the <code class="language-plaintext highlighter-rouge">syscall</code> instruction? Let’s check the assembly:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>.text:0000000000400B21  mov     rax, 0Eh
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>.text:0000000000400B21  mov     rax, 0Eh
 .text:0000000000400B28  mov     rdi, 0
 .text:0000000000400B2F  mov     rsi, 0
 .text:0000000000400B36  mov     rdx, 603397h
@@ -361,20 +361,20 @@
 .text:0000000000400B44  syscall
 </code></pre></div></div>
 
-<p>So…it just call the system call <code class="highlighter-rouge">sigprocmask(0, NULL, 0x603397)</code>. After checking the <a href="http://linux.die.net/man/2/sigprocmask">man page</a>, I still don’t know what <code class="highlighter-rouge">sigprocmask</code> does, but I found out that it clears the byte at <code class="highlighter-rouge">0x603397</code>. This discovery is important, because in order to be the head librarian, we’ll have to let the data at <code class="highlighter-rouge">0x603394</code> be set to <code class="highlighter-rouge">0x00278F03</code>. If we can find a way that set the value at <code class="highlighter-rouge">0x603394</code> to <code class="highlighter-rouge">0xXX278F03</code> and trigger the <code class="highlighter-rouge">sigprocmask</code> syscall, then <code class="highlighter-rouge">0xXX278F03</code> will become <code class="highlighter-rouge">0x00278F03</code>, which will give us the admin privileges!</p>
+<p>So…it just call the system call <code class="language-plaintext highlighter-rouge">sigprocmask(0, NULL, 0x603397)</code>. After checking the <a href="http://linux.die.net/man/2/sigprocmask">man page</a>, I still don’t know what <code class="language-plaintext highlighter-rouge">sigprocmask</code> does, but I found out that it clears the byte at <code class="language-plaintext highlighter-rouge">0x603397</code>. This discovery is important, because in order to be the head librarian, we’ll have to let the data at <code class="language-plaintext highlighter-rouge">0x603394</code> be set to <code class="language-plaintext highlighter-rouge">0x00278F03</code>. If we can find a way that set the value at <code class="language-plaintext highlighter-rouge">0x603394</code> to <code class="language-plaintext highlighter-rouge">0xXX278F03</code> and trigger the <code class="language-plaintext highlighter-rouge">sigprocmask</code> syscall, then <code class="language-plaintext highlighter-rouge">0xXX278F03</code> will become <code class="language-plaintext highlighter-rouge">0x00278F03</code>, which will give us the admin privileges!</p>
 
 <p>After doing some analysis, I finally figured out how to beat the challenge:</p>
 <ol>
-  <li>First, send the input <code class="highlighter-rouge">420B65F7</code></li>
-  <li>The program will then ask us to input the “library card”. We send <code class="highlighter-rouge">99278F03</code> instead of <code class="highlighter-rouge">00278F03</code>, because if we send <code class="highlighter-rouge">00278F03</code>, program will ask us to guess the random number, and it’ll set the value at <code class="highlighter-rouge">0x603394</code> to <code class="highlighter-rouge">0</code> after we failed to guess the correct value.</li>
-  <li>By sending <code class="highlighter-rouge">99278F03</code>, value at <code class="highlighter-rouge">0x603394</code> will become <code class="highlighter-rouge">99278F03</code>. It will failed the check though, but since the program did not ask us to guess the random number, it won’t clear the data at <code class="highlighter-rouge">0x603394</code>, and so the value at <code class="highlighter-rouge">0x603394</code> will remain unchange.</li>
-  <li>Now we send an invalid input in order to trigger the <code class="highlighter-rouge">sigprocmask</code> syscall. The program will clear a byte at <code class="highlighter-rouge">0x603397</code>, changing <code class="highlighter-rouge">99278F03</code> into <code class="highlighter-rouge">00278F03</code>.</li>
+  <li>First, send the input <code class="language-plaintext highlighter-rouge">420B65F7</code></li>
+  <li>The program will then ask us to input the “library card”. We send <code class="language-plaintext highlighter-rouge">99278F03</code> instead of <code class="language-plaintext highlighter-rouge">00278F03</code>, because if we send <code class="language-plaintext highlighter-rouge">00278F03</code>, program will ask us to guess the random number, and it’ll set the value at <code class="language-plaintext highlighter-rouge">0x603394</code> to <code class="language-plaintext highlighter-rouge">0</code> after we failed to guess the correct value.</li>
+  <li>By sending <code class="language-plaintext highlighter-rouge">99278F03</code>, value at <code class="language-plaintext highlighter-rouge">0x603394</code> will become <code class="language-plaintext highlighter-rouge">99278F03</code>. It will failed the check though, but since the program did not ask us to guess the random number, it won’t clear the data at <code class="language-plaintext highlighter-rouge">0x603394</code>, and so the value at <code class="language-plaintext highlighter-rouge">0x603394</code> will remain unchange.</li>
+  <li>Now we send an invalid input in order to trigger the <code class="language-plaintext highlighter-rouge">sigprocmask</code> syscall. The program will clear a byte at <code class="language-plaintext highlighter-rouge">0x603397</code>, changing <code class="language-plaintext highlighter-rouge">99278F03</code> into <code class="language-plaintext highlighter-rouge">00278F03</code>.</li>
   <li>Now we can claim that we’re the head librarian and check the book title + read the book content.</li>
 </ol>
 
 <p>Here the script that I wrote to pass the challenge:</p>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/usr/bin/env python</span>
-
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python
+</span>
 <span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="n">HOST</span> <span class="o">=</span> <span class="s">"school.fluxfingers.net"</span>
@@ -398,8 +398,8 @@
 
     <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"words.</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"420B65F7"</span><span class="p">)</span>
     <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"card.</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"99278F03"</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"alright!</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">":</span><span class="se">\n</span><span class="s">123456"</span><span class="p">)</span> <span class="c"># trigger the sigprocmask syscall</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"right?</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"952A7224"</span><span class="p">)</span>
+    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"alright!</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">":</span><span class="se">\n</span><span class="s">123456"</span><span class="p">)</span> <span class="c1"># trigger the sigprocmask syscall
+</span>    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"right?</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"952A7224"</span><span class="p">)</span>
     <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"16F7F4D391F030CF</span><span class="se">\n</span><span class="s">------------</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"F1140B88"</span><span class="p">)</span>
     <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"book.</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
     <span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="s">"16F7F4D3"</span><span class="p">)</span>
@@ -408,7 +408,7 @@
     <span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
 
 </code></pre></div></div>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bruce30262@ubuntu:~/Desktop/hack.lu_2015/secret$ ./exp_secret.py 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bruce30262@ubuntu:~/Desktop/hack.lu_2015/secret$ ./exp_secret.py 
 [+] Opening connection to school.fluxfingers.net on port 1527: Done
 [*] Switching to interactive mode
 oh, yes, we have that! here you go...
@@ -419,7 +419,7 @@ $
 
 </code></pre></div></div>
 
-<p>Flag: <code class="highlighter-rouge">flag{our_secret_is_that_we_really_just_have_this_one_book}</code></p>
+<p>Flag: <code class="language-plaintext highlighter-rouge">flag{our_secret_is_that_we_really_just_have_this_one_book}</code></p>
 
         
       </section>
@@ -520,7 +520,6 @@ $
       <div class="grid__wrapper">
         
           
-          
 
 
 
@@ -540,7 +539,6 @@ $
 
         
           
-          
 
 
 
@@ -559,7 +557,6 @@ $
 </div>
 
         
-          
           
 
 
@@ -582,7 +579,6 @@ $
 
         
           
-          
 
 
 
@@ -603,6 +599,7 @@ $
         
       </div>
     </div>
+  
   
 </div>
 
@@ -653,7 +650,7 @@ $
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2020 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

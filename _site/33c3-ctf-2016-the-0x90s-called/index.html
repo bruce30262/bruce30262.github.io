@@ -307,7 +307,7 @@
 <p>First we’ll have to go to a web page to start our challenge session. The page will show us the port (same IP address with the web page) and the ID/password.</p>
 
 <p>Once we connected to the remote host and login the machine, we’ll found that we’re inside a <a href="http://www.slackware.com/">Slackware Linux</a>:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ nc 78.46.224.70 2323
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ nc 78.46.224.70 2323
 
 Welcome to Linux 0.99pl12.
 
@@ -320,8 +320,8 @@ slack:~$ uname -a
 Linux slack 0.99.12 #6 Sun Aug 8 16:02:35 CDT 1993 i586
 </code></pre></div></div>
 
-<p>Later we’ll found that there’s a <code class="highlighter-rouge">flag.txt</code> inside the root directory:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>slack:/$ ls -al /flag.txt
+<p>Later we’ll found that there’s a <code class="language-plaintext highlighter-rouge">flag.txt</code> inside the root directory:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>slack:/$ ls -al /flag.txt
 -r--------   1 root     root           36 Dec 27  1916 /flag.txt
 </code></pre></div></div>
 
@@ -329,10 +329,10 @@ Linux slack 0.99.12 #6 Sun Aug 8 16:02:35 CDT 1993 i586
 
 <p>By googling <strong>“slackware linux 0.99 local root exploit”</strong>, we found a working <a href="https://github.com/HackerFantastic/Public/blob/master/exploits/prdelka-vs-GNU-lpr.c">PoC</a>. Now all we need to do is copy the PoC to the remote host, then compile &amp; execute the exploit so we can escalate to root.</p>
 
-<p>Although it looks simple, it still took me a while to complete the challenge, since there’s no tool that can help us download the PoC to the host – <strong>no <code class="highlighter-rouge">wget</code>, no <code class="highlighter-rouge">curl</code>, not even <code class="highlighter-rouge">nc</code>!!</strong> And the <code class="highlighter-rouge">vi</code> editor is just terrible!! Finally I decided to use <code class="highlighter-rouge">cat &lt;&lt;'EOF' &gt;&gt; test.c</code> + copy &amp; paste to write the exploit into <code class="highlighter-rouge">test.c</code>.</p>
+<p>Although it looks simple, it still took me a while to complete the challenge, since there’s no tool that can help us download the PoC to the host – <strong>no <code class="language-plaintext highlighter-rouge">wget</code>, no <code class="language-plaintext highlighter-rouge">curl</code>, not even <code class="language-plaintext highlighter-rouge">nc</code>!!</strong> And the <code class="language-plaintext highlighter-rouge">vi</code> editor is just terrible!! Finally I decided to use <code class="language-plaintext highlighter-rouge">cat &lt;&lt;'EOF' &gt;&gt; test.c</code> + copy &amp; paste to write the exploit into <code class="language-plaintext highlighter-rouge">test.c</code>.</p>
 
 <p>After we compile &amp; execute the local root exploit, we’re able to escalate to root and get the flag:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>slack:~$ gcc -o test test.c
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>slack:~$ gcc -o test test.c
 slack:~$ ./test
 [ Slackware linux 1.01 /usr/bin/lpr local root exploit
 # id
@@ -343,7 +343,7 @@ cat /flag.txt
 33C3_Th3_0x90s_w3r3_pre3tty_4w3s0m3
 </code></pre></div></div>
 
-<p>flag: <code class="highlighter-rouge">33C3_Th3_0x90s_w3r3_pre3tty_4w3s0m3</code></p>
+<p>flag: <code class="language-plaintext highlighter-rouge">33C3_Th3_0x90s_w3r3_pre3tty_4w3s0m3</code></p>
 
         
       </section>
@@ -444,7 +444,6 @@ cat /flag.txt
       <div class="grid__wrapper">
         
           
-          
 
 
 
@@ -464,7 +463,6 @@ cat /flag.txt
 
         
           
-          
 
 
 
@@ -483,7 +481,6 @@ cat /flag.txt
 </div>
 
         
-          
           
 
 
@@ -506,7 +503,6 @@ cat /flag.txt
 
         
           
-          
 
 
 
@@ -527,6 +523,7 @@ cat /flag.txt
         
       </div>
     </div>
+  
   
 </div>
 
@@ -577,7 +574,7 @@ cat /flag.txt
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2020 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

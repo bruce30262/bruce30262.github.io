@@ -316,9 +316,9 @@
  	<span class="cm">/*do something*/</span>
 </code></pre></div></div>
 
-<p>This is the partial pseudo code from the checking secret function. The variable <code class="highlighter-rouge">legend</code> was stored in the data segment <code class="highlighter-rouge">0x610138</code> with the initial value <code class="highlighter-rouge">0x73</code>. Knowing that <code class="highlighter-rouge">0x73 &gt;&gt; 2 == 28</code>, I’m guessing that the secret’s length is going to be 28.</p>
+<p>This is the partial pseudo code from the checking secret function. The variable <code class="language-plaintext highlighter-rouge">legend</code> was stored in the data segment <code class="language-plaintext highlighter-rouge">0x610138</code> with the initial value <code class="language-plaintext highlighter-rouge">0x73</code>. Knowing that <code class="language-plaintext highlighter-rouge">0x73 &gt;&gt; 2 == 28</code>, I’m guessing that the secret’s length is going to be 28.</p>
 
-<p>To verify the assumption, I launch the program with gdb, and set the breakpoint at the end of the checking secret function. Then, I start sending the input with different length. I found out that when the input length is 28, the return value will be <code class="highlighter-rouge">0</code>, which is different from other inputs (return value = <code class="highlighter-rouge">0x1c</code>). Although I don’t know the exact secret ( because the return value should be <code class="highlighter-rouge">1</code> for the correct secret ), I’m now quite sure that the secret length should be 28.</p>
+<p>To verify the assumption, I launch the program with gdb, and set the breakpoint at the end of the checking secret function. Then, I start sending the input with different length. I found out that when the input length is 28, the return value will be <code class="language-plaintext highlighter-rouge">0</code>, which is different from other inputs (return value = <code class="language-plaintext highlighter-rouge">0x1c</code>). Although I don’t know the exact secret ( because the return value should be <code class="language-plaintext highlighter-rouge">1</code> for the correct secret ), I’m now quite sure that the secret length should be 28.</p>
 
 <p>Now let’s take a look at other part of the checking function:</p>
 <div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span> <span class="n">v7</span> <span class="p">)</span>
@@ -330,7 +330,7 @@
         <span class="o">*</span><span class="n">v9</span> <span class="o">=</span> <span class="n">legend</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span><span class="p">;</span>
         <span class="k">if</span> <span class="p">(</span> <span class="n">y26</span> <span class="o">&lt;</span> <span class="mi">10</span> <span class="o">||</span> <span class="p">(((</span><span class="n">_BYTE</span><span class="p">)</span><span class="n">x25</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">_BYTE</span><span class="p">)</span><span class="n">x25</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">)</span>
             <span class="k">break</span><span class="p">;</span>
-<span class="n">LABEL_14</span><span class="o">:</span>
+<span class="nl">LABEL_14:</span>
         <span class="o">*</span><span class="n">v9</span> <span class="o">=</span> <span class="n">legend</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span><span class="p">;</span>
     <span class="p">}</span>
 <span class="p">}</span>
@@ -344,7 +344,7 @@
         <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">v8</span><span class="p">,</span> <span class="n">v12</span><span class="p">);</span>
         <span class="k">if</span> <span class="p">(</span> <span class="n">y26</span> <span class="o">&lt;</span> <span class="mi">10</span> <span class="o">||</span> <span class="p">(((</span><span class="n">_BYTE</span><span class="p">)</span><span class="n">x25</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">_BYTE</span><span class="p">)</span><span class="n">x25</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">)</span>
             <span class="k">break</span><span class="p">;</span>
-<span class="n">LABEL_15</span><span class="o">:</span>
+<span class="nl">LABEL_15:</span>
         <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">v8</span><span class="p">,</span> <span class="n">v12</span><span class="p">);</span>
     <span class="p">}</span>
     <span class="n">v6</span> <span class="o">=</span> <span class="n">sanitize_input</span><span class="p">(</span><span class="n">v8</span><span class="p">,</span> <span class="n">v1</span><span class="p">);</span>
@@ -356,7 +356,7 @@
         <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::~</span><span class="n">string</span><span class="p">(</span><span class="n">v8</span><span class="p">);</span>
         <span class="k">if</span> <span class="p">(</span> <span class="n">y26</span> <span class="o">&lt;</span> <span class="mi">10</span> <span class="o">||</span> <span class="p">(((</span><span class="n">_BYTE</span><span class="p">)</span><span class="n">x25</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">_BYTE</span><span class="p">)</span><span class="n">x25</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">)</span>
             <span class="k">break</span><span class="p">;</span>
-<span class="n">LABEL_16</span><span class="o">:</span>
+<span class="nl">LABEL_16:</span>
         <span class="o">*</span><span class="n">v9</span> <span class="o">=</span> <span class="n">v6</span><span class="p">;</span>
         <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::~</span><span class="n">string</span><span class="p">(</span><span class="n">v8</span><span class="p">);</span>
     <span class="p">}</span>
@@ -421,7 +421,7 @@
 </code></pre></div></div>
 
 <p>Run the script and wait a couple of minutes, we’ll get the correct secret:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>.................
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>.................
 Trying: dr4g0n_or_p4tric1an_it5_LLVG
 1700759
 Trying: dr4g0n_or_p4tric1an_it5_LLVH
@@ -440,7 +440,7 @@ end
 </code></pre></div></div>
 
 <p>Verify the secret:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bruce30262@ubuntu:~/CSAWCTF-2015/wyvern$ ./wyvern
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bruce30262@ubuntu:~/CSAWCTF-2015/wyvern$ ./wyvern
 +-----------------------+
 |    Welcome Hero       |
 +-----------------------+
@@ -453,7 +453,7 @@ success
 
 [+] A great success! Here is a flag{dr4g0n_or_p4tric1an_it5_LLVM}
 </code></pre></div></div>
-<p>Cool! The flag is: <code class="highlighter-rouge">dr4g0n_or_p4tric1an_it5_LLVM</code> (without <code class="highlighter-rouge">flag{}</code>)</p>
+<p>Cool! The flag is: <code class="language-plaintext highlighter-rouge">dr4g0n_or_p4tric1an_it5_LLVM</code> (without <code class="language-plaintext highlighter-rouge">flag{}</code>)</p>
 
         
       </section>
@@ -562,7 +562,6 @@ success
       <div class="grid__wrapper">
         
           
-          
 
 
 
@@ -582,7 +581,6 @@ success
 
         
           
-          
 
 
 
@@ -601,7 +599,6 @@ success
 </div>
 
         
-          
           
 
 
@@ -624,7 +621,6 @@ success
 
         
           
-          
 
 
 
@@ -645,6 +641,7 @@ success
         
       </div>
     </div>
+  
   
 </div>
 
@@ -695,7 +692,7 @@ success
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2020 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

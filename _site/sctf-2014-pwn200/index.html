@@ -305,10 +305,10 @@ In Pwn200, they gave us a binary file and a libc.so. First we open the binary fi
 
 <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="p">.......................</span>
  <span class="p">.......................</span>
-  <span class="kt">int</span> <span class="n">buf</span><span class="p">;</span> <span class="c1">// [sp+9Ch] [bp-1Ch]@1
-</span> <span class="p">.......................</span>
-  <span class="kt">size_t</span> <span class="n">n</span><span class="p">;</span> <span class="c1">// [sp+ACh] [bp-Ch]@1
-</span> <span class="p">.......................</span>
+  <span class="kt">int</span> <span class="n">buf</span><span class="p">;</span> <span class="c1">// [sp+9Ch] [bp-1Ch]@1</span>
+ <span class="p">.......................</span>
+  <span class="kt">size_t</span> <span class="n">n</span><span class="p">;</span> <span class="c1">// [sp+ACh] [bp-Ch]@1</span>
+ <span class="p">.......................</span>
  <span class="p">.......................</span> 
  <span class="n">read</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">buf</span><span class="p">,</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
  <span class="k">if</span> <span class="p">(</span> <span class="n">strlen</span><span class="p">((</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">buf</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">&gt;</span> <span class="mi">9</span> <span class="o">||</span> <span class="n">strncmp</span><span class="p">(</span><span class="s">"syclover"</span><span class="p">,</span> <span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">buf</span><span class="p">,</span> <span class="mi">8u</span><span class="p">)</span> <span class="p">)</span>
@@ -322,27 +322,27 @@ In Pwn200, they gave us a binary file and a libc.so. First we open the binary fi
     <span class="n">result</span> <span class="o">=</span> <span class="n">write</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">v1</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span>
  <span class="p">}</span>
 </code></pre></div></div>
-<p>notice at line <code class="highlighter-rouge">read(0, &amp;buf, n + 1);</code>, we can overwrite the variable <code class="highlighter-rouge">n</code> by overflowing the <code class="highlighter-rouge">buf</code> variable. After we control <code class="highlighter-rouge">n</code>, we can input at most 255 characters at the line <code class="highlighter-rouge">read(0, &amp;v1, n);</code>. By doing this, we can overwrite <strong>(control)</strong> the return address!</p>
+<p>notice at line <code class="language-plaintext highlighter-rouge">read(0, &amp;buf, n + 1);</code>, we can overwrite the variable <code class="language-plaintext highlighter-rouge">n</code> by overflowing the <code class="language-plaintext highlighter-rouge">buf</code> variable. After we control <code class="language-plaintext highlighter-rouge">n</code>, we can input at most 255 characters at the line <code class="language-plaintext highlighter-rouge">read(0, &amp;v1, n);</code>. By doing this, we can overwrite <strong>(control)</strong> the return address!</p>
 
-<p>But there’s one problem: the program has enable the DEP protection. Since it gave us the libc.so, we think they might want us to use the <strong>return-to-libc attack</strong>. By checking the GOT entry using objdump, we know the GOT entry of <code class="highlighter-rouge">read()</code> is at address <code class="highlighter-rouge">0x08049850</code>.</p>
+<p>But there’s one problem: the program has enable the DEP protection. Since it gave us the libc.so, we think they might want us to use the <strong>return-to-libc attack</strong>. By checking the GOT entry using objdump, we know the GOT entry of <code class="language-plaintext highlighter-rouge">read()</code> is at address <code class="language-plaintext highlighter-rouge">0x08049850</code>.</p>
 
-<p>So how do we get the address of <code class="highlighter-rouge">system()</code>? Well, since we can overwrite the return address, we can set the return address to <code class="highlighter-rouge">write()</code>’s GOT entry. By giving the parameter <code class="highlighter-rouge">0x08049850</code>, we can leak the function pointer of <code class="highlighter-rouge">read()</code>, and calculate <code class="highlighter-rouge">system()</code>’s address by adding the offset ( we can get the offset by checking libc.so ).</p>
+<p>So how do we get the address of <code class="language-plaintext highlighter-rouge">system()</code>? Well, since we can overwrite the return address, we can set the return address to <code class="language-plaintext highlighter-rouge">write()</code>’s GOT entry. By giving the parameter <code class="language-plaintext highlighter-rouge">0x08049850</code>, we can leak the function pointer of <code class="language-plaintext highlighter-rouge">read()</code>, and calculate <code class="language-plaintext highlighter-rouge">system()</code>’s address by adding the offset ( we can get the offset by checking libc.so ).</p>
 
-<p>After getting the address of <code class="highlighter-rouge">system()</code>, we can set the return address back to the head of main function, so we can execute the whole program again and write the memory by using <code class="highlighter-rouge">read()</code>. We can write “/bin/sh” to a memory address in .bss section, and set the return address to <code class="highlighter-rouge">system()</code>, with <strong>pointer to “/bin/sh”</strong> as the parameter. Finally, we spawn a shell and capture the flag.</p>
+<p>After getting the address of <code class="language-plaintext highlighter-rouge">system()</code>, we can set the return address back to the head of main function, so we can execute the whole program again and write the memory by using <code class="language-plaintext highlighter-rouge">read()</code>. We can write “/bin/sh” to a memory address in .bss section, and set the return address to <code class="language-plaintext highlighter-rouge">system()</code>, with <strong>pointer to “/bin/sh”</strong> as the parameter. Finally, we spawn a shell and capture the flag.</p>
 
 <p>To sum up, here’s the step of the exploitation:</p>
 <ol>
-  <li>Overwrite <code class="highlighter-rouge">n</code>, so we can use <code class="highlighter-rouge">read()</code> to overwrite (control) the return address</li>
-  <li>Set the return address to <code class="highlighter-rouge">write()</code>, with the parameter <code class="highlighter-rouge">0x08049850</code> (read()’s GOT entry)</li>
-  <li>Calculate the address of <code class="highlighter-rouge">system()</code></li>
+  <li>Overwrite <code class="language-plaintext highlighter-rouge">n</code>, so we can use <code class="language-plaintext highlighter-rouge">read()</code> to overwrite (control) the return address</li>
+  <li>Set the return address to <code class="language-plaintext highlighter-rouge">write()</code>, with the parameter <code class="language-plaintext highlighter-rouge">0x08049850</code> (read()’s GOT entry)</li>
+  <li>Calculate the address of <code class="language-plaintext highlighter-rouge">system()</code></li>
   <li>Set the return address back to the head of main function</li>
   <li>Write “/bin/sh” to an address in .bss section by using read()</li>
   <li>Repeat step 3 (for the final exploit)</li>
-  <li>Set the return address to <code class="highlighter-rouge">system()</code>, with pointer to “/bin/sh” as the parameter</li>
+  <li>Set the return address to <code class="language-plaintext highlighter-rouge">system()</code>, with pointer to “/bin/sh” as the parameter</li>
   <li>Spawn the shell &amp; capture the flag</li>
 </ol>
 
-<p>flag: <code class="highlighter-rouge">SCTF{SH3NG_4_KAN_DAN__BU_FU_9_GANN}</code></p>
+<p>flag: <code class="language-plaintext highlighter-rouge">SCTF{SH3NG_4_KAN_DAN__BU_FU_9_GANN}</code></p>
 
         
       </section>
@@ -443,7 +443,6 @@ In Pwn200, they gave us a binary file and a libc.so. First we open the binary fi
       <div class="grid__wrapper">
         
           
-          
 
 
 
@@ -463,7 +462,6 @@ In Pwn200, they gave us a binary file and a libc.so. First we open the binary fi
 
         
           
-          
 
 
 
@@ -482,7 +480,6 @@ In Pwn200, they gave us a binary file and a libc.so. First we open the binary fi
 </div>
 
         
-          
           
 
 
@@ -505,7 +502,6 @@ In Pwn200, they gave us a binary file and a libc.so. First we open the binary fi
 
         
           
-          
 
 
 
@@ -526,6 +522,7 @@ In Pwn200, they gave us a binary file and a libc.so. First we open the binary fi
         
       </div>
     </div>
+  
   
 </div>
 
@@ -576,7 +573,7 @@ In Pwn200, they gave us a binary file and a libc.so. First we open the binary fi
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2020 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

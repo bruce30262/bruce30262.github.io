@@ -317,8 +317,8 @@ name. Notice that sometimes google API will respond a wrong country(mostly it re
 
 <p>Here’s the script I used for solving the challenge:</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># -*- coding: utf-8 -*-</span>
-<span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># -*- coding: utf-8 -*-
+</span><span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">time</span>
@@ -380,8 +380,8 @@ name. Notice that sometimes google API will respond a wrong country(mostly it re
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">20</span><span class="p">):</span>
     <span class="n">res</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
     <span class="k">print</span> <span class="s">"res"</span><span class="p">,</span> <span class="n">res</span>
-    <span class="c">#country = re.search("--- Round (\d+) ---\n(\S+ ):", res).groups(0)[1]</span>
-    <span class="n">country</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="n">res</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s">"-</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span><span class="o">+</span><span class="mi">2</span><span class="p">:</span><span class="n">res</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s">":"</span><span class="p">):]</span>
+    <span class="c1">#country = re.search("--- Round (\d+) ---\n(\S+ ):", res).groups(0)[1]
+</span>    <span class="n">country</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="n">res</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s">"-</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span><span class="o">+</span><span class="mi">2</span><span class="p">:</span><span class="n">res</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s">":"</span><span class="p">):]</span>
     <span class="k">print</span> <span class="s">"now:"</span><span class="p">,</span> <span class="n">country</span>
     <span class="n">ans</span> <span class="o">=</span> <span class="n">get_alpha2</span><span class="p">(</span><span class="n">country</span><span class="p">)</span>
     <span class="k">print</span> <span class="s">"ans:"</span><span class="p">,</span> <span class="n">ans</span>
@@ -398,8 +398,8 @@ name. Notice that sometimes google API will respond a wrong country(mostly it re
     <span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">ans</span><span class="o">+</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
     <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">TIME</span><span class="p">)</span>
 
-<span class="c"># level2, not all the case</span>
-<span class="n">Congo_River</span> <span class="o">=</span> <span class="p">[</span><span class="s">"AO"</span><span class="p">,</span> <span class="s">"BI"</span><span class="p">,</span> <span class="s">"CM"</span><span class="p">,</span> <span class="s">"CF"</span><span class="p">,</span> <span class="s">"CD"</span><span class="p">,</span> <span class="s">"GA"</span><span class="p">,</span> <span class="s">"CG"</span><span class="p">,</span> <span class="s">"RW"</span><span class="p">,</span> <span class="s">"TZ"</span><span class="p">,</span> <span class="s">"ZM"</span><span class="p">]</span>
+<span class="c1"># level2, not all the case
+</span><span class="n">Congo_River</span> <span class="o">=</span> <span class="p">[</span><span class="s">"AO"</span><span class="p">,</span> <span class="s">"BI"</span><span class="p">,</span> <span class="s">"CM"</span><span class="p">,</span> <span class="s">"CF"</span><span class="p">,</span> <span class="s">"CD"</span><span class="p">,</span> <span class="s">"GA"</span><span class="p">,</span> <span class="s">"CG"</span><span class="p">,</span> <span class="s">"RW"</span><span class="p">,</span> <span class="s">"TZ"</span><span class="p">,</span> <span class="s">"ZM"</span><span class="p">]</span>
 <span class="n">Alps</span> <span class="o">=</span> <span class="p">[</span><span class="s">"CH"</span><span class="p">,</span> <span class="s">"AT"</span><span class="p">,</span> <span class="s">"LI"</span><span class="p">,</span> <span class="s">"DE"</span><span class="p">,</span> <span class="s">"IT"</span><span class="p">,</span> <span class="s">"SI"</span><span class="p">,</span> <span class="s">"FR"</span><span class="p">]</span>
 <span class="n">Andes</span> <span class="o">=</span> <span class="p">[</span><span class="s">"AR"</span><span class="p">,</span> <span class="s">"BO"</span><span class="p">,</span> <span class="s">"CL"</span><span class="p">,</span> <span class="s">"CO"</span><span class="p">,</span> <span class="s">"EC"</span><span class="p">,</span> <span class="s">"PE"</span><span class="p">,</span> <span class="s">"VE"</span><span class="p">]</span>
 <span class="n">Himalayas</span> <span class="o">=</span> <span class="p">[</span><span class="s">"BT"</span><span class="p">,</span> <span class="s">"NP"</span><span class="p">,</span> <span class="s">"CN"</span><span class="p">,</span> <span class="s">"IN"</span><span class="p">,</span> <span class="s">"PK"</span><span class="p">]</span>
@@ -476,12 +476,12 @@ name. Notice that sometimes google API will respond a wrong country(mostly it re
 			<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">TIME</span><span class="p">)</span>
 			<span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">Apennine</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span> <span class="k">break</span>
 			<span class="k">print</span> <span class="n">r</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
-	<span class="k">else</span><span class="p">:</span> <span class="c"># solve by hand</span>
-		<span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
+	<span class="k">else</span><span class="p">:</span> <span class="c1"># solve by hand
+</span>		<span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
 	<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">TIME</span><span class="p">)</span>
 </code></pre></div></div>
 
-<p>After answering all the questions, we get the flag: <code class="highlighter-rouge">0CTF{eNj0y_geography_l0v3_7hE_w0lRd}</code></p>
+<p>After answering all the questions, we get the flag: <code class="language-plaintext highlighter-rouge">0CTF{eNj0y_geography_l0v3_7hE_w0lRd}</code></p>
 
         
       </section>
@@ -590,7 +590,6 @@ name. Notice that sometimes google API will respond a wrong country(mostly it re
       <div class="grid__wrapper">
         
           
-          
 
 
 
@@ -610,7 +609,6 @@ name. Notice that sometimes google API will respond a wrong country(mostly it re
 
         
           
-          
 
 
 
@@ -629,7 +627,6 @@ name. Notice that sometimes google API will respond a wrong country(mostly it re
 </div>
 
         
-          
           
 
 
@@ -652,7 +649,6 @@ name. Notice that sometimes google API will respond a wrong country(mostly it re
 
         
           
-          
 
 
 
@@ -673,6 +669,7 @@ name. Notice that sometimes google API will respond a wrong country(mostly it re
         
       </div>
     </div>
+  
   
 </div>
 
@@ -723,7 +720,7 @@ name. Notice that sometimes google API will respond a wrong country(mostly it re
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2020 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

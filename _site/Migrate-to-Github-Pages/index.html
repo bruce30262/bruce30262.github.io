@@ -334,26 +334,26 @@
     <ul>
       <li>Content of the hexo framework ( markdown files, theme, config file…etc )</li>
       <li>The docker container will mount this directory to the working directory, something like:
-        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run -it --rm -p 4000:4000 -v [HOME_DIR]/bruce30262_blog:/app --name hexo-blog bruce30262/docker-misc:hexo-blog
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run -it --rm -p 4000:4000 -v [HOME_DIR]/bruce30262_blog:/app --name hexo-blog bruce30262/docker-misc:hexo-blog
 </code></pre></div>        </div>
       </li>
     </ul>
   </li>
 </ul>
 
-<p>Later inside the container we can just run the hexo command under the <code class="highlighter-rouge">/app</code> directory and start blogging.</p>
+<p>Later inside the container we can just run the hexo command under the <code class="language-plaintext highlighter-rouge">/app</code> directory and start blogging.</p>
 
 <h2 id="hexo-command">Hexo command</h2>
 <ul>
-  <li><code class="highlighter-rouge">hexo init</code> : Initialize a hexo blog</li>
-  <li><code class="highlighter-rouge">hexo g(enerate)</code> : Generate the static site</li>
-  <li><code class="highlighter-rouge">hexo s(erver)</code> : Launch the blog at the local side ( for previewing )</li>
-  <li><code class="highlighter-rouge">hexo d(eploy)</code> :
+  <li><code class="language-plaintext highlighter-rouge">hexo init</code> : Initialize a hexo blog</li>
+  <li><code class="language-plaintext highlighter-rouge">hexo g(enerate)</code> : Generate the static site</li>
+  <li><code class="language-plaintext highlighter-rouge">hexo s(erver)</code> : Launch the blog at the local side ( for previewing )</li>
+  <li><code class="language-plaintext highlighter-rouge">hexo d(eploy)</code> :
     <ul>
       <li>Deploy the blog to github pages.</li>
-      <li>To fully deploy the blog, use the <code class="highlighter-rouge">hexo g -d</code> or the <code class="highlighter-rouge">hexo d -g</code> command.</li>
-      <li>Before deploying the blog, we need to do some setting in <code class="highlighter-rouge">_config.yml</code>:
-        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  deploy:
+      <li>To fully deploy the blog, use the <code class="language-plaintext highlighter-rouge">hexo g -d</code> or the <code class="language-plaintext highlighter-rouge">hexo d -g</code> command.</li>
+      <li>Before deploying the blog, we need to do some setting in <code class="language-plaintext highlighter-rouge">_config.yml</code>:
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  deploy:
 type: git
 repo: https://github.com/bruce30262/bruce30262.github.io.git
 </code></pre></div>        </div>
@@ -366,35 +366,35 @@ repo: https://github.com/bruce30262/bruce30262.github.io.git
 <h2 id="hexo-plugin">Hexo plugin</h2>
 <p>To install the hexo plugin:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm install [plugin_name] --save
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm install [plugin_name] --save
 </code></pre></div></div>
 <ul>
-  <li><code class="highlighter-rouge">hexo-deployer-git</code> : For deploying the blog to github</li>
-  <li><code class="highlighter-rouge">hexo-admin</code> : An admin interface for blogging</li>
-  <li><code class="highlighter-rouge">hexo-generator-sitemap</code> : For generating sitemap</li>
-  <li><code class="highlighter-rouge">hexo-generator-feed</code> : For generating atom.xml ( rss feed )</li>
+  <li><code class="language-plaintext highlighter-rouge">hexo-deployer-git</code> : For deploying the blog to github</li>
+  <li><code class="language-plaintext highlighter-rouge">hexo-admin</code> : An admin interface for blogging</li>
+  <li><code class="language-plaintext highlighter-rouge">hexo-generator-sitemap</code> : For generating sitemap</li>
+  <li><code class="language-plaintext highlighter-rouge">hexo-generator-feed</code> : For generating atom.xml ( rss feed )</li>
 </ul>
 
 <h1 id="hexo-theme">Hexo theme</h1>
 <p>I chose the <a href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> theme. Here’s the <a href="https://github.com/iissnan/hexo-theme-next/blob/master/README.en.md">English</a> and the <a href="http://theme-next.iissnan.com/getting-started.html">Chinese</a> version of the theme’s documentations.</p>
 
-<p>To choose the Pisces scheme, modified the <strong>theme’s <code class="highlighter-rouge">_config.yml</code></strong>:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Schemes
+<p>To choose the Pisces scheme, modified the <strong>theme’s <code class="language-plaintext highlighter-rouge">_config.yml</code></strong>:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Schemes
 #scheme: Muse
 #scheme: Mist
 scheme: Pisces    &lt;-- remove the comment
 </code></pre></div></div>
 
 <h2 id="social-link">Social link</h2>
-<p>In the <strong>site’s <code class="highlighter-rouge">_config.yml</code></strong>:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Social 
+<p>In the <strong>site’s <code class="language-plaintext highlighter-rouge">_config.yml</code></strong>:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Social 
 social:
   Github: your github link
   Twitter: your twitter linmk
   Facebook: your facebook link
 </code></pre></div></div>
-<p>In the <strong>theme’s <code class="highlighter-rouge">_config.yml</code></strong>:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>social_icons:
+<p>In the <strong>theme’s <code class="language-plaintext highlighter-rouge">_config.yml</code></strong>:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>social_icons:
   enable: true
   # Icon Mappings.
   # KeyMapsToSocialItemKey: NameOfTheIconFromFontAwesome
@@ -405,8 +405,8 @@ social:
 
 <h2 id="view-count--visitor-count">View count &amp; Visitor count</h2>
 <p>Enable the <a href="http://busuanzi.ibruce.info/"><strong>busuanzi</strong> ( 不蒜子 )</a> feature.
-In the <strong>theme’s <code class="highlighter-rouge">_config.yml</code></strong>:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Show PV/UV of the website/page with busuanzi.
+In the <strong>theme’s <code class="language-plaintext highlighter-rouge">_config.yml</code></strong>:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Show PV/UV of the website/page with busuanzi.
 # Get more information on http://ibruce.info/2015/04/04/busuanzi/
 busuanzi_count:
   # count values only if the other configs are false
@@ -426,8 +426,8 @@ busuanzi_count:
 </code></pre></div></div>
 
 <h2 id="share-widget--addthis-">Share widget ( AddThis )</h2>
-<p>First login to the <a href="http://www.addthis.com/">AddThis</a> website, and create a share widget. Then, in the <strong>theme’s <code class="highlighter-rouge">_config.yml</code></strong>:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Share
+<p>First login to the <a href="http://www.addthis.com/">AddThis</a> website, and create a share widget. Then, in the <strong>theme’s <code class="language-plaintext highlighter-rouge">_config.yml</code></strong>:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Share
 #jiathis:
 # Warning: JiaThis does not support https.
 add_this_id: ra-XXXXXXXXXXXXX     &lt;-- the pubid
@@ -436,12 +436,12 @@ add_this_id: ra-XXXXXXXXXXXXX     &lt;-- the pubid
 <h2 id="migrate-disqus-comment">Migrate Disqus comment</h2>
 <p>First enable the disqus feature.</p>
 
-<p>In the <strong>site’s <code class="highlighter-rouge">_config.yml</code></strong>:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>disqus_shortname: old_disqus_shortname   &lt;-- old site's disqus shortname
+<p>In the <strong>site’s <code class="language-plaintext highlighter-rouge">_config.yml</code></strong>:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>disqus_shortname: old_disqus_shortname   &lt;-- old site's disqus shortname
 </code></pre></div></div>
 
-<p>In the <strong>theme’s <code class="highlighter-rouge">_config.yml</code></strong>:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Disqus
+<p>In the <strong>theme’s <code class="language-plaintext highlighter-rouge">_config.yml</code></strong>:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Disqus
 disqus:
   enable: true
   shortname: old_disqus_shortname   &lt;-- old site's disqus shortname
@@ -580,7 +580,6 @@ disqus:
       <div class="grid__wrapper">
         
           
-          
 
 
 
@@ -600,7 +599,6 @@ disqus:
 
         
           
-          
 
 
 
@@ -619,7 +617,6 @@ disqus:
 </div>
 
         
-          
           
 
 
@@ -642,7 +639,6 @@ disqus:
 
         
           
-          
 
 
 
@@ -663,6 +659,7 @@ disqus:
         
       </div>
     </div>
+  
   
 </div>
 
@@ -713,7 +710,7 @@ disqus:
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2020 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

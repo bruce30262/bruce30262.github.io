@@ -304,7 +304,7 @@
 
 <!-- more -->
 
-<p>The challenge gave us a file call <code class="highlighter-rouge">rop.iseq</code>. By checking the file header, I found that it was a binary format of Ruby’s <a href="https://ilconnettivo.wordpress.com/2015/12/25/ruby-2-3-0-instructionsequence/">InstructionSequence</a>.</p>
+<p>The challenge gave us a file call <code class="language-plaintext highlighter-rouge">rop.iseq</code>. By checking the file header, I found that it was a binary format of Ruby’s <a href="https://ilconnettivo.wordpress.com/2015/12/25/ruby-2-3-0-instructionsequence/">InstructionSequence</a>.</p>
 
 <p>By googling the InstructionSequence, I found that there are some new features were added into the ruby version 2.3, for example the <a href="http://ruby-doc.org/core-2.3.0/RubyVM/InstructionSequence.html#method-c-load_from_binary">load_from_binary</a> method. We can actually use these methods to load the instruction sequence from a binary file, and disassemble the instruction to a human readable format.</p>
 
@@ -320,8 +320,8 @@
 <span class="nb">puts</span> <span class="n">d</span><span class="p">.</span><span class="nf">disasm</span> <span class="c1"># print out the disassemble result</span>
 </code></pre></div></div>
 
-<p>If we execute the line <code class="highlighter-rouge">d.eval</code>, it will run the instruction sequence:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bruce30262@ubuntu:~/Desktop$ ruby ./de.rb 
+<p>If we execute the line <code class="language-plaintext highlighter-rouge">d.eval</code>, it will run the instruction sequence:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bruce30262@ubuntu:~/Desktop$ ruby ./de.rb 
 AAAA
 Invalid Key @_@
 </code></pre></div></div>
@@ -329,7 +329,7 @@ Invalid Key @_@
 <p>Looks like the program will read our input and do some checking, then output the checking result.</p>
 
 <p>Anyway let’s dump the disassemble result and start reversing. <a href="https://gist.github.com/bruce30262/1e8fd1439f13e75cf72e0c265dd612de">Here</a>’s the whole disassemble result.</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>== disasm: #&lt;ISeq:&lt;compiled&gt;@&lt;compiled&gt;&gt;================================
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>== disasm: #&lt;ISeq:&lt;compiled&gt;@&lt;compiled&gt;&gt;================================
 == catch table
 | catch type: break  st: 0096 ed: 0102 sp: 0000 cont: 0102
 | catch type: break  st: 0239 ed: 0245 sp: 0000 cont: 0245
@@ -372,23 +372,23 @@ local table (size: 3, argc: 0 [opts: 0, rest: -1, post: 0, block: -1, kw: -1@-1,
 <p>Google is our friend. I found a useful <a href="http://kgrz.io/2014/04/19/ruby-trace-leave-oh-my.html">reference</a> for introducing basic ruby instruction sequence reversing.</p>
 
 <p>For example for the following iseq:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0000 trace            1                                               (   1)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0000 trace            1                                               (   1)
 0002 putself          
 0003 putstring        "digest"
 0005 opt_send_without_block &lt;callinfo!mid:require, argc:1, FCALL|ARGS_SIMPLE&gt;, &lt;callcache&gt;
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">trace 1</code> means “A new line of Ruby code has been encountered”. Then by reading the following lines, we know that the line of the code was probably <code class="highlighter-rouge">require "digest"</code>.</p>
+<p><code class="language-plaintext highlighter-rouge">trace 1</code> means “A new line of Ruby code has been encountered”. Then by reading the following lines, we know that the line of the code was probably <code class="language-plaintext highlighter-rouge">require "digest"</code>.</p>
 
 <p>And so we can try to reverse the whole iseq by following the similar pattern. First we found the code that read the user input:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># input = gets.chomp
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># input = gets.chomp
 0056 opt_send_without_block &lt;callinfo!mid:gets, argc:0, ARGS_SIMPLE&gt;, &lt;callcache&gt;
 0059 opt_send_without_block &lt;callinfo!mid:chomp, argc:0, ARGS_SIMPLE&gt;, &lt;callcache&gt;
 0062 setlocal_OP__WC__0 3
 </code></pre></div></div>
-<p>So <code class="highlighter-rouge">local_OP__WC__0 3</code> will be our input. Now for the first check:</p>
+<p>So <code class="language-plaintext highlighter-rouge">local_OP__WC__0 3</code> will be our input. Now for the first check:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># input.split("-")
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># input.split("-")
 0064 trace            1                                               (  39)
 0066 getlocal_OP__WC__0 3
 0068 putstring        "-"
@@ -418,17 +418,17 @@ local table (size: 3, argc: 0 [opts: 0, rest: -1, post: 0, block: -1, kw: -1@-1,
 </code></pre></div></div>
 <p>We can see that the valid key format must be something like “X-X-X-X-X”. Here I also found a sequence of iseq which help us infer the precise key format:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0000 trace            256                                             (  41)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0000 trace            256                                             (  41)
 0002 trace            1
 0004 getlocal_OP__WC__0 2
 0006 putobject        /^[0-9A-F]{4}$/ &lt;-- here
 0008 opt_regexpmatch2 &lt;callinfo!mid:=~, argc:1, ARGS_SIMPLE&gt;, &lt;callcache&gt;
 0011 trace            512
 </code></pre></div></div>
-<p>So now we know that the key format is “XXXX-XXXX-XXXX-XXXX-XXXX”, while “X” is in the range of <code class="highlighter-rouge">[0-9A-F]</code>. Time to recover the valid key.</p>
+<p>So now we know that the key format is “XXXX-XXXX-XXXX-XXXX-XXXX”, while “X” is in the range of <code class="language-plaintext highlighter-rouge">[0-9A-F]</code>. Time to recover the valid key.</p>
 
 <p>The checking of the first part of the key was pretty simple:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># local_OP__WC__0 2 = input.split("-"), let's call it key
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># local_OP__WC__0 2 = input.split("-"), let's call it key
 0111 getlocal_OP__WC__0 2
 0113 putobject_OP_INT2FIX_O_0_C_ 
 
@@ -440,9 +440,9 @@ local table (size: 3, argc: 0 [opts: 0, rest: -1, post: 0, block: -1, kw: -1@-1,
 0124 opt_eq           &lt;callinfo!mid:==, argc:1, ARGS_SIMPLE&gt;, &lt;callcache&gt;
 0127 branchif         134
 </code></pre></div></div>
-<p>So <code class="highlighter-rouge">key[0]</code> is <code class="highlighter-rouge">hex(31337)</code> = <code class="highlighter-rouge">7A69</code>
+<p>So <code class="language-plaintext highlighter-rouge">key[0]</code> is <code class="language-plaintext highlighter-rouge">hex(31337)</code> = <code class="language-plaintext highlighter-rouge">7A69</code>
 The checking of the second part of the key is even more simple:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># key[1].reverse == "FACE"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># key[1].reverse == "FACE"
 0136 getlocal_OP__WC__0 2
 0138 putobject_OP_INT2FIX_O_1_C_ 
 0139 opt_aref         &lt;callinfo!mid:[], argc:1, ARGS_SIMPLE&gt;, &lt;callcache&gt;
@@ -451,12 +451,12 @@ The checking of the second part of the key is even more simple:</p>
 0147 opt_eq           &lt;callinfo!mid:==, argc:1, ARGS_SIMPLE&gt;, &lt;callcache&gt;
 0150 branchif         157
 </code></pre></div></div>
-<p>So <code class="highlighter-rouge">key[1]</code> = <code class="highlighter-rouge">"FACE".reverse</code> = <code class="highlighter-rouge">ECAF</code>.</p>
+<p>So <code class="language-plaintext highlighter-rouge">key[1]</code> = <code class="language-plaintext highlighter-rouge">"FACE".reverse</code> = <code class="language-plaintext highlighter-rouge">ECAF</code>.</p>
 
-<p>To verify if <code class="highlighter-rouge">key[0]</code> and <code class="highlighter-rouge">key[1]</code> were the right value, we can actually use the following command to trace the ruby code: <code class="highlighter-rouge">ruby -r tracer de.rb</code>. If the key was correct, it would perform more checking, which means it will execute more line of code, so we can know if a part of the key was right or wrong by observing the trace of the ruby tracer ( kind of a side-channel analysis. )</p>
+<p>To verify if <code class="language-plaintext highlighter-rouge">key[0]</code> and <code class="language-plaintext highlighter-rouge">key[1]</code> were the right value, we can actually use the following command to trace the ruby code: <code class="language-plaintext highlighter-rouge">ruby -r tracer de.rb</code>. If the key was correct, it would perform more checking, which means it will execute more line of code, so we can know if a part of the key was right or wrong by observing the trace of the ruby tracer ( kind of a side-channel analysis. )</p>
 
-<p>Back to our recovering procedure. The checking of the <code class="highlighter-rouge">key[2]</code> looks like this:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># call f(217, key[2].to_i(16), 314159)
+<p>Back to our recovering procedure. The checking of the <code class="language-plaintext highlighter-rouge">key[2]</code> looks like this:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># call f(217, key[2].to_i(16), 314159)
 0160 putobject        217
 0162 getlocal_OP__WC__0 2
 0164 putobject        2
@@ -474,9 +474,9 @@ The checking of the second part of the key is even more simple:</p>
 0189 opt_eq           &lt;callinfo!mid:==, argc:1, ARGS_SIMPLE&gt;, &lt;callcache&gt;
 0192 branchif         199
 </code></pre></div></div>
-<p>It will first call a method <code class="highlighter-rouge">f</code>, with argument (<code class="highlighter-rouge">217</code>, <code class="highlighter-rouge">key[2].to_i(16)</code>, <code class="highlighter-rouge">314159</code>), then check if its return value = <code class="highlighter-rouge">94449</code> ( with 28 as base, <code class="highlighter-rouge">48D5</code> is actually <code class="highlighter-rouge">94449</code> in base 10 )</p>
+<p>It will first call a method <code class="language-plaintext highlighter-rouge">f</code>, with argument (<code class="language-plaintext highlighter-rouge">217</code>, <code class="language-plaintext highlighter-rouge">key[2].to_i(16)</code>, <code class="language-plaintext highlighter-rouge">314159</code>), then check if its return value = <code class="language-plaintext highlighter-rouge">94449</code> ( with 28 as base, <code class="language-plaintext highlighter-rouge">48D5</code> is actually <code class="language-plaintext highlighter-rouge">94449</code> in base 10 )</p>
 
-<p>method <code class="highlighter-rouge">f</code> was kind of complicated, so I will just post the pseudo code instead:</p>
+<p>method <code class="language-plaintext highlighter-rouge">f</code> was kind of complicated, so I will just post the pseudo code instead:</p>
 <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">two17</span><span class="p">,</span> <span class="n">key2</span><span class="p">,</span> <span class="n">pi</span><span class="p">)</span>
     <span class="n">ret</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">v2</span> <span class="o">=</span> <span class="n">two17</span>
@@ -491,7 +491,7 @@ The checking of the second part of the key is even more simple:</p>
 <span class="k">end</span>
 </code></pre></div></div>
 
-<p>Since we know that <code class="highlighter-rouge">key[2]</code>’s format is <code class="highlighter-rouge">0000</code> ~ <code class="highlighter-rouge">FFFF</code>, we can just crack <code class="highlighter-rouge">key[2]</code> by writing a simple crackme:</p>
+<p>Since we know that <code class="language-plaintext highlighter-rouge">key[2]</code>’s format is <code class="language-plaintext highlighter-rouge">0000</code> ~ <code class="language-plaintext highlighter-rouge">FFFF</code>, we can just crack <code class="language-plaintext highlighter-rouge">key[2]</code> by writing a simple crackme:</p>
 <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">two17</span><span class="p">,</span> <span class="n">key2</span><span class="p">,</span> <span class="n">pi</span><span class="p">)</span>
     <span class="n">ret</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">v2</span> <span class="o">=</span> <span class="n">two17</span>
@@ -513,10 +513,10 @@ The checking of the second part of the key is even more simple:</p>
     <span class="k">end</span>
 <span class="k">end</span>
 </code></pre></div></div>
-<p>And so we got the value of <code class="highlighter-rouge">key[2]</code>: <code class="highlighter-rouge">1BD2</code></p>
+<p>And so we got the value of <code class="language-plaintext highlighter-rouge">key[2]</code>: <code class="language-plaintext highlighter-rouge">1BD2</code></p>
 
-<p>Moving on to the next part (<code class="highlighter-rouge">key[3]</code>):</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0201 getlocal_OP__WC__0 2
+<p>Moving on to the next part (<code class="language-plaintext highlighter-rouge">key[3]</code>):</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0201 getlocal_OP__WC__0 2
 0203 putobject        3
 0205 opt_aref         &lt;callinfo!mid:[], argc:1, ARGS_SIMPLE&gt;, &lt;callcache&gt;
 0208 putobject        10
@@ -530,13 +530,13 @@ The checking of the second part of the key is even more simple:</p>
 0230 branchif         237
 </code></pre></div></div>
 
-<p>At first I was confused at line 0216 ~ 0218. There’s a <code class="highlighter-rouge">:first</code> for <code class="highlighter-rouge">map</code>, but the argc of <code class="highlighter-rouge">map</code> was actually <code class="highlighter-rouge">0</code>. After doing some search on the internet, I found <a href="http://qiita.com/yui-knk/items/f7ce1c3138ef44872d3b">this</a> post and found out that the check was actually doing:</p>
+<p>At first I was confused at line 0216 ~ 0218. There’s a <code class="language-plaintext highlighter-rouge">:first</code> for <code class="language-plaintext highlighter-rouge">map</code>, but the argc of <code class="language-plaintext highlighter-rouge">map</code> was actually <code class="language-plaintext highlighter-rouge">0</code>. After doing some search on the internet, I found <a href="http://qiita.com/yui-knk/items/f7ce1c3138ef44872d3b">this</a> post and found out that the check was actually doing:</p>
 <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">b</span> <span class="o">=</span> <span class="n">key</span><span class="p">[</span><span class="mi">3</span><span class="p">].</span><span class="nf">to_i</span><span class="p">(</span><span class="mi">10</span><span class="p">).</span><span class="nf">prime_division</span><span class="p">.</span><span class="nf">map</span> <span class="o">&amp;</span><span class="ss">:first</span>
 <span class="n">b</span><span class="p">.</span><span class="nf">sort</span> <span class="o">==</span> <span class="p">[</span><span class="mi">53</span><span class="p">,</span><span class="mi">97</span><span class="p">]</span>
 </code></pre></div></div>
-<p>So the value of <code class="highlighter-rouge">key[3]</code> is <code class="highlighter-rouge">53*97 == 5141</code> ( base 10 )</p>
+<p>So the value of <code class="language-plaintext highlighter-rouge">key[3]</code> is <code class="language-plaintext highlighter-rouge">53*97 == 5141</code> ( base 10 )</p>
 
-<p>At this point we know the valid key is <code class="highlighter-rouge">7A69-ECAF-1BD2-5141-XXXX</code>. The checking of the last part of the key was also kind of complicated and I was kind of lazy to reverse the whole thing. So far we have the first four part of the key, and there’s only one left …… so why don’t we use the old typical brute force attack to recover the last one ? ;)</p>
+<p>At this point we know the valid key is <code class="language-plaintext highlighter-rouge">7A69-ECAF-1BD2-5141-XXXX</code>. The checking of the last part of the key was also kind of complicated and I was kind of lazy to reverse the whole thing. So far we have the first four part of the key, and there’s only one left …… so why don’t we use the old typical brute force attack to recover the last one ? ;)</p>
 <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env ruby</span>
 <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="p">(</span><span class="mi">0</span><span class="o">..</span><span class="mh">0xffff</span><span class="p">)</span>
     <span class="n">key</span> <span class="o">=</span> <span class="s2">"7A69-ECAF-1BD2-5141-%04X"</span> <span class="o">%</span> <span class="n">i</span>
@@ -550,17 +550,17 @@ The checking of the second part of the key is even more simple:</p>
 <span class="k">end</span>
 </code></pre></div></div>
 <p>And after about 20 minutes….</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>........................
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>........................
 echo "7A69-ECAF-1BD2-5141-CA70"|ruby de.rb
 echo "7A69-ECAF-1BD2-5141-CA71"|ruby de.rb
 echo "7A69-ECAF-1BD2-5141-CA72"|ruby de.rb
 Congratz! flag is hitcon{ROP = Ruby Obsecured Programming ^_&lt;}
 </code></pre></div></div>
 
-<p>Looks like I should brute force the key from <code class="highlighter-rouge">0xffff</code> down to <code class="highlighter-rouge">0</code> though :P
-Anyway, the valid key is <code class="highlighter-rouge">7A69-ECAF-1BD2-5141-CA72</code>, and so we got the flag !</p>
+<p>Looks like I should brute force the key from <code class="language-plaintext highlighter-rouge">0xffff</code> down to <code class="language-plaintext highlighter-rouge">0</code> though :P
+Anyway, the valid key is <code class="language-plaintext highlighter-rouge">7A69-ECAF-1BD2-5141-CA72</code>, and so we got the flag !</p>
 
-<p>flag: <code class="highlighter-rouge">hitcon{ROP = Ruby Obsecured Programming ^_&lt;}</code></p>
+<p>flag: <code class="language-plaintext highlighter-rouge">hitcon{ROP = Ruby Obsecured Programming ^_&lt;}</code></p>
 
         
       </section>
@@ -661,7 +661,6 @@ Anyway, the valid key is <code class="highlighter-rouge">7A69-ECAF-1BD2-5141-CA7
       <div class="grid__wrapper">
         
           
-          
 
 
 
@@ -681,7 +680,6 @@ Anyway, the valid key is <code class="highlighter-rouge">7A69-ECAF-1BD2-5141-CA7
 
         
           
-          
 
 
 
@@ -700,7 +698,6 @@ Anyway, the valid key is <code class="highlighter-rouge">7A69-ECAF-1BD2-5141-CA7
 </div>
 
         
-          
           
 
 
@@ -723,7 +720,6 @@ Anyway, the valid key is <code class="highlighter-rouge">7A69-ECAF-1BD2-5141-CA7
 
         
           
-          
 
 
 
@@ -744,6 +740,7 @@ Anyway, the valid key is <code class="highlighter-rouge">7A69-ECAF-1BD2-5141-CA7
         
       </div>
     </div>
+  
   
 </div>
 
@@ -794,7 +791,7 @@ Anyway, the valid key is <code class="highlighter-rouge">7A69-ECAF-1BD2-5141-CA7
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2020 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

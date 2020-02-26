@@ -302,11 +302,11 @@
         <p>Description:  Find flag in <a href="http://asis-ctf.ir/tasks/tictac_4c56077190984fde63900b3ba14d11dd">this</a> file
 <!-- more --></p>
 
-<p>After extracting data in the compressed file, we found a .pcap file. Analyze the file with Wireshark, we found there’re lots of ICMP packets in it. After checking those packets with eyes wide-open, we found some interesting stuff : one of the ICMP packet contains the following data: <code class="highlighter-rouge">7069636b206d653a204153</code></p>
+<p>After extracting data in the compressed file, we found a .pcap file. Analyze the file with Wireshark, we found there’re lots of ICMP packets in it. After checking those packets with eyes wide-open, we found some interesting stuff : one of the ICMP packet contains the following data: <code class="language-plaintext highlighter-rouge">7069636b206d653a204153</code></p>
 
-<p>At first I just think that this might be a part of a md5-encrypted string. But then I found that other packets contains similar data, too. I found that there’s data like <code class="highlighter-rouge">7069636b206d653a203635</code>, <code class="highlighter-rouge">7069636b206d653a203965</code>…etc. Notice that there’s a slight difference between those strings: <strong>their last 4 characters are different</strong>.</p>
+<p>At first I just think that this might be a part of a md5-encrypted string. But then I found that other packets contains similar data, too. I found that there’s data like <code class="language-plaintext highlighter-rouge">7069636b206d653a203635</code>, <code class="language-plaintext highlighter-rouge">7069636b206d653a203965</code>…etc. Notice that there’s a slight difference between those strings: <strong>their last 4 characters are different</strong>.</p>
 
-<p>So I take a good look at those strings, and found that those were actually a <strong>string represent as hex values</strong>. If we convert those hex values into characters, <code class="highlighter-rouge">7069636b206d653a20</code> will be <code class="highlighter-rouge">pick me:</code>. So the string <code class="highlighter-rouge">7069636b206d653a204153</code> will be <code class="highlighter-rouge">pick me: AS</code>. This discovery got my attention, so I kept searching data that contains <code class="highlighter-rouge">7069636b206d653a20</code>, and found that not only ICMP, but also IPv4 protocol contains these data. So I deicided to use <code class="highlighter-rouge">strings</code> and <code class="highlighter-rouge">grep</code> to get those data out of the file, and here’s the result:</p>
+<p>So I take a good look at those strings, and found that those were actually a <strong>string represent as hex values</strong>. If we convert those hex values into characters, <code class="language-plaintext highlighter-rouge">7069636b206d653a20</code> will be <code class="language-plaintext highlighter-rouge">pick me:</code>. So the string <code class="language-plaintext highlighter-rouge">7069636b206d653a204153</code> will be <code class="language-plaintext highlighter-rouge">pick me: AS</code>. This discovery got my attention, so I kept searching data that contains <code class="language-plaintext highlighter-rouge">7069636b206d653a20</code>, and found that not only ICMP, but also IPv4 protocol contains these data. So I deicided to use <code class="language-plaintext highlighter-rouge">strings</code> and <code class="language-plaintext highlighter-rouge">grep</code> to get those data out of the file, and here’s the result:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@kali:~/Desktop# strings tictac.pcap | <span class="nb">grep</span> <span class="s2">"7069636b206d653a20"</span>
 7069636b206d653a204153<span class="sb">`</span>
@@ -343,7 +343,7 @@ Z47069636b206d653a206231<span class="sb">`</span>
 root@kali:~/Desktop#
 </code></pre></div></div>
 <p>Filter out the duplicate one, the final result will be like this:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>7069636b206d653a204153
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>7069636b206d653a204153
 7069636b206d653a204953
 7069636b206d653a205f36
 7069636b206d653a206435
@@ -364,7 +364,7 @@ root@kali:~/Desktop#
 7069636b206d653a206120
 </code></pre></div></div>
 
-<p>We can see that there’re totally 19 lines of data. Each data contains 2 characters in the flag, which means there’re totaly 38 characters. The flag’s format is <code class="highlighter-rouge">ASIS_md5(xxx)</code>, which is a 37-characters string, so we can expect that if we combine the last 2 characters in each data, we’ll know what the flag is. To do this, just write a python script and let the program do the rest.</p>
+<p>We can see that there’re totally 19 lines of data. Each data contains 2 characters in the flag, which means there’re totaly 38 characters. The flag’s format is <code class="language-plaintext highlighter-rouge">ASIS_md5(xxx)</code>, which is a 37-characters string, so we can expect that if we combine the last 2 characters in each data, we’ll know what the flag is. To do this, just write a python script and let the program do the rest.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">"data"</span><span class="p">,</span> <span class="s">"r"</span><span class="p">)</span>
 
@@ -379,7 +379,7 @@ root@kali:~/Desktop#
 
 <p>Boom! CTF ;)</p>
 
-<p>flag: <code class="highlighter-rouge">ASIS_6d54a67659e45edbe63bbf909e6b183a</code></p>
+<p>flag: <code class="language-plaintext highlighter-rouge">ASIS_6d54a67659e45edbe63bbf909e6b183a</code></p>
 
         
       </section>
@@ -480,7 +480,6 @@ root@kali:~/Desktop#
       <div class="grid__wrapper">
         
           
-          
 
 
 
@@ -500,7 +499,6 @@ root@kali:~/Desktop#
 
         
           
-          
 
 
 
@@ -519,7 +517,6 @@ root@kali:~/Desktop#
 </div>
 
         
-          
           
 
 
@@ -542,7 +539,6 @@ root@kali:~/Desktop#
 
         
           
-          
 
 
 
@@ -563,6 +559,7 @@ root@kali:~/Desktop#
         
       </div>
     </div>
+  
   
 </div>
 
@@ -613,7 +610,7 @@ root@kali:~/Desktop#
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2020 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

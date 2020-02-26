@@ -309,11 +309,11 @@
 <p>It first gave us a pcap file. Several of my teammates have already extract some information before I started to solve the challenge. To be brief, these packets contain the following message:</p>
 
 <p>First is the encrypted secret:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>encrypt(secret):
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>encrypt(secret):
 3ed2e01c1d1248125c67ac637384a22d997d9369c74c82abba4cc3b1bfc65f026c957ff0feef61b161cfe3373c2d9b905639aa3688659566d9acc93bb72080f7e5ebd643808a0e50e1fc3d16246afcf688dfedf02ad4ae84fd92c5c53bbd98f08b21d838a3261874c4ee3ce8fbcb96628d5706499dd985ec0c13573eeee03766f7010a867edfed92c33233b17a9730eb4a82a6db51fa6124bfc48ef99d669e21740d12656f597e691bbcbaa67abe1a09f02afc37140b167533c7536ab2ecd4ed37572fc9154d23aa7d8c92b84b774702632ed2737a569e4dfbe01338fcbb2a77ddd6990ce169bb4f48e1ca96d30eced23b6fe5b875ca6481056848be0fbc26bcbffdfe966da4221103408f459ec1ef12c72068bc1b96df045d3fa12cc2a9dcd162ffdf876b3bc3a3ed2373559bcbe3f470a8c695bf54796bfe471cd34b463e9876212df912deef882b657954d7dada47
 </code></pre></div></div>
 <p>And the packets that contain the information of the decrypt message:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msg=00000000000000000000000000000000997d9369c74c82abba4cc3b1bfc65f02
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msg=00000000000000000000000000000000997d9369c74c82abba4cc3b1bfc65f02
 md5(decrypt(msg)) = aa85a4e0adbd34c287af2d20da4453c9
 
 msg=0000000000000000000000000000d903997d9369c74c82abba4cc3b1bfc65f02
@@ -339,7 +339,7 @@ md5(decrypt(msg)) = d41d8cd98f00b204e9800998ecf8427e
 </code></pre></div></div>
 
 <p>Looks like someone was sending a bunch of encrypted message, and try to let the server decrypt the message for him. I also found that we can split the encrypted message by every 32 character:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>encrypt(secret):
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>encrypt(secret):
 msg=
 3ed2e01c1d1248125c67ac637384a22d
 997d9369c74c82abba4cc3b1bfc65f02 &lt;-- here!
@@ -363,42 +363,42 @@ c72068bc1b96df045d3fa12cc2a9dcd1
 70a8c695bf54796bfe471cd34b463e98
 76212df912deef882b657954d7dada47
 </code></pre></div></div>
-<p>Notice the line that marked “here!”, the string is actually identical to sencond half of <code class="highlighter-rouge">00000000000000000000000000000000997d9369c74c82abba4cc3b1bfc65f02</code>.</p>
+<p>Notice the line that marked “here!”, the string is actually identical to sencond half of <code class="language-plaintext highlighter-rouge">00000000000000000000000000000000997d9369c74c82abba4cc3b1bfc65f02</code>.</p>
 
 <p>I suck at crypto, so at first I just keep inspecting the decrypt message info, hoping that I can find some special pattern so I can use it to decrypt the secret.  And of course I failed miserably, until I notice that some of the decrypt request were failed – the server response with the code 500 ( or 403 ) instead of 200.  And that’s the moment I started to think “Wait a minute…this looks familiar…isn’t this the pattern of the <strong>padding oracle attack</strong> ?”  And so I start googling about the padding oracle attack.</p>
 
 <p>And guess what ? It <strong>IS</strong> the padding oracle attack !</p>
 
-<p>So with the help of <a href="http://mslc.ctf.su/wp/codegate-ctf-2011-crypto-400/">this writeup</a> posted by MSLC, I figured out that to decrypt the message <code class="highlighter-rouge">997d9369c74c82abba4cc3b1bfc65f02</code> (let’s call it <code class="highlighter-rouge">C1</code>), first we’ll have to find the value of <code class="highlighter-rouge">AES_Decrypt(C1)</code>, which can be done by xor-ing the value of</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>67acd06f7f7b28762310ce1213fccb11 (last attacker's ciphertext)
+<p>So with the help of <a href="http://mslc.ctf.su/wp/codegate-ctf-2011-crypto-400/">this writeup</a> posted by MSLC, I figured out that to decrypt the message <code class="language-plaintext highlighter-rouge">997d9369c74c82abba4cc3b1bfc65f02</code> (let’s call it <code class="language-plaintext highlighter-rouge">C1</code>), first we’ll have to find the value of <code class="language-plaintext highlighter-rouge">AES_Decrypt(C1)</code>, which can be done by xor-ing the value of</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>67acd06f7f7b28762310ce1213fccb11 (last attacker's ciphertext)
 </code></pre></div></div>
 <p>and</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>10101010101010101010101010101010 (padding)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>10101010101010101010101010101010 (padding)
 </code></pre></div></div>
 
-<p>After we get the value of <code class="highlighter-rouge">AES_Decrypt(C1)</code>, we can decrypt <code class="highlighter-rouge">C1</code> by doing <code class="highlighter-rouge">AES_Decrypt(C1) xor C0</code>. <code class="highlighter-rouge">C0</code> is the first block of the ciphertext, which is</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>3ed2e01c1d1248125c67ac637384a22d
+<p>After we get the value of <code class="language-plaintext highlighter-rouge">AES_Decrypt(C1)</code>, we can decrypt <code class="language-plaintext highlighter-rouge">C1</code> by doing <code class="language-plaintext highlighter-rouge">AES_Decrypt(C1) xor C0</code>. <code class="language-plaintext highlighter-rouge">C0</code> is the first block of the ciphertext, which is</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>3ed2e01c1d1248125c67ac637384a22d
 </code></pre></div></div>
 <p>in this case.</p>
 
 <p>And so I wrote a script to decrypt the whole message:</p>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/usr/bin/env python</span>
-<span class="c"># -*- coding: utf-8 -*-</span>
-
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 
 <span class="k">def</span> <span class="nf">myexec</span><span class="p">(</span><span class="n">cmd</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
-<span class="c"># "cat ./ggg": print out all the last attacker ciphertext</span>
-<span class="n">resp</span> <span class="o">=</span> <span class="n">myexec</span><span class="p">(</span><span class="s">"cat ./ggg"</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+<span class="c1"># "cat ./ggg": print out all the last attacker ciphertext
+</span><span class="n">resp</span> <span class="o">=</span> <span class="n">myexec</span><span class="p">(</span><span class="s">"cat ./ggg"</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
 <span class="k">del</span> <span class="n">resp</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
 <span class="n">temp</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">resp</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="c"># first line is encrypt(secret), ignore</span>
-        <span class="k">continue</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="c1"># first line is encrypt(secret), ignore
+</span>        <span class="k">continue</span>
     <span class="n">d</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">"="</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="o">==</span> <span class="mi">64</span>
     <span class="n">temp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
@@ -444,15 +444,15 @@ c72068bc1b96df045d3fa12cc2a9dcd1
 <span class="k">print</span> <span class="n">plain</span>
 
 </code></pre></div></div>
-<p><code class="highlighter-rouge">ggg</code> is a file that store the value of <code class="highlighter-rouge">encrypt(secret)</code> and all the last attacker’s ciphertext ( grab it from pcap file with the help of <code class="highlighter-rouge">strings</code> &amp; <code class="highlighter-rouge">grep</code> )</p>
+<p><code class="language-plaintext highlighter-rouge">ggg</code> is a file that store the value of <code class="language-plaintext highlighter-rouge">encrypt(secret)</code> and all the last attacker’s ciphertext ( grab it from pcap file with the help of <code class="language-plaintext highlighter-rouge">strings</code> &amp; <code class="language-plaintext highlighter-rouge">grep</code> )</p>
 
 <p>And so we have the decrypted message:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>In cryptography, a padding oracle attack is an attack which is performed using the padding of a cryptographic message.
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>In cryptography, a padding oracle attack is an attack which is performed using the padding of a cryptographic message.
 hitcon{H4cked by a de1ici0us pudding '3'}
 In cryptography, variable-length plaintext messages often have to be padded (expanded) to be compatible with the underlying cryptographic primitive.
 </code></pre></div></div>
 
-<p>flag: <code class="highlighter-rouge">hitcon{H4cked by a de1ici0us pudding '3'}</code></p>
+<p>flag: <code class="language-plaintext highlighter-rouge">hitcon{H4cked by a de1ici0us pudding '3'}</code></p>
 
         
       </section>
@@ -561,7 +561,6 @@ In cryptography, variable-length plaintext messages often have to be padded (exp
       <div class="grid__wrapper">
         
           
-          
 
 
 
@@ -581,7 +580,6 @@ In cryptography, variable-length plaintext messages often have to be padded (exp
 
         
           
-          
 
 
 
@@ -600,7 +598,6 @@ In cryptography, variable-length plaintext messages often have to be padded (exp
 </div>
 
         
-          
           
 
 
@@ -623,7 +620,6 @@ In cryptography, variable-length plaintext messages often have to be padded (exp
 
         
           
-          
 
 
 
@@ -644,6 +640,7 @@ In cryptography, variable-length plaintext messages often have to be padded (exp
         
       </div>
     </div>
+  
   
 </div>
 
@@ -694,7 +691,7 @@ In cryptography, variable-length plaintext messages often have to be padded (exp
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2020 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

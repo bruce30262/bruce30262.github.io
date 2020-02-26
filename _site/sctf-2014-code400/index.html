@@ -331,14 +331,14 @@
     <span class="n">fp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </code></pre></div></div>
 
-<p>After we analyze the code, we found that the key point is the <code class="highlighter-rouge">key</code> variable. 
-The <code class="highlighter-rouge">key</code> variable is a 6 bytes data. Since <code class="highlighter-rouge">key[4]</code> * (<code class="highlighter-rouge">key[5]</code>-5) has to be 17557, we know that there’s only 2 conditions:</p>
+<p>After we analyze the code, we found that the key point is the <code class="language-plaintext highlighter-rouge">key</code> variable. 
+The <code class="language-plaintext highlighter-rouge">key</code> variable is a 6 bytes data. Since <code class="language-plaintext highlighter-rouge">key[4]</code> * (<code class="language-plaintext highlighter-rouge">key[5]</code>-5) has to be 17557, we know that there’s only 2 conditions:</p>
 <ol>
-  <li><code class="highlighter-rouge">key[4]</code> = 97 &amp; <code class="highlighter-rouge">key[5]</code> = 186</li>
-  <li><code class="highlighter-rouge">key[4]</code> = 181 &amp; <code class="highlighter-rouge">key[5]</code> = 102</li>
+  <li><code class="language-plaintext highlighter-rouge">key[4]</code> = 97 &amp; <code class="language-plaintext highlighter-rouge">key[5]</code> = 186</li>
+  <li><code class="language-plaintext highlighter-rouge">key[4]</code> = 181 &amp; <code class="language-plaintext highlighter-rouge">key[5]</code> = 102</li>
 </ol>
 
-<p>But we still know nothing about <code class="highlighter-rouge">key[0]</code> ~ <code class="highlighter-rouge">key[4]</code>, so we’ll have to use brute-force attack to get the rest of these 4 bytes.</p>
+<p>But we still know nothing about <code class="language-plaintext highlighter-rouge">key[0]</code> ~ <code class="language-plaintext highlighter-rouge">key[4]</code>, so we’ll have to use brute-force attack to get the rest of these 4 bytes.</p>
 
 <p>The script told us the ciphertext:</p>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">base64</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">"fm2knkCBHPuhCQHYE3spag=="</span><span class="p">)</span>
@@ -364,30 +364,30 @@ God damn it…..</p>
 
 </code></pre></div></div>
 
-<p>Now we got the ciphertext &amp; plaintext, we can use brute-force attack to crack the whole <code class="highlighter-rouge">key</code>. The time complexity’s about <strong>256*256*256*256*2</strong> ( <code class="highlighter-rouge">key[4]</code> &amp; <code class="highlighter-rouge">key[5]</code> has only 2 conditions ), which is about 8.5 billion calculations. For me, I wrote a C++ program, with the help of the <a href="https://www.openssl.org/">OpenSSL</a> library, spent about 25 minutes to crack the <code class="highlighter-rouge">key</code> out.</p>
+<p>Now we got the ciphertext &amp; plaintext, we can use brute-force attack to crack the whole <code class="language-plaintext highlighter-rouge">key</code>. The time complexity’s about <strong>256*256*256*256*2</strong> ( <code class="language-plaintext highlighter-rouge">key[4]</code> &amp; <code class="language-plaintext highlighter-rouge">key[5]</code> has only 2 conditions ), which is about 8.5 billion calculations. For me, I wrote a C++ program, with the help of the <a href="https://www.openssl.org/">OpenSSL</a> library, spent about 25 minutes to crack the <code class="language-plaintext highlighter-rouge">key</code> out.</p>
 
 <div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;openssl/aes.h&gt;
 #include &lt;stdlib.h&gt;
 #include &lt;stdio.h&gt;
 </span>
-<span class="c1">//ciphertext
-</span><span class="k">static</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">ori</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
+<span class="c1">//ciphertext</span>
+<span class="k">static</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">ori</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
     <span class="mh">0x7e</span><span class="p">,</span> <span class="mh">0x6d</span><span class="p">,</span> <span class="mh">0xa4</span><span class="p">,</span> <span class="mh">0x9e</span><span class="p">,</span> <span class="mh">0x40</span><span class="p">,</span> <span class="mh">0x81</span><span class="p">,</span> <span class="mh">0x1c</span><span class="p">,</span> <span class="mh">0xfb</span><span class="p">,</span>
     <span class="mh">0xa1</span><span class="p">,</span> <span class="mh">0x09</span><span class="p">,</span> <span class="mh">0x01</span><span class="p">,</span> <span class="mh">0xd8</span><span class="p">,</span> <span class="mh">0x13</span><span class="p">,</span> <span class="mh">0x7b</span><span class="p">,</span> <span class="mh">0x29</span><span class="p">,</span> <span class="mh">0x6a</span><span class="p">,</span>
 <span class="p">};</span>
 
-<span class="c1">//2: index 3
-//3: index 9
-//0: index 12
-</span><span class="k">static</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">key0</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
+<span class="c1">//2: index 3</span>
+<span class="c1">//3: index 9</span>
+<span class="c1">//0: index 12</span>
+<span class="k">static</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">key0</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
     <span class="mh">0x68</span><span class="p">,</span> <span class="mh">0x65</span><span class="p">,</span> <span class="mh">0x79</span><span class="p">,</span> <span class="mh">0x02</span><span class="p">,</span> <span class="mh">0x63</span><span class="p">,</span> <span class="mh">0x68</span><span class="p">,</span> <span class="mh">0x65</span><span class="p">,</span> <span class="mh">0x63</span><span class="p">,</span>
     <span class="mh">0x6b</span><span class="p">,</span> <span class="mh">0x03</span><span class="p">,</span> <span class="mh">0x69</span><span class="p">,</span> <span class="mh">0x74</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x6f</span><span class="p">,</span> <span class="mh">0x75</span><span class="p">,</span> <span class="mh">0x74</span><span class="p">,</span>
 <span class="p">};</span>
 
-<span class="c1">//1: index 4
-//4: index 7
-//5: index 12
-</span><span class="k">static</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">key1</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
+<span class="c1">//1: index 4</span>
+<span class="c1">//4: index 7</span>
+<span class="c1">//5: index 12</span>
+<span class="k">static</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">key1</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
     <span class="mh">0x63</span><span class="p">,</span> <span class="mh">0x6f</span><span class="p">,</span> <span class="mh">0x6d</span><span class="p">,</span> <span class="mh">0x65</span><span class="p">,</span> <span class="mh">0x01</span><span class="p">,</span> <span class="mh">0x6f</span><span class="p">,</span> <span class="mh">0x6e</span><span class="p">,</span> <span class="mh">0x04</span><span class="p">,</span>
     <span class="mh">0x62</span><span class="p">,</span> <span class="mh">0x61</span><span class="p">,</span> <span class="mh">0x62</span><span class="p">,</span> <span class="mh">0x79</span><span class="p">,</span> <span class="mh">0x05</span><span class="p">,</span> <span class="mh">0x7e</span><span class="p">,</span> <span class="mh">0x7e</span><span class="p">,</span> <span class="mh">0x21</span><span class="p">,</span>
 <span class="p">};</span>
@@ -396,8 +396,8 @@ God damn it…..</p>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
 <span class="p">{</span>
-    <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">text</span><span class="p">[]</span> <span class="o">=</span> <span class="s">"92cfceb39d57d914"</span><span class="p">;</span> <span class="c1">//plaintext
-</span>
+    <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">text</span><span class="p">[]</span> <span class="o">=</span> <span class="s">"92cfceb39d57d914"</span><span class="p">;</span> <span class="c1">//plaintext</span>
+
     <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">enc_out</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="mi">16</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="p">));</span> 
 
     <span class="n">AES_KEY</span> <span class="n">enc_key</span><span class="p">;</span>
@@ -407,8 +407,8 @@ God damn it…..</p>
 
     <span class="k">for</span> <span class="p">(</span><span class="n">i0</span> <span class="o">=</span> <span class="mh">0x00</span> <span class="p">;</span> <span class="n">i0</span> <span class="o">&lt;=</span> <span class="mh">0xff</span> <span class="p">;</span> <span class="n">i0</span><span class="o">+=</span><span class="mh">0x1</span> <span class="p">)</span>
     <span class="p">{</span>
-        <span class="n">printf</span><span class="p">(</span><span class="s">"i0: %X</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">i0</span><span class="p">);</span> <span class="c1">//monitor the cracking process
-</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"i0: %X</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">i0</span><span class="p">);</span> <span class="c1">//monitor the cracking process</span>
+
         <span class="k">if</span><span class="p">(</span><span class="n">out</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
 
         <span class="k">for</span> <span class="p">(</span><span class="n">i1</span> <span class="o">=</span> <span class="mh">0x00</span> <span class="p">;</span> <span class="n">i1</span> <span class="o">&lt;=</span> <span class="mh">0xff</span> <span class="p">;</span> <span class="n">i1</span><span class="o">+=</span><span class="mh">0x1</span> <span class="p">)</span>
@@ -421,14 +421,14 @@ God damn it…..</p>
 
                 <span class="k">for</span> <span class="p">(</span><span class="n">i3</span> <span class="o">=</span> <span class="mh">0x00</span> <span class="p">;</span> <span class="n">i3</span> <span class="o">&lt;=</span> <span class="mh">0xff</span> <span class="p">;</span> <span class="n">i3</span><span class="o">+=</span><span class="mh">0x1</span> <span class="p">)</span>
                 <span class="p">{</span>
-                    <span class="n">key0</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">i2</span><span class="p">;</span> <span class="c1">//key[2]
-</span>                    <span class="n">key0</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span> <span class="o">=</span> <span class="n">i3</span><span class="p">;</span> <span class="c1">//key[3]
-</span>                    <span class="n">key0</span><span class="p">[</span><span class="mi">12</span><span class="p">]</span> <span class="o">=</span> <span class="n">i0</span><span class="p">;</span> <span class="c1">//key[0]
-</span>
-                    <span class="n">key1</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">i1</span><span class="p">;</span> <span class="c1">//key[1]
-</span>                    <span class="n">key1</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x61</span><span class="p">;</span> <span class="c1">//key[4]
-</span>                    <span class="n">key1</span><span class="p">[</span><span class="mi">12</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xBA</span><span class="p">;</span> <span class="c1">//key[5]
-</span>
+                    <span class="n">key0</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">i2</span><span class="p">;</span> <span class="c1">//key[2]</span>
+                    <span class="n">key0</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span> <span class="o">=</span> <span class="n">i3</span><span class="p">;</span> <span class="c1">//key[3]</span>
+                    <span class="n">key0</span><span class="p">[</span><span class="mi">12</span><span class="p">]</span> <span class="o">=</span> <span class="n">i0</span><span class="p">;</span> <span class="c1">//key[0]</span>
+
+                    <span class="n">key1</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">i1</span><span class="p">;</span> <span class="c1">//key[1]</span>
+                    <span class="n">key1</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x61</span><span class="p">;</span> <span class="c1">//key[4]</span>
+                    <span class="n">key1</span><span class="p">[</span><span class="mi">12</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xBA</span><span class="p">;</span> <span class="c1">//key[5]</span>
+
                     <span class="n">AES_set_encrypt_key</span><span class="p">(</span><span class="n">key0</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">enc_key</span><span class="p">);</span>
                     <span class="n">AES_ecb_encrypt</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">enc_out</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">enc_key</span><span class="p">,</span> <span class="n">AES_ENCRYPT</span><span class="p">);</span>  
                     <span class="n">AES_set_encrypt_key</span><span class="p">(</span><span class="n">key1</span><span class="p">,</span><span class="mi">128</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">enc_key</span><span class="p">);</span>
@@ -438,8 +438,8 @@ God damn it…..</p>
 
                     <span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="o">*</span><span class="p">(</span><span class="n">enc_out</span><span class="o">+</span><span class="n">i</span><span class="p">)</span><span class="o">!=</span><span class="mh">0x00</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
                     <span class="p">{</span>
-                        <span class="c1">//printf("%X ",*(enc_out+i));
-</span>                        <span class="k">if</span> <span class="p">(</span> <span class="o">*</span><span class="p">(</span><span class="n">enc_out</span><span class="o">+</span><span class="n">i</span><span class="p">)</span> <span class="o">==</span> <span class="n">ori</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">)</span> <span class="n">cnt</span><span class="o">++</span><span class="p">;</span>
+                        <span class="c1">//printf("%X ",*(enc_out+i));</span>
+                        <span class="k">if</span> <span class="p">(</span> <span class="o">*</span><span class="p">(</span><span class="n">enc_out</span><span class="o">+</span><span class="n">i</span><span class="p">)</span> <span class="o">==</span> <span class="n">ori</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">)</span> <span class="n">cnt</span><span class="o">++</span><span class="p">;</span>
                         <span class="k">else</span> <span class="k">break</span><span class="p">;</span>
                     <span class="p">}</span>
 
@@ -450,9 +450,9 @@ God damn it…..</p>
                         <span class="k">break</span><span class="p">;</span>
                     <span class="p">}</span>
 
-                    <span class="n">key1</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xB5</span><span class="p">;</span> <span class="c1">//key[4]
-</span>                    <span class="n">key1</span><span class="p">[</span><span class="mi">12</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x66</span><span class="p">;</span> <span class="c1">//key[5]
-</span>
+                    <span class="n">key1</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xB5</span><span class="p">;</span> <span class="c1">//key[4]</span>
+                    <span class="n">key1</span><span class="p">[</span><span class="mi">12</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x66</span><span class="p">;</span> <span class="c1">//key[5]</span>
+
                     <span class="n">AES_set_encrypt_key</span><span class="p">(</span><span class="n">key0</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">enc_key</span><span class="p">);</span>
                     <span class="n">AES_ecb_encrypt</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">enc_out</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">enc_key</span><span class="p">,</span> <span class="n">AES_ENCRYPT</span><span class="p">);</span>  
                     <span class="n">AES_set_encrypt_key</span><span class="p">(</span><span class="n">key1</span><span class="p">,</span><span class="mi">128</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">enc_key</span><span class="p">);</span>
@@ -462,8 +462,8 @@ God damn it…..</p>
 
                     <span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="o">*</span><span class="p">(</span><span class="n">enc_out</span><span class="o">+</span><span class="n">i</span><span class="p">)</span><span class="o">!=</span><span class="mh">0x00</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
                     <span class="p">{</span>
-                        <span class="c1">//printf("%X ",*(enc_out+i));
-</span>                        <span class="k">if</span> <span class="p">(</span> <span class="o">*</span><span class="p">(</span><span class="n">enc_out</span><span class="o">+</span><span class="n">i</span><span class="p">)</span> <span class="o">==</span> <span class="n">ori</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">)</span> <span class="n">cnt</span><span class="o">++</span><span class="p">;</span>
+                        <span class="c1">//printf("%X ",*(enc_out+i));</span>
+                        <span class="k">if</span> <span class="p">(</span> <span class="o">*</span><span class="p">(</span><span class="n">enc_out</span><span class="o">+</span><span class="n">i</span><span class="p">)</span> <span class="o">==</span> <span class="n">ori</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">)</span> <span class="n">cnt</span><span class="o">++</span><span class="p">;</span>
                         <span class="k">else</span> <span class="k">break</span><span class="p">;</span>
                     <span class="p">}</span>
 
@@ -483,13 +483,13 @@ God damn it…..</p>
     <span class="p">}</span>
 
 
-    <span class="n">printf</span><span class="p">(</span><span class="s">"k0: %X</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">key0</span><span class="p">[</span><span class="mi">12</span><span class="p">]);</span> <span class="c1">//key[0]
-</span>    <span class="n">printf</span><span class="p">(</span><span class="s">"k1: %X</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">key1</span><span class="p">[</span><span class="mi">4</span><span class="p">]);</span> <span class="c1">//key[1]
-</span>    <span class="n">printf</span><span class="p">(</span><span class="s">"k2: %X</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">key0</span><span class="p">[</span><span class="mi">3</span><span class="p">]);</span> <span class="c1">//key[2]
-</span>    <span class="n">printf</span><span class="p">(</span><span class="s">"k3: %X</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">key0</span><span class="p">[</span><span class="mi">9</span><span class="p">]);</span> <span class="c1">//key[3]
-</span>    <span class="n">printf</span><span class="p">(</span><span class="s">"k4: %X</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">key1</span><span class="p">[</span><span class="mi">7</span><span class="p">]);</span> <span class="c1">//key[4]
-</span>    <span class="n">printf</span><span class="p">(</span><span class="s">"k5: %X</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">key1</span><span class="p">[</span><span class="mi">12</span><span class="p">]);</span> <span class="c1">//key[5]
-</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"k0: %X</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">key0</span><span class="p">[</span><span class="mi">12</span><span class="p">]);</span> <span class="c1">//key[0]</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"k1: %X</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">key1</span><span class="p">[</span><span class="mi">4</span><span class="p">]);</span> <span class="c1">//key[1]</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"k2: %X</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">key0</span><span class="p">[</span><span class="mi">3</span><span class="p">]);</span> <span class="c1">//key[2]</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"k3: %X</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">key0</span><span class="p">[</span><span class="mi">9</span><span class="p">]);</span> <span class="c1">//key[3]</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"k4: %X</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">key1</span><span class="p">[</span><span class="mi">7</span><span class="p">]);</span> <span class="c1">//key[4]</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"k5: %X</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">key1</span><span class="p">[</span><span class="mi">12</span><span class="p">]);</span> <span class="c1">//key[5]</span>
+
     <span class="n">free</span><span class="p">(</span><span class="n">enc_out</span><span class="p">);</span>
 
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
@@ -497,9 +497,9 @@ God damn it…..</p>
 
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">key</code> : <code class="highlighter-rouge">\x81\x69\x37\x88\x61\xBA</code></p>
+<p><code class="language-plaintext highlighter-rouge">key</code> : <code class="language-plaintext highlighter-rouge">\x81\x69\x37\x88\x61\xBA</code></p>
 
-<p>But we’re not done yet. After we got the right <code class="highlighter-rouge">key</code>, it will help us generate the right filename, which is:</p>
+<p>But we’re not done yet. After we got the right <code class="language-plaintext highlighter-rouge">key</code>, it will help us generate the right filename, which is:</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">key</span> <span class="o">=</span> <span class="s">"</span><span class="se">\x81\x69\x37\x88\x61\xBA</span><span class="s">"</span>
 <span class="n">filename</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span><span class="o">+</span><span class="s">".txt"</span>
@@ -508,22 +508,22 @@ God damn it…..</p>
 </code></pre></div></div>
 <p>After we enter the filename in the url (under the Code400 domain of course), we found a message. It gave us a ciphertext and a plaintext which is partialy decrypted:</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#base64.encode(ciphertext)</span>
-<span class="n">ciphertext</span> <span class="o">=</span> <span class="s">"Or18/xSC2xW5pT7BLbIE7YPGLwWytbZsxupMp4w6iaa0QvtYZUMefkf43wmzR36MekHm23wgI4buIJLGk7m7gTq9fP8UgtsVuaU+wS2yBO2Dxi8FsrW2bMbqTKeMOommtEL7WGVDHn5H+N8Js0d+jHpB5tt8ICOG7iCSxpO5u4E6vXz/FILbFbmlPsEtsgTtg8YvBbK1tmzG6kynjDqJprRC+1hlQx5+R/jfCbNHfox6QebbfCAjhu4gksaTubuBOr18/xSC2xW5pT7BLbIE7YPGLwWytbZsxupMp4w6iaa0QvtYZUMefkf43wmzR36MekHm23wgI4buIJLGk7m7gTq9fP8UgtsVuaU+wS2yBO2Dxi8FsrW2bMbqTKeMOommtEL7WGVDHn5H+N8Js0d+jHpB5tt8ICOG7iCSxpO5u4E="</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#base64.encode(ciphertext)
+</span><span class="n">ciphertext</span> <span class="o">=</span> <span class="s">"Or18/xSC2xW5pT7BLbIE7YPGLwWytbZsxupMp4w6iaa0QvtYZUMefkf43wmzR36MekHm23wgI4buIJLGk7m7gTq9fP8UgtsVuaU+wS2yBO2Dxi8FsrW2bMbqTKeMOommtEL7WGVDHn5H+N8Js0d+jHpB5tt8ICOG7iCSxpO5u4E6vXz/FILbFbmlPsEtsgTtg8YvBbK1tmzG6kynjDqJprRC+1hlQx5+R/jfCbNHfox6QebbfCAjhu4gksaTubuBOr18/xSC2xW5pT7BLbIE7YPGLwWytbZsxupMp4w6iaa0QvtYZUMefkf43wmzR36MekHm23wgI4buIJLGk7m7gTq9fP8UgtsVuaU+wS2yBO2Dxi8FsrW2bMbqTKeMOommtEL7WGVDHn5H+N8Js0d+jHpB5tt8ICOG7iCSxpO5u4E="</span>
 
-<span class="c">#partialy decrypted plaintext</span>
-<span class="n">plaintext</span> <span class="o">=</span> <span class="s">"*****n**M****H***j***Wx*******d************h*****3****=*******==******t**F**M**f***hM************3***H*w**J*********=**==*******U******E**95**V*c*N****5**t*M*****J*c*Q*****c*h5**0******==*==****NUR*******************X2*u*H**Y************G**P****=***********0*****************************f***5****OX*********=*******=****"</span>
+<span class="c1">#partialy decrypted plaintext
+</span><span class="n">plaintext</span> <span class="o">=</span> <span class="s">"*****n**M****H***j***Wx*******d************h*****3****=*******==******t**F**M**f***hM************3***H*w**J*********=**==*******U******E**95**V*c*N****5**t*M*****J*c*Q*****c*h5**0******==*==****NUR*******************X2*u*H**Y************G**P****=***********0*****************************f***5****OX*********=*******=****"</span>
 
 </code></pre></div></div>
 <p>I decode the base64 ciphertext, and found that there’re 320 bytes data, which is same as the plaintext. And then I try to decrypt the whole plaintext, but unfortunately I failed -_- ( I suck at crypto ! ). So I send this message to one of my teammate, who is good at it.</p>
 
 <p>He found out that the actual ciphertext &amp; plaintext were both only 64 bytes, they just repeat themselves 5 times (64*5 = 320). So he splitted the plaintext into 5 groups, observed the known plaintext ,do the cross-comparison and complete the whole plaintext:</p>
 
-<p><code class="highlighter-rouge">U0NURntEMF95MHVfcjNhMWx5X2tuMHdfY3J5cHQwOXJhcGh5P30=============</code></p>
+<p><code class="language-plaintext highlighter-rouge">U0NURntEMF95MHVfcjNhMWx5X2tuMHdfY3J5cHQwOXJhcGh5P30=============</code></p>
 
 <p>It was another base64-encode string. So he base64-decode the whole string:</p>
 
-<p><code class="highlighter-rouge">SCTF{D0_y0u_r3a1ly_kn0w_crypt09raphy?}</code></p>
+<p><code class="language-plaintext highlighter-rouge">SCTF{D0_y0u_r3a1ly_kn0w_crypt09raphy?}</code></p>
 
 <p>Thank goodness! Praise Jesus! 
 Finally, we get the flag!!!</p>
@@ -639,7 +639,6 @@ Finally, we get the flag!!!</p>
       <div class="grid__wrapper">
         
           
-          
 
 
 
@@ -659,7 +658,6 @@ Finally, we get the flag!!!</p>
 
         
           
-          
 
 
 
@@ -678,7 +676,6 @@ Finally, we get the flag!!!</p>
 </div>
 
         
-          
           
 
 
@@ -701,7 +698,6 @@ Finally, we get the flag!!!</p>
 
         
           
-          
 
 
 
@@ -722,6 +718,7 @@ Finally, we get the flag!!!</p>
         
       </div>
     </div>
+  
   
 </div>
 
@@ -772,7 +769,7 @@ Finally, we get the flag!!!</p>
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2020 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

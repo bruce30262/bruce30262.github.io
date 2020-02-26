@@ -354,12 +354,12 @@ mirror 2 : nc 217.218.48.84 12429</p>
     <span class="n">ps</span> <span class="o">=</span> <span class="n">log</span><span class="o">.</span><span class="n">progress</span><span class="p">(</span><span class="s">"getting points from server..."</span><span class="p">)</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">my_recvuntil</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="s">"area? "</span><span class="p">)</span>
 
-    <span class="c"># parse the vertex list</span>
-    <span class="n">list_str</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s">"[["</span><span class="p">):</span><span class="n">s</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s">"What's"</span><span class="p">):]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="c1"># parse the vertex list
+</span>    <span class="n">list_str</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s">"[["</span><span class="p">):</span><span class="n">s</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s">"What's"</span><span class="p">):]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
     <span class="n">real_list</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">list_str</span><span class="p">)</span>
     
-    <span class="c"># get the convex hull point</span>
-    <span class="n">points</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">real_list</span><span class="p">)</span>
+    <span class="c1"># get the convex hull point
+</span>    <span class="n">points</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">real_list</span><span class="p">)</span>
     <span class="n">hull</span> <span class="o">=</span> <span class="n">ConvexHull</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
     <span class="n">hull_points</span> <span class="o">=</span> <span class="p">[</span> <span class="n">real_list</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">hull</span><span class="o">.</span><span class="n">vertices</span><span class="p">]</span>
 
@@ -372,7 +372,7 @@ mirror 2 : nc 217.218.48.84 12429</p>
 
 </code></pre></div></div>
 
-<p>After solving 99 problems, we got the flag: <code class="highlighter-rouge">ASIS{f3a8369f4194c5e44c03e5fcefb8ddf6}</code></p>
+<p>After solving 99 problems, we got the flag: <code class="language-plaintext highlighter-rouge">ASIS{f3a8369f4194c5e44c03e5fcefb8ddf6}</code></p>
 
         
       </section>
@@ -473,7 +473,6 @@ mirror 2 : nc 217.218.48.84 12429</p>
       <div class="grid__wrapper">
         
           
-          
 
 
 
@@ -493,7 +492,6 @@ mirror 2 : nc 217.218.48.84 12429</p>
 
         
           
-          
 
 
 
@@ -512,7 +510,6 @@ mirror 2 : nc 217.218.48.84 12429</p>
 </div>
 
         
-          
           
 
 
@@ -535,7 +532,6 @@ mirror 2 : nc 217.218.48.84 12429</p>
 
         
           
-          
 
 
 
@@ -556,6 +552,7 @@ mirror 2 : nc 217.218.48.84 12429</p>
         
       </div>
     </div>
+  
   
 </div>
 
@@ -606,7 +603,7 @@ mirror 2 : nc 217.218.48.84 12429</p>
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2020 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

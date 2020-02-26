@@ -328,7 +328,7 @@ This is perl 5, version 18, subversion 2 (v5.18.2) built for x86_64-linux-gnu-th
 
 <p>Well, by searching the answer with the help of the almighty google, we can easily solve the <strong>BabyPolyQuine</strong> challenge by submitting this <a href="http://shinh.skr.jp/obf/poly_quine.txt">program</a>, which pass almost all the languages check – except for <strong>Python3</strong>.</p>
 
-<p>It seems that Python3 has encounter some syntax error. After changing <code class="highlighter-rouge">def printf(a,*b):p a%b</code> to <code class="highlighter-rouge">def printf(a,*b):p (a%b)</code>, Python3 can run it without any error message now, <strong>but it print an extra newline, which doesn’t match the challenge’s requirement</strong>. So now we’re focusing on <strong>how to make both python2 &amp; python3 have the same printing behavior</strong>. After doing some trial &amp; error, I found that for C, Ruby &amp; Perl, they will ignore the line <code class="highlighter-rouge">def printf(a,*b):p (a%b)</code>, except Python. So we can add some code at that line.</p>
+<p>It seems that Python3 has encounter some syntax error. After changing <code class="language-plaintext highlighter-rouge">def printf(a,*b):p a%b</code> to <code class="language-plaintext highlighter-rouge">def printf(a,*b):p (a%b)</code>, Python3 can run it without any error message now, <strong>but it print an extra newline, which doesn’t match the challenge’s requirement</strong>. So now we’re focusing on <strong>how to make both python2 &amp; python3 have the same printing behavior</strong>. After doing some trial &amp; error, I found that for C, Ruby &amp; Perl, they will ignore the line <code class="language-plaintext highlighter-rouge">def printf(a,*b):p (a%b)</code>, except Python. So we can add some code at that line.</p>
 
 <p>As for my opinion, I add the following code:</p>
 
@@ -336,10 +336,10 @@ This is perl 5, version 18, subversion 2 (v5.18.2) built for x86_64-linux-gnu-th
 <span class="k">def</span> <span class="nf">printf</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="o">*</span><span class="n">b</span><span class="p">):</span><span class="n">p</span> <span class="p">(</span><span class="n">a</span><span class="o">%</span><span class="n">b</span><span class="p">)</span>
 </code></pre></div></div>
 
-<p>For Python, it will import the sys module, and set a lambda <code class="highlighter-rouge">p</code> as a <code class="highlighter-rouge">stdout.write()</code> function. The <code class="highlighter-rouge">stdout.write()</code> function won’t print newline, so python2 &amp; python3 will act like the same.</p>
+<p>For Python, it will import the sys module, and set a lambda <code class="language-plaintext highlighter-rouge">p</code> as a <code class="language-plaintext highlighter-rouge">stdout.write()</code> function. The <code class="language-plaintext highlighter-rouge">stdout.write()</code> function won’t print newline, so python2 &amp; python3 will act like the same.</p>
 
 <p>The whole program:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include/*
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include/*
 s='''*/&lt;stdio.h&gt;
 main(){char*_;/*==;sub _:lvalue{$_}&lt;&lt;s;#';&lt;&lt;s#'''
 from sys import* ; p = lambda x:stdout.write(x)
@@ -352,7 +352,7 @@ s='''*/
 }//'''#==
 </code></pre></div></div>
 
-<p>After we submit the code, we get the flag as well: <code class="highlighter-rouge">0ctf{"Yields falsehood when preceded by its quotation" yields falsehood when preceded by its quotation}</code></p>
+<p>After we submit the code, we get the flag as well: <code class="language-plaintext highlighter-rouge">0ctf{"Yields falsehood when preceded by its quotation" yields falsehood when preceded by its quotation}</code></p>
 
         
       </section>
@@ -477,7 +477,6 @@ s='''*/
       <div class="grid__wrapper">
         
           
-          
 
 
 
@@ -497,7 +496,6 @@ s='''*/
 
         
           
-          
 
 
 
@@ -516,7 +514,6 @@ s='''*/
 </div>
 
         
-          
           
 
 
@@ -539,7 +536,6 @@ s='''*/
 
         
           
-          
 
 
 
@@ -560,6 +556,7 @@ s='''*/
         
       </div>
     </div>
+  
   
 </div>
 
@@ -610,7 +607,7 @@ s='''*/
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2020 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

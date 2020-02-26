@@ -309,7 +309,7 @@
 
 <p>“…..Instant messaging generates five billion messages a day (750GB), or <strong>274 Terabytes a year</strong>.”</p>
 
-<p>so the flag will be ASIS_md5(274) = <code class="highlighter-rouge">ASIS_d947bf06a885db0d477d707121934ff8</code></p>
+<p>so the flag will be ASIS_md5(274) = <code class="language-plaintext highlighter-rouge">ASIS_d947bf06a885db0d477d707121934ff8</code></p>
 
 <h1 id="lottery">Lottery</h1>
 
@@ -317,7 +317,7 @@
 
 <p>After entering the site we’ll find a message at the front page</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>The 1234567890 th visitor, the prize awarded.
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>The 1234567890 th visitor, the prize awarded.
 Anyone who has visited our site is the 1234567890 th Special prizes are awarded. 
 You have visited us already 
 You are the 1496 visitor
@@ -326,20 +326,20 @@ Don't hack cookies, we are alive :)
 
 <p>well, let’s go check the cookie shall we ;)</p>
 
-<p>and so we found a cookie name <code class="highlighter-rouge">Visitor</code>, which contains the value:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MTQ5NjoxNDE1ZGI3MGZlOWRkYjExOWUyM2U5YjI4MDhjZGUzOA%3D%3D
+<p>and so we found a cookie name <code class="language-plaintext highlighter-rouge">Visitor</code>, which contains the value:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MTQ5NjoxNDE1ZGI3MGZlOWRkYjExOWUyM2U5YjI4MDhjZGUzOA%3D%3D
 </code></pre></div></div>
 
-<p>if we url-decode <code class="highlighter-rouge">%3D</code> the result will be <code class="highlighter-rouge">=</code>, so the cookie actually contains a base64 encode string. After we decode the whole string, it shows <code class="highlighter-rouge">1496:1415db70fe9ddb119e23e9b2808cde38</code>.</p>
+<p>if we url-decode <code class="language-plaintext highlighter-rouge">%3D</code> the result will be <code class="language-plaintext highlighter-rouge">=</code>, so the cookie actually contains a base64 encode string. After we decode the whole string, it shows <code class="language-plaintext highlighter-rouge">1496:1415db70fe9ddb119e23e9b2808cde38</code>.</p>
 
-<p>After doing some research we found that <code class="highlighter-rouge">1415db70fe9ddb119e23e9b2808cde38</code> is actually <code class="highlighter-rouge">md5(1496)</code>. So the challenge is quite simple: we just need to modify the cookie value to <code class="highlighter-rouge">base64_encode(1234567890:md5(1234567890))</code>, then we’ll get the flag.</p>
+<p>After doing some research we found that <code class="language-plaintext highlighter-rouge">1415db70fe9ddb119e23e9b2808cde38</code> is actually <code class="language-plaintext highlighter-rouge">md5(1496)</code>. So the challenge is quite simple: we just need to modify the cookie value to <code class="language-plaintext highlighter-rouge">base64_encode(1234567890:md5(1234567890))</code>, then we’ll get the flag.</p>
 
 <p>So just type the following script into the url bar (I’m using chrome):</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>javascript:document.cookie="Visitor=MTIzNDU2Nzg5MDplODA3ZjFmY2Y4MmQxMzJmOWJiMDE4Y2E2NzM4YTE5Zg=="
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>javascript:document.cookie="Visitor=MTIzNDU2Nzg5MDplODA3ZjFmY2Y4MmQxMzJmOWJiMDE4Y2E2NzM4YTE5Zg=="
 </code></pre></div></div>
 <p>Refresh the page, then the front page will show us the flag :)</p>
 
-<p>flag: <code class="highlighter-rouge">ASIS_9f1af649f25108144fc38a01f8767c0c</code></p>
+<p>flag: <code class="language-plaintext highlighter-rouge">ASIS_9f1af649f25108144fc38a01f8767c0c</code></p>
 
         
       </section>
@@ -440,7 +440,6 @@ Don't hack cookies, we are alive :)
       <div class="grid__wrapper">
         
           
-          
 
 
 
@@ -460,7 +459,6 @@ Don't hack cookies, we are alive :)
 
         
           
-          
 
 
 
@@ -479,7 +477,6 @@ Don't hack cookies, we are alive :)
 </div>
 
         
-          
           
 
 
@@ -502,7 +499,6 @@ Don't hack cookies, we are alive :)
 
         
           
-          
 
 
 
@@ -523,6 +519,7 @@ Don't hack cookies, we are alive :)
         
       </div>
     </div>
+  
   
 </div>
 
@@ -573,7 +570,7 @@ Don't hack cookies, we are alive :)
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2020 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

