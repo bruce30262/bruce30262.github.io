@@ -1,6 +1,6 @@
 <!doctype html>
 <!--
-  Minimal Mistakes Jekyll Theme 4.16.6 by Michael Rose
+  Minimal Mistakes Jekyll Theme 4.19.1 by Michael Rose
   Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
   Free for personal and commercial use under the MIT license
   https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
@@ -10,7 +10,7 @@
     <meta charset="utf-8">
 
 <!-- begin _includes/seo.html --><title>SECCON CTF 2016 – chat - Hacking Tube 2.0</title>
-<meta name="description" content="Category: ExploitPoints: 500">
+<meta name="description" content="Category: Exploit Points: 500  ">
 
 
   <meta name="author" content="Bruce Chen">
@@ -23,7 +23,7 @@
 <meta property="og:url" content="http://0.0.0.0:4000/seccon-ctf-2016-chat/">
 
 
-  <meta property="og:description" content="Category: ExploitPoints: 500">
+  <meta property="og:description" content="Category: Exploit Points: 500  ">
 
 
 
@@ -74,7 +74,7 @@
 <!-- For all browsers -->
 <link rel="stylesheet" href="/assets/css/main.css">
 
-<!--[if IE ]>
+<!--[if IE]>
   <style>
     /* old IE unsupported flexbox fixes */
     .greedy-nav .site-title {
@@ -91,7 +91,6 @@
 
 
   
-    
     <script src="https://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-592d8051fa91b8b6"></script>
   
 
@@ -130,11 +129,11 @@
           
         </a>
         <ul class="visible-links"><li class="masthead__menu-item">
-              <a href="/archives/" >Archives</a>
+              <a href="/archives/">Archives</a>
             </li><li class="masthead__menu-item">
-              <a href="/categories/" >Categories</a>
+              <a href="/categories/">Categories</a>
             </li><li class="masthead__menu-item">
-              <a href="/tags/" >Tags</a>
+              <a href="/tags/">Tags</a>
             </li></ul>
         
         <button class="search__toggle" type="button">
@@ -170,8 +169,6 @@
 
   
     <div class="author__avatar">
-      
-
       
         <img src="/assets/images/other/gravatar.png" alt="Bruce Chen" itemprop="image">
       
@@ -282,10 +279,11 @@
   </div>
 
 
+
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
     <meta itemprop="headline" content="SECCON CTF 2016 – chat">
     <meta itemprop="description" content="Category: ExploitPoints: 500">
-    <meta itemprop="datePublished" content="December 12, 2016">
+    <meta itemprop="datePublished" content="2016-12-12T16:03:00+08:00">
     
 
     <div class="page__inner-wrap">
@@ -421,7 +419,8 @@ Done.
 <p>We can see that if we show <code class="language-plaintext highlighter-rouge">userB</code>’s DM after we remove <code class="language-plaintext highlighter-rouge">userA</code>, the sender’s name will become a strange value. This is because while removing <code class="language-plaintext highlighter-rouge">userA</code>, it will free the <code class="language-plaintext highlighter-rouge">userA-&gt;name</code> pointer, but the program is still able to access the pointer by showing <code class="language-plaintext highlighter-rouge">userB</code>’s DM <strong>( accessing <code class="language-plaintext highlighter-rouge">userB-&gt;messsage-&gt;sender-&gt;name</code> )</strong>. A typical Use-After-Free vulnerability.</p>
 
 <p>So now there’s a dangling pointer in the program. If we can arrange the heap memory chunk carefully, and make a user’s name buffer overlapped with <code class="language-plaintext highlighter-rouge">userB-&gt;messsage-&gt;sender</code>:</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<pre>
+
                        +--------------+
 userB-&gt;message-&gt;sender | char *p_name | userC-&gt;name
                        |              |
@@ -436,11 +435,12 @@ userB-&gt;message-&gt;sender | char *p_name | userC-&gt;name
                        |    .      |
                        +-----------+
 
-</code></pre></div></div>
+</pre>
 <p>We can then modify the value of pointer <code class="language-plaintext highlighter-rouge">p_name</code> by editing <code class="language-plaintext highlighter-rouge">userC-&gt;name</code>, and then leak some address by viewing <code class="language-plaintext highlighter-rouge">userB</code>’s DM ( sender’s name ). This can be done easily if you’re familiar with the glibc malloc’s fastbin allocation. By changing <code class="language-plaintext highlighter-rouge">p_name</code> into <code class="language-plaintext highlighter-rouge">__libc_start_main@got.plt</code> ( <code class="language-plaintext highlighter-rouge">0x603040</code>, which its first character is <code class="language-plaintext highlighter-rouge">0x40</code>, a printable character ), we can then leak the libc’s base address.</p>
 
 <p>Now we still need to find a way to do the “write-anywhere” attack. It’s kind of hard to find such vulnerability by just reversing the binary, so I decided to start fuzzing the binary, while examine the heap memory at the same time. Finally ( and luckily ! ), I notice that I’ve made the heap memory chunk arranged like this:</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<pre>
+
           +--------------+
 0x1234050 |              | userC-&gt;name
           +--------------+
@@ -461,7 +461,7 @@ userB-&gt;message-&gt;sender | char *p_name | userC-&gt;name
           |              |
           +--------------+
 
-</code></pre></div></div>
+</pre>
 
 <p>I found that I can corrupt the header of unsortbin chunk <code class="language-plaintext highlighter-rouge">0x1234060</code> by overflowing the <code class="language-plaintext highlighter-rouge">userC-&gt;name</code> buffer ! Later I realized that this is because program use <code class="language-plaintext highlighter-rouge">strdup</code> to allocate the buffer of <code class="language-plaintext highlighter-rouge">userC-&gt;name</code>. If we set the name length of <code class="language-plaintext highlighter-rouge">userC</code> less than 24, it will allocate a buffer with size <code class="language-plaintext highlighter-rouge">0x20</code> ( fastbin[0] ) . But when we change a user’s name, it allow us to input at most 32 characters, which will overflow the name buffer !</p>
 
@@ -893,10 +893,10 @@ userB-&gt;message-&gt;sender | char *p_name | userC-&gt;name
     
   <script>
     var disqus_config = function () {
-      this.page.url = "http://0.0.0.0:4000/seccon-ctf-2016-chat/";  // Replace PAGE_URL with your page's canonical URL variable
-      this.page.identifier = "/seccon-ctf-2016-chat"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+      this.page.url = "http://0.0.0.0:4000/seccon-ctf-2016-chat/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/seccon-ctf-2016-chat"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
     };
-    (function() { // DON'T EDIT BELOW THIS LINE
+    (function() { /* DON'T EDIT BELOW THIS LINE */
       var d = document, s = d.createElement('script');
       s.src = 'https://bruce30262logdown.disqus.com/embed.js';
       s.setAttribute('data-timestamp', +new Date());

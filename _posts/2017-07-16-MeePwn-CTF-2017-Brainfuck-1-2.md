@@ -143,7 +143,7 @@ flag: `MeePwnCTF{this_is_simple_challenge_:banana-dance:}`
 
 ## Brainfuck2
 
-For Brainfuck2, the binary is basically the same as Brainfuck1, except it has the following exectuting process:
+For Brainfuck2, the binary is basically the same as Brainfuck1, except it has the following executing process:
 
 ```c++
 BrainFuckVM *__fastcall BrainFuckVM::run(BrainFuckVM *this)

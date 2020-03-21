@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://0.0.0.0:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://0.0.0.0:4000/" rel="alternate" type="text/html" /><updated>2020-02-26T11:38:16+08:00</updated><id>http://0.0.0.0:4000/feed.xml</id><title type="html">Hacking Tube 2.0</title><subtitle>Security and stuff</subtitle><author><name>Bruce Chen</name></author><entry><title type="html">Flare-on Challenge 2019 Write-up</title><link href="http://0.0.0.0:4000/flare-on-challenge-2019-write-up/" rel="alternate" type="text/html" title="Flare-on Challenge 2019 Write-up" /><published>2019-09-28T13:30:00+08:00</published><updated>2019-09-28T13:30:00+08:00</updated><id>http://0.0.0.0:4000/flare-on-challenge-2019-write-up</id><content type="html" xml:base="http://0.0.0.0:4000/flare-on-challenge-2019-write-up/">&lt;p&gt;Another year of &lt;a href=&quot;https://www.fireeye.com/blog/threat-research/2019/07/announcing-the-sixth-annual-flare-on-challenge.html&quot;&gt;Flare-on challenge&lt;/a&gt; ! As a guy who’s interetesed in reverse engineering, this is definitely a great chance for me to practice/sharpen my reversing skills ! This year it has 12 challenges covering Windows PE, Linux ELF, Android apk, NES ROM …… and over 5,700 participants !&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://0.0.0.0:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://0.0.0.0:4000/" rel="alternate" type="text/html" /><updated>2020-03-21T17:07:10+08:00</updated><id>http://0.0.0.0:4000/feed.xml</id><title type="html">Hacking Tube 2.0</title><subtitle>Security and stuff</subtitle><author><name>Bruce Chen</name></author><entry><title type="html">Flare-on Challenge 2019 Write-up</title><link href="http://0.0.0.0:4000/flare-on-challenge-2019-write-up/" rel="alternate" type="text/html" title="Flare-on Challenge 2019 Write-up" /><published>2019-09-28T13:30:00+08:00</published><updated>2019-09-28T13:30:00+08:00</updated><id>http://0.0.0.0:4000/flare-on-challenge-2019-write-up</id><content type="html" xml:base="http://0.0.0.0:4000/flare-on-challenge-2019-write-up/">&lt;p&gt;Another year of &lt;a href=&quot;https://www.fireeye.com/blog/threat-research/2019/07/announcing-the-sixth-annual-flare-on-challenge.html&quot;&gt;Flare-on challenge&lt;/a&gt; ! As a guy who’s interetesed in reverse engineering, this is definitely a great chance for me to practice/sharpen my reversing skills ! This year it has 12 challenges covering Windows PE, Linux ELF, Android apk, NES ROM …… and over 5,700 participants !&lt;/p&gt;
 
 &lt;!-- more --&gt;
 
@@ -6,9 +6,7 @@
 
 &lt;p&gt;Final rank : &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;197/5790&lt;/code&gt;, not bad for an amateur reverse engineering lover 😄 In fact I’m just glad I was able to finish it this year, since I was kind of busy during the challenge and can only solve those during my free time. Like &lt;a href=&quot;https://bruce30262.github.io/flare-on-challenge-2018-write-up/&quot;&gt;the previous one&lt;/a&gt;, I’ll share my solution of each challenge – how I solve it, what tools did I use, …etc. Feel free to discuss the challenge in the comment sections below 🙂&lt;/p&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;You can also check the official write-up &lt;a href=&quot;https://www.fireeye.com/blog/threat-research/2019/09/2019-flare-on-challenge-solutions.html&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;p class=&quot;notice--success&quot;&gt;You can also check the official write-up &lt;a href=&quot;https://www.fireeye.com/blog/threat-research/2019/09/2019-flare-on-challenge-solutions.html&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;level-1&quot;&gt;Level 1&lt;/h2&gt;
 
@@ -338,9 +336,7 @@ isEcstatic:
 
 &lt;p&gt;We can see that it uses the value from &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Program.j(XXX)&lt;/code&gt;. Since I was too lazy to implement &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Program.j()&lt;/code&gt;, I decided to launch the debugger in dnSpy and extract those values from memory. While doing this, I found that the program had trigger the “StackOverflow Exception” while doing &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Program.Init()&lt;/code&gt;. At first I thought it has something to do with the bug in dnSpy, so I just skip through the code in  &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Program.Init()&lt;/code&gt;. There were many code in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Program.Init()&lt;/code&gt; that I can’t understand, must be some unimportant code ;) ( Boy I was so wrong… ). After that we can just replace those &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Program.j()&lt;/code&gt; with the value we extracted earlier in our python version of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Program.i()&lt;/code&gt;. So far so good.&lt;/p&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;According to the &lt;a href=&quot;https://www.fireeye.com/content/dam/fireeye-www/blog/pdfs/FlareOn6_Challenge6_Solution_BMPHIDE.pdf&quot;&gt;offcial write-up of level6&lt;/a&gt;, the StackOverflow Exception is actually an anti-debug trick. You can check the write-up for more details.&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;p class=&quot;notice--danger&quot;&gt;&lt;strong&gt;NOTE&lt;/strong&gt;: According to the &lt;a href=&quot;https://www.fireeye.com/content/dam/fireeye-www/blog/pdfs/FlareOn6_Challenge6_Solution_BMPHIDE.pdf&quot;&gt;offcial write-up of level6&lt;/a&gt;, the StackOverflow Exception is actually an anti-debug trick. You can check the write-up for more details.&lt;/p&gt;
 
 &lt;p&gt;However I soon found out that this isn’t the right approach – my python version of bmphide behaved differently from the .NET version. I’ve checked the logic in each function, and everything seems to be correct, so where’s the problem ? Oh I don’t know, &lt;strong&gt;maybe go check that &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Program.Init()&lt;/code&gt; function again -_- ?&lt;/strong&gt;&lt;/p&gt;
 
@@ -348,9 +344,7 @@ isEcstatic:
 
 &lt;p&gt;To figure out what’s actually happening I have to attach the debugger to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bmphide.exe&lt;/code&gt; so it won’t terminate while doing &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Program.Init()&lt;/code&gt;.&lt;/p&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;By providing a large &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;secret&lt;/code&gt; file in command line, we’ll be able to attach the dnSpy debugger to the process just in time.&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;p class=&quot;notice--info&quot;&gt;&lt;strong&gt;TIP:&lt;/strong&gt; By providing a large &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;secret&lt;/code&gt; file in command line, we’ll be able to attach the dnSpy debugger to the process just in time.&lt;/p&gt;
 
 &lt;p&gt;I first re-extract those values generated by &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Program.j()&lt;/code&gt;, then start analyzing the code in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Program.h()&lt;/code&gt; – and that’s the moment I realized where the problem was : &lt;strong&gt;when I tried to step into &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Program.f()&lt;/code&gt;, it actually jumped to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Program.g()&lt;/code&gt; !&lt;/strong&gt; And not only &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;f()&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;a()&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;c()&lt;/code&gt; also jumped to a different function, what the hell ?! Apparently, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Program.Init()&lt;/code&gt; is doing something evil, which make me have to modified my python version of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Program.h()&lt;/code&gt; into:&lt;/p&gt;
 
@@ -387,9 +381,7 @@ isEcstatic:
 
 &lt;p&gt;&lt;strong&gt;It’s actually doing &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;((idx+1) * 0x126B6FC5)&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;((idx+2) * 0xC82C97D)&lt;/code&gt;&lt;/strong&gt;. Again, what the f*ck ?&lt;/p&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;According to the official write-up, it’s because it uses several obfuscation techniques including JIT hook to overwrite the code during runtime 😮 That’s why the code behavior is different from the one that dnSpy shows us !&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;p class=&quot;notice--danger&quot;&gt;&lt;strong&gt;NOTE:&lt;/strong&gt; According to the official write-up, it’s because it uses several obfuscation techniques including JIT hook to overwrite the code during runtime 😮 That’s why the code behavior is different from the one that dnSpy shows us !&lt;/p&gt;
 
 &lt;p&gt;So after I modified the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;g()&lt;/code&gt; function in my python bmphide, &lt;a href=&quot;https://gist.github.com/bruce30262/ae755f4e52462f9aae90c1782c096090#file-bmphide-py&quot;&gt;the code&lt;/a&gt; finally behaves identical to the original version.&lt;/p&gt;
 
@@ -796,7 +788,7 @@ ret
 
 &lt;p&gt;&lt;strong&gt;Tool : IDA Pro + Windbg, x64dbg&lt;/strong&gt;&lt;/p&gt;
 
-&lt;blockquote&gt;
+&lt;blockquote class=&quot;notice&quot;&gt;
   &lt;p&gt;Hey, at least its not subleq.&lt;/p&gt;
 &lt;/blockquote&gt;
 
@@ -933,9 +925,7 @@ fffff800`02d2b0c3 56              push    rsi
 fffff800`02d2b0c4 57              push    rdi
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;Later did I know that you can just use Volatility’s &lt;a href=&quot;https://github.com/volatilityfoundation/volatility/wiki/Command-Reference-Mal#impscan&quot;&gt;impscan&lt;/a&gt; command to identify calls to APIs. The command even has an option to generate an IDA .idc file that help us mark the function name in IDA !&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;p class=&quot;notice--info&quot;&gt;&lt;strong&gt;TIP&lt;/strong&gt;: Later did I know that you can just use Volatility’s &lt;a href=&quot;https://github.com/volatilityfoundation/volatility/wiki/Command-Reference-Mal#impscan&quot;&gt;impscan&lt;/a&gt; command to identify calls to APIs. The command even has an option to generate an IDA .idc file that help us mark the function name in IDA !&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;In Windbg we can use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;!drvobj \Driver\in 7&lt;/code&gt; to analyze a driver object – it will list the location of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DriverEntry&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DriverUnload&lt;/code&gt; and the major dispatch function.&lt;/li&gt;
@@ -967,15 +957,11 @@ fffff800`02d2b0c4 57              push    rdi
 
 &lt;p&gt;To decrypt those DLL, I decided to learn the &lt;a href=&quot;https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/javascript-debugger-scripting&quot;&gt;JavaScript Debugger Scripting&lt;/a&gt; so I can use Javascript in Windbg to do the decryption. After reading some useful article/cheatsheet ( &lt;a href=&quot;https://doar-e.github.io/blog/2017/12/01/debugger-data-model/&quot;&gt;link1&lt;/a&gt;, &lt;a href=&quot;https://github.com/hugsy/defcon_27_windbg_workshop/blob/master/windbg_cheatsheet.md&quot;&gt;link2&lt;/a&gt; ), I came up with a &lt;a href=&quot;https://gist.github.com/bruce30262/9f5cd8274666167436ef1b4b12e7f268#file-script-js&quot;&gt;script&lt;/a&gt; that allows me to decrypt those DLL files.&lt;/p&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;Gotta say… using Javascript in Windbg is not that intuitive. Like they don’t have API call &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;writeMemoryValues&lt;/code&gt; to let us write value to memory, I have to implement a wrapper which execute the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;eb&lt;/code&gt; command to do the job. Also I don’t like the way it execute our custom command, we have to run the command like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;!cmd (&quot;&amp;lt;hex value&amp;gt;&quot;, &quot;&amp;lt;hex value&amp;gt;&quot;...)&lt;/code&gt; instead of just &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;!cmd arg1 arg2&lt;/code&gt;.&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;p class=&quot;notice--warning&quot;&gt;&lt;strong&gt;MURMUR:&lt;/strong&gt; Gotta say… using Javascript in Windbg is not that intuitive. Like they don’t have API call &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;writeMemoryValues&lt;/code&gt; to let us write value to memory, I have to implement a wrapper which execute the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;eb&lt;/code&gt; command to do the job. Also I don’t like the way it execute our custom command, we have to run the command like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;!cmd (&quot;&amp;lt;hex value&amp;gt;&quot;, &quot;&amp;lt;hex value&amp;gt;&quot;...)&lt;/code&gt; instead of just &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;!cmd arg1 arg2&lt;/code&gt;.&lt;/p&gt;
 
 &lt;p&gt;Notice that since it uses APC injection to start the code, we’ll have to switch to the injected process context before we decrpyt those DLLs. So, execute the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.process &amp;lt;address of process object&amp;gt;&lt;/code&gt; command first then run the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;!dr4&lt;/code&gt; command, we’ll then have our decrypted routine code in the process memory. Dump the code with the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.writemem&lt;/code&gt; command, then we can start analyzing those DLL files.&lt;/p&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;One of the DLL (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;k.dll&lt;/code&gt;) does not need to be decrypted though, it’s actually un-encrypted in the process memory.&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;p class=&quot;notice--info&quot;&gt;&lt;strong&gt;NOTE:&lt;/strong&gt; One of the DLL (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;k.dll&lt;/code&gt;) does not need to be decrypted though, it’s actually un-encrypted in the process memory.&lt;/p&gt;
 
 &lt;p&gt;After some reverse engineering we can classify those DLL with the following table:&lt;/p&gt;
 
@@ -1056,17 +1042,13 @@ REG_DWORD                     : (S) 0
 
 &lt;p&gt;Simple huh ? Except it’s not …… for some unknown reason, those encrypted packets were &lt;strong&gt;encrypted again with another unknown encryption method&lt;/strong&gt; 😕 &lt;del&gt;This is the moment when the challenge starting to get guessy –&lt;/del&gt; no matter how I tried, I just couldn’t find where the hell they got encrypted. In the end I have to guess how it got encrypted by analyzing those packet data.&lt;/p&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;EDIT: WOW, so after I read the &lt;a href=&quot;https://www.fireeye.com/content/dam/fireeye-www/blog/pdfs/FlareOn6_Challenge12_Solution_help.pdf&quot;&gt;official write-up&lt;/a&gt;, you actually have to use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;!poolfind FLAR&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;!object \Driver&lt;/code&gt; to locate another driver which uses WFP ( Windows Filtering Platform ) APIs to  modify network traffic on the infected system ! 😲&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;p class=&quot;notice--danger&quot;&gt;&lt;strong&gt;EDIT:&lt;/strong&gt; WOW, so after I read the &lt;a href=&quot;https://www.fireeye.com/content/dam/fireeye-www/blog/pdfs/FlareOn6_Challenge12_Solution_help.pdf&quot;&gt;official write-up&lt;/a&gt;, you actually have to use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;!poolfind FLAR&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;!object \Driver&lt;/code&gt; to locate another driver which uses WFP ( Windows Filtering Platform ) APIs to  modify network traffic on the infected system ! 😲&lt;/p&gt;
 
 &lt;p&gt;Some of them are pretty simple. For those in port 4444, you can easily infer that it’s just a simple XOR operation, with a 64 bit value key. XOR those data with the key then you’ll get the raw data of the attacker’s request. For those in port 6666 and 8888, you’ll notice that it somehow send the data twice in row: one with the data encrypted, another one without being encrypted. Just extract the latter and decrypt + decompress it, you’ll get the raw data ( filename, file content, key logger data…etc. )&lt;/p&gt;
 
 &lt;p&gt;The packets in port 7777 are the most confusing. After hours of failing I decided to ask some help from the flare-on master &lt;a href=&quot;https://twitter.com/alex_k_polyakov&quot;&gt;@alex_k_polyakov&lt;/a&gt;, who told me to focus on XOR and RC4 ( which is good to know because I was starting to think it might be some AES-192 shit or something like that……. ). After analyzing those packets, I noticed that at some point it started to repeat the same 8 bytes data over and over again. With common sense, I treated the 8 bytes data as the key and XORed it with those packets. &lt;strong&gt;Then it just gave me the raw BMP image file…without needing to decrypt &amp;amp; decompress it…&lt;/strong&gt;&lt;/p&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;Still don’t know how I got that. But as long as it works…meh &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;¯\_(ツ)_/¯&lt;/code&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;p class=&quot;notice&quot;&gt;Still don’t know how I got that. But as long as it works…meh &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;¯\_(ツ)_/¯&lt;/code&gt;&lt;/p&gt;
 
 &lt;p&gt;Now we can start analyze those data and try figure out what the attacker was trying to do. By looking at the data in port 4444, we can figure out that the attacker would constantly took screenshots of victim’s desktop, then after few moment, retrieved the key logger data. It kept doing this until it got the following screenshots:&lt;/p&gt;
 
@@ -1138,9 +1120,7 @@ REG_DWORD                     : (S) 0
 
 &lt;p&gt;According to the &lt;a href=&quot;https://www.fireeye.com/blog/threat-research/2018/10/2018-flare-on-challenge-solutions.html&quot;&gt;official blog&lt;/a&gt;, 2.3% ( 114 / 4893 ) of players have completed the challenge this year.&lt;/p&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;EDIT: According to the final result on &lt;a href=&quot;http://flare-on.com/&quot;&gt;flare-on.com&lt;/a&gt;,  129 out of 4925 players have finished the challenge this year&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;p class=&quot;notice--info&quot;&gt;&lt;strong&gt;EDIT:&lt;/strong&gt; According to the final result on &lt;a href=&quot;http://flare-on.com/2018.html&quot;&gt;flare-on.com&lt;/a&gt;,  129 out of 4925 players have finished the challenge this year.&lt;/p&gt;
 
 &lt;p&gt;Last year I got stuck at level 12 and failed to finish the challenge, so I’m very glad that I was able to complete it this year 😄. Here in this post I’ll share my solution of each challenge – how I solve it, what tools did I use, …etc.&lt;/p&gt;
 
@@ -1148,7 +1128,7 @@ REG_DWORD                     : (S) 0
 
 &lt;h2 id=&quot;level-1&quot;&gt;Level 1&lt;/h2&gt;
 
-&lt;blockquote&gt;
+&lt;blockquote class=&quot;notice&quot;&gt;
   &lt;p&gt;Welcome to the Fifth Annual Flare-On Challenge! The Minesweeper World Championship is coming soon and we found the registration app. You weren’t officially invited but if you can figure out what the code is you can probably get in anyway. Good luck!&lt;/p&gt;
 &lt;/blockquote&gt;
 
@@ -1163,7 +1143,7 @@ REG_DWORD                     : (S) 0
 &lt;p&gt;flag: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;GoldenTicket2018@flare-on.com&lt;/code&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;level-2&quot;&gt;Level 2&lt;/h2&gt;
-&lt;blockquote&gt;
+&lt;blockquote class=&quot;notice&quot;&gt;
   &lt;p&gt;You hacked your way into the Minesweeper Championship, good job. Now its time to compete. Here is the Ultimate Minesweeper binary. Beat it, win the championship, and we’ll move you on to greater challenges.&lt;/p&gt;
 &lt;/blockquote&gt;
 
@@ -1266,7 +1246,7 @@ REG_DWORD                     : (S) 0
 &lt;p&gt;flag: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Ch3aters_Alw4ys_W1n@flare-on.com&lt;/code&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;level-3&quot;&gt;Level 3&lt;/h2&gt;
-&lt;blockquote&gt;
+&lt;blockquote class=&quot;notice&quot;&gt;
   &lt;p&gt;When you are finished with your media interviews and talk show appearances after that crushing victory at the Minesweeper Championship, I have another task for you. Nothing too serious, as you’ll see, this one is child’s play&lt;/p&gt;
 &lt;/blockquote&gt;
 
@@ -1419,9 +1399,7 @@ Go step on a brick!
             &lt;span class=&quot;n&quot;&gt;run_binary&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;For some unknown reason I couldn’t install LIEF on Windows 10, so I had to seperate the script into two different scripts : one for extracting the passwords ( run under a Linux VM ), another for running the binaries ( run under Win10 )&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;p class=&quot;notice--warning&quot;&gt;For some unknown reason I couldn’t install LIEF on Windows 10, so I had to seperate the script into two different scripts : one for extracting the passwords ( run under a Linux VM ), another for running the binaries ( run under Win10 )&lt;/p&gt;
 
 &lt;p&gt;After that those binaries will generate 48 png files, and output something like:&lt;/p&gt;
 
@@ -1439,7 +1417,7 @@ Go step on a brick!
 &lt;p&gt;flag: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mor3_awes0m3_th4n_an_awes0me_p0ssum@flare-on.com&lt;/code&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;level-4&quot;&gt;Level 4&lt;/h2&gt;
-&lt;blockquote&gt;
+&lt;blockquote class=&quot;notice&quot;&gt;
   &lt;p&gt;It is time to get serious. Reverse Engineering isn’t about toys and games. Sometimes its about malicious software. I recommend you run this next challenge in a VM or someone else’s computer you have gained access to, especially if they are a Firefox user.&lt;/p&gt;
 &lt;/blockquote&gt;
 
@@ -1638,7 +1616,7 @@ Go step on a brick!
 &lt;p&gt;Bingo ! The flag is : &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;c0Mm4nD_inJ3c7ioN@flare-on.com&lt;/code&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;level-5&quot;&gt;Level 5&lt;/h2&gt;
-&lt;blockquote&gt;
+&lt;blockquote class=&quot;notice&quot;&gt;
   &lt;p&gt;The future of the internet is here, again. This next challenge will showcase some the exciting new technologies paving the information super-highway for the next generation.&lt;/p&gt;
 &lt;/blockquote&gt;
 
@@ -1795,7 +1773,7 @@ Go step on a brick!
 &lt;p&gt;flag: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;wasm_rulez_js_droolz@flare-on.com&lt;/code&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;level-6&quot;&gt;Level 6&lt;/h2&gt;
-&lt;blockquote&gt;
+&lt;blockquote class=&quot;notice&quot;&gt;
   &lt;p&gt;Wow you are a really good reverse engineer! Keep it up! You can do it!&lt;/p&gt;
 
   &lt;p&gt;How to tell if your child is a computer hacker:&lt;/p&gt;
@@ -1963,10 +1941,8 @@ No soup for you!
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;🤔…this looks very similar to fibonacci ….
+&lt;p class=&quot;notice&quot;&gt;🤔…this looks very similar to fibonacci ….
 wait a second … It &lt;strong&gt;IS&lt;/strong&gt; fibonacci !! OMG I’m such an idiot 😫&lt;/p&gt;
-&lt;/blockquote&gt;
 
 &lt;p&gt;☝ Yeah…that’s me after N hours of frustrations…&lt;/p&gt;
 
@@ -1993,7 +1969,7 @@ wait a second … It &lt;strong&gt;IS&lt;/strong&gt; fibonacci !! OMG I’m such
 &lt;p&gt;flag: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mag!iC_mUshr00ms_maY_h4ve_g!ven_uS_Santa_ClaUs@flare-on.com&lt;/code&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;level-7&quot;&gt;Level 7&lt;/h2&gt;
-&lt;blockquote&gt;
+&lt;blockquote class=&quot;notice&quot;&gt;
   &lt;p&gt;Wow, just…. Wow.&lt;/p&gt;
 &lt;/blockquote&gt;
 
@@ -2032,9 +2008,7 @@ wait a second … It &lt;strong&gt;IS&lt;/strong&gt; fibonacci !! OMG I’m such
 
 &lt;p&gt;Here it will load the 64 bit dll ( 7.dll ) and wait for our input. We then can attach the debugger to this process and press any key to continue the debug process.&lt;/p&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;EDIT: &lt;a href=&quot;https://twitter.com/hasherezade/status/1049800972913045504&quot;&gt;dll_to_exe finally support 64 bit dll&lt;/a&gt; ! However it won’t work on this one, you’ll have to use &lt;a href=&quot;https://github.com/hasherezade/releases/releases/tag/0.3.8&quot;&gt;PE-bear&lt;/a&gt; to convert the dll to exe ( check out this &lt;a href=&quot;https://hshrzd.wordpress.com/2016/07/21/how-to-turn-a-dll-into-a-standalone-exe/&quot;&gt;hasherezade’s blog post&lt;/a&gt; for more details )&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;p class=&quot;notice--success&quot;&gt;&lt;strong&gt;EDIT:&lt;/strong&gt;  &lt;a href=&quot;https://twitter.com/hasherezade/status/1049800972913045504&quot;&gt;dll_to_exe finally support 64 bit dll&lt;/a&gt; ! However it won’t work on this one, you’ll have to use &lt;a href=&quot;https://github.com/hasherezade/releases/releases/tag/0.3.8&quot;&gt;PE-bear&lt;/a&gt; to convert the dll to exe ( check out this &lt;a href=&quot;https://hshrzd.wordpress.com/2016/07/21/how-to-turn-a-dll-into-a-standalone-exe/&quot;&gt;hasherezade’s blog post&lt;/a&gt; for more details )&lt;/p&gt;
 
 &lt;p&gt;By reverse &amp;amp; debug the dll file with IDA Pro, we could sort out some stuff in this dll file :&lt;/p&gt;
 
@@ -2141,7 +2115,7 @@ wait a second … It &lt;strong&gt;IS&lt;/strong&gt; fibonacci !! OMG I’m such
 &lt;p&gt;flag: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;P0rt_Kn0ck1ng_0n_he4v3ns_d00r@flare-on.com&lt;/code&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;level-8&quot;&gt;Level 8&lt;/h2&gt;
-&lt;blockquote&gt;
+&lt;blockquote class=&quot;notice&quot;&gt;
   &lt;p&gt;You are absolutely crushing this. Saved off the first few sectors from a hard drive that some computer genius had back in the 90s. People say the kid used to write his own computer software but that sounds crazy. This little prankster left us a secret message I think.&lt;/p&gt;
 &lt;/blockquote&gt;
 
@@ -2197,15 +2171,13 @@ wait a second … It &lt;strong&gt;IS&lt;/strong&gt; fibonacci !! OMG I’m such
 &lt;p&gt;flag: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;R3_PhD@flare-on.com&lt;/code&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;level-9&quot;&gt;Level 9&lt;/h2&gt;
-&lt;blockquote&gt;
+&lt;blockquote class=&quot;notice&quot;&gt;
   &lt;p&gt;Its getting to the very late stage challenges now, so its probably a good point to just turn back, stop this insanity. What’s that? You wanted more ASCII art? Ask and ye shall receive.&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;p&gt;&lt;strong&gt;Tools : IDA Pro + Windbg, Chrome browser&lt;/strong&gt;&lt;/p&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;Special thanks to &lt;a href=&quot;https://twitter.com/_L4ys&quot;&gt;Lays&lt;/a&gt; for helping me on this one&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;p class=&quot;notice--success&quot;&gt;Special thanks to &lt;a href=&quot;https://twitter.com/_L4ys&quot;&gt;Lays&lt;/a&gt; for helping me on this one&lt;/p&gt;
 
 &lt;p&gt;We were given a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;leet_editr.exe&lt;/code&gt;, which is a PE32 executable (GUI) Intel 80386, for MS Windows. After reverse it with IDA Pro we know that:&lt;/p&gt;
 
@@ -2483,7 +2455,7 @@ struct enc_data
 &lt;p&gt;flag: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;scr1pt1ng_sl4ck1ng_and_h4ck1ng@flare-on.com&lt;/code&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;level-10&quot;&gt;Level 10&lt;/h2&gt;
-&lt;blockquote&gt;
+&lt;blockquote class=&quot;notice&quot;&gt;
   &lt;p&gt;How about a nice game of golf? Did you bring a visor? Just kidding, you’re not going outside any time soon. You’re going to be sitting at your computer all day trying to solve this.&lt;/p&gt;
 &lt;/blockquote&gt;
 
@@ -2491,9 +2463,7 @@ struct enc_data
 
 &lt;p&gt;&lt;strong&gt;Tools : IDA Pro + Windbg, TWindbg, Z3&lt;/strong&gt;&lt;/p&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;Special thanks to &lt;a href=&quot;https://twitter.com/_wmliang_&quot;&gt;Lucas&lt;/a&gt; for helping me on this one&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;p class=&quot;notice--success&quot;&gt;Special thanks to &lt;a href=&quot;https://twitter.com/_wmliang_&quot;&gt;Lucas&lt;/a&gt; for helping me on this one&lt;/p&gt;
 
 &lt;p&gt;We were given a 64 bit PE file. After some reversing, we know that:&lt;/p&gt;
 
@@ -2612,7 +2582,7 @@ struct enc_data
 &lt;p&gt;flag: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;We4r_ur_v1s0r_w1th_Fl4R3@flare-on.com&lt;/code&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;level-11&quot;&gt;Level 11&lt;/h2&gt;
-&lt;blockquote&gt;
+&lt;blockquote class=&quot;notice&quot;&gt;
   &lt;p&gt;We captured some malware traffic, and the malware we think was responsible. You know the drill, if you reverse engineer and decode everything appropriately you will reveal a hidden message. This challenge thinks its the 9th but it turned out too hard, so we made it the 11th.&lt;/p&gt;
 &lt;/blockquote&gt;
 
@@ -2720,15 +2690,13 @@ struct enc_data
 &lt;p&gt;flag: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;recover_these_messages_lost_in_the_colorful_bits@flare-on.com&lt;/code&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;level-12&quot;&gt;Level 12&lt;/h2&gt;
-&lt;blockquote&gt;
+&lt;blockquote class=&quot;notice&quot;&gt;
   &lt;p&gt;Now for the final test of your focus and dedication. We found a floppy disk that was given to spies to transmit secret messages. The spies were also given the password, we don’t have that information, but see if you can figure out the message anyway. You are saving lives.&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;p&gt;&lt;strong&gt;Tools : qemu, DOSBox, IDA Pro, Bochs emulator&lt;/strong&gt;&lt;/p&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;Again thanks to Lays for helping me on this one&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;p class=&quot;notice--success&quot;&gt;Again thanks to Lays for helping me on this one&lt;/p&gt;
 
 &lt;p&gt;Well here we are, final challenge, our worst nightmare.&lt;/p&gt;
 
@@ -2749,9 +2717,7 @@ struct enc_data
 
 &lt;p&gt;So apparently there’s something inside the image file that does the password checking, and it’s definitely not &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;infohelp.exe&lt;/code&gt;.&lt;/p&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;According to Lays, the program hook int 0x21 and jump to the code that does the password checking during the file operation of “message.dat”.&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;p class=&quot;notice--info&quot;&gt;According to Lays, the program hook int 0x21 and jump to the code that does the password checking during the file operation of “message.dat”.&lt;/p&gt;
 
 &lt;p&gt;To locate the actual code, I decided to switch my analyzing tool to IDA and &lt;a href=&quot;https://sourceforge.net/projects/bochs/&quot;&gt;Bochs emulator&lt;/a&gt;. By suspending the execution during the password checking stage, we can locate the code and re-implement it with the following pseudo code:&lt;/p&gt;
 
@@ -2996,9 +2962,7 @@ else:
 
 &lt;p&gt;&lt;img src=&quot;/assets/images/Flare-on-2018/deeper.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;EDIT: Ah…so after I read the &lt;a href=&quot;https://www.fireeye.com/content/dam/fireeye-www/blog/pdfs/FlareOn5_Challenge12_Solution.pdf&quot;&gt;official write-up&lt;/a&gt;, it’s actually not subleq2 but a &lt;a href=&quot;https://en.wikipedia.org/wiki/One_instruction_set_computer#Reverse_subtract_and_skip_if_borrow&quot;&gt;RSSB&lt;/a&gt; (Reverse subtract and skip if borrow) VM. It looks kind of like subleq2, and I got confused 😛&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;p class=&quot;notice--danger&quot;&gt;&lt;strong&gt;EDIT:&lt;/strong&gt; Ah…so after I read the &lt;a href=&quot;https://www.fireeye.com/content/dam/fireeye-www/blog/pdfs/FlareOn5_Challenge12_Solution.pdf&quot;&gt;official write-up&lt;/a&gt;, it’s actually not subleq2 but a &lt;a href=&quot;https://en.wikipedia.org/wiki/One_instruction_set_computer#Reverse_subtract_and_skip_if_borrow&quot;&gt;RSSB&lt;/a&gt; (Reverse subtract and skip if borrow) VM. It looks kind of like subleq2, and I got confused 😛&lt;/p&gt;
 
 &lt;p&gt;So once again, I had to write another disassebler for &lt;del&gt;subleq2&lt;/del&gt; RSSB. Based on the first one and with some modification, I created another &lt;a href=&quot;https://gist.github.com/bruce30262/1f4ec443c82eb3587440877aa811c767&quot;&gt;tiny disassembler&lt;/a&gt;. It can only identify instructions like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;MOV&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ADD&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SUB&lt;/code&gt;……, but again, we could simplify the code base on some special patterns. After identifying some function calls, I was able to recover the whole program logic, and this time the result is much more reasonable :&lt;/p&gt;
 
@@ -3297,16 +3261,16 @@ patch -p1 &amp;lt; ../change.diff # apply the patch
 
 &lt;p&gt;Later we’ll find the binaries in the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;out/Debug&lt;/code&gt; directory. If you want a Release build with debug symbols, you’ll have to modified the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CMakeLists.txt&lt;/code&gt;:&lt;/p&gt;
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# At line 355
+&lt;div class=&quot;language-diff highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;err&quot;&gt;#&lt;/span&gt; At line 355
 
 if(NOT CMAKE_BUILD_TYPE STREQUAL Debug)
--    add_compile_options(-O3)
-+    add_compile_options(-O0)
+&lt;span class=&quot;gd&quot;&gt;-    add_compile_options(-O3)
+&lt;/span&gt;&lt;span class=&quot;gi&quot;&gt;+    add_compile_options(-O0)
 +    add_compile_options(-finstrument-functions)
 +    add_compile_options(-g)
 +    add_compile_options(-ggdb)
-else()
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;else()
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;I modified the optimization flag to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;O0&lt;/code&gt; because the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;O3&lt;/code&gt; flag will optimized out the function parameter and causes some inconvenience during the debug process.&lt;/p&gt;
 
@@ -3319,21 +3283,21 @@ else()
 
 &lt;h2 id=&quot;analyzing-the-vulnerability--the-patch-&quot;&gt;Analyzing the Vulnerability ( the patch )&lt;/h2&gt;
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;diff --git a/lib/Runtime/Library/JavascriptArray.cpp b/lib/Runtime/Library/JavascriptArray.cpp
+&lt;div class=&quot;language-diff highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gh&quot;&gt;diff --git a/lib/Runtime/Library/JavascriptArray.cpp b/lib/Runtime/Library/JavascriptArray.cpp
 index a666b0b..0e8a073 100644
---- a/lib/Runtime/Library/JavascriptArray.cpp
-+++ b/lib/Runtime/Library/JavascriptArray.cpp
-@@ -3151,12 +3151,6 @@ namespace Js
+&lt;/span&gt;&lt;span class=&quot;gd&quot;&gt;--- a/lib/Runtime/Library/JavascriptArray.cpp
+&lt;/span&gt;&lt;span class=&quot;gi&quot;&gt;+++ b/lib/Runtime/Library/JavascriptArray.cpp
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;@@ -3151,12 +3151,6 @@&lt;/span&gt; namespace Js
              if (scriptContext-&amp;gt;GetConfig()-&amp;gt;IsES6IsConcatSpreadableEnabled())
              {
                  spreadableCheckedAndTrue = JavascriptOperators::IsConcatSpreadable(aItem) != FALSE;
--                if (!JavascriptNativeIntArray::Is(pDestArray))
+&lt;span class=&quot;gd&quot;&gt;-                if (!JavascriptNativeIntArray::Is(pDestArray))
 -                {
 -                    ConcatArgs&amp;lt;uint&amp;gt;(pDestArray, remoteTypeIds, args, scriptContext, idxArg, idxDest, spreadableCheckedAndTrue);
 -                    return pDestArray;
 -                }
 -
-                 if(!spreadableCheckedAndTrue)
+&lt;/span&gt;                 if(!spreadableCheckedAndTrue)
                  {
                      pDestArray-&amp;gt;SetItem(idxDest, aItem, PropertyOperation_ThrowIfNotExtensible);
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -3640,12 +3604,11 @@ index a666b0b..0e8a073 100644
 
 &lt;p&gt;Before we start, it is recommanded that the reader read this amazing &lt;a href=&quot;http://www.phrack.org/papers/attacking_javascript_engines.html&quot;&gt;phrack paper&lt;/a&gt; ( also authored by saelo ) and have some basic knowledge of the Javascript engine exploitation technique, especially the “Exploiting with valueOf” part, cause we’ll be using that later.&lt;/p&gt;
 
-&lt;p&gt;TL;DR:&lt;/p&gt;
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;.... The rules governing the conversion from object types to numbers 
+&lt;p class=&quot;notice&quot;&gt;&lt;strong&gt;TL;DR:&lt;/strong&gt;&lt;br /&gt;
+The rules governing the &lt;strong&gt;conversion from object types to numbers&lt;/strong&gt; 
 (and primitive types in general) are especially interesting. 
-In particular, if the object has a callable property named &quot;valueOf&quot;, 
-this method will be called and the return value used if it is a primitive value.
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;strong&gt;In particular, if the object has a callable property named “valueOf”, 
+this method will be called and the return value used if it is a primitive value.&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;For instance, variable &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hax&lt;/code&gt; has the following &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;valueOf&lt;/code&gt; property:&lt;/p&gt;
 &lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;hax&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;valueOf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;hello&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
@@ -3695,24 +3658,24 @@ cd ..
 
 &lt;p&gt;Let’s start with the &lt;a href=&quot;https://github.com/saelo/feuerfuchs/blob/master/feuerfuchs.patch&quot;&gt;patch&lt;/a&gt; first:&lt;/p&gt;
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;........................
+&lt;div class=&quot;language-diff highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;err&quot;&gt;........................&lt;/span&gt;
 ... ( other patch ).....
-........................
+&lt;span class=&quot;err&quot;&gt;........................&lt;/span&gt;
 
  /* static */ const JSPropertySpec
  TypedArrayObject::protoAccessors[] = {
--    JS_PSG(&quot;length&quot;, TypedArray_lengthGetter, 0),
-     JS_PSG(&quot;buffer&quot;, TypedArray_bufferGetter, 0),
-+    JS_PSGS(&quot;length&quot;, TypedArray_lengthGetter, TypedArray_lengthSetter, 0),
-     JS_PSG(&quot;byteLength&quot;, TypedArray_byteLengthGetter, 0),
-+    JS_PSGS(&quot;offset&quot;, TypedArray_offsetGetter, TypedArray_offsetSetter, 0),
-     JS_PSG(&quot;byteOffset&quot;, TypedArray_byteOffsetGetter, 0),
+&lt;span class=&quot;gd&quot;&gt;-    JS_PSG(&quot;length&quot;, TypedArray_lengthGetter, 0),
+&lt;/span&gt;     JS_PSG(&quot;buffer&quot;, TypedArray_bufferGetter, 0),
+&lt;span class=&quot;gi&quot;&gt;+    JS_PSGS(&quot;length&quot;, TypedArray_lengthGetter, TypedArray_lengthSetter, 0),
+&lt;/span&gt;     JS_PSG(&quot;byteLength&quot;, TypedArray_byteLengthGetter, 0),
+&lt;span class=&quot;gi&quot;&gt;+    JS_PSGS(&quot;offset&quot;, TypedArray_offsetGetter, TypedArray_offsetSetter, 0),
+&lt;/span&gt;     JS_PSG(&quot;byteOffset&quot;, TypedArray_byteOffsetGetter, 0),
      JS_PS_END
  };
  
-........................
+&lt;span class=&quot;err&quot;&gt;........................&lt;/span&gt;
 ... ( other patch ).....
-........................
+&lt;span class=&quot;err&quot;&gt;........................&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;We can see that the patch add &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;setter&lt;/code&gt; to both &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;offset&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;length&lt;/code&gt; property in the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;TypedArray&lt;/code&gt; class, which allow us to set the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;offset&lt;/code&gt; ( starting point of the data buffer ) and the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;length&lt;/code&gt; of a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;TypedArray&lt;/code&gt;. However the patch has also handled the boundary check for &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;offset&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;length&lt;/code&gt; as well, so we can’t do something like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;tarray.offset=10000&lt;/code&gt; and use out-of-boundary (OOB) read/write to exploit the service. We’ll have to find another way to exploit the vulnerability.&lt;/p&gt;
@@ -4268,7 +4231,7 @@ call rax
 
 &lt;h2 id=&quot;brainfuck2&quot;&gt;Brainfuck2&lt;/h2&gt;
 
-&lt;p&gt;For Brainfuck2, the binary is basically the same as Brainfuck1, except it has the following exectuting process:&lt;/p&gt;
+&lt;p&gt;For Brainfuck2, the binary is basically the same as Brainfuck1, except it has the following executing process:&lt;/p&gt;
 
 &lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;BrainFuckVM&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;__fastcall&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BrainFuckVM&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BrainFuckVM&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;

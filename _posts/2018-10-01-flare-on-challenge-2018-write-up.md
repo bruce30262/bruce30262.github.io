@@ -34,7 +34,8 @@ Flare-on challenge is a Reverse-style CTF challenge created by the [FireEye FLAR
 
 According to the [official blog](https://www.fireeye.com/blog/threat-research/2018/10/2018-flare-on-challenge-solutions.html), 2.3% ( 114 / 4893 ) of players have completed the challenge this year.
 
-> EDIT: According to the final result on [flare-on.com](http://flare-on.com/),  129 out of 4925 players have finished the challenge this year
+**EDIT:** According to the final result on [flare-on.com](http://flare-on.com/2018.html),  129 out of 4925 players have finished the challenge this year.  
+{: .notice--info}
 
 Last year I got stuck at level 12 and failed to finish the challenge, so I'm very glad that I was able to complete it this year 😄. Here in this post I'll share my solution of each challenge -- how I solve it, what tools did I use, ...etc.
 
@@ -42,7 +43,8 @@ Enough for the talk, let's get started !
 
 ## Level 1
 
->Welcome to the Fifth Annual Flare-On Challenge! The Minesweeper World Championship is coming soon and we found the registration app. You weren't officially invited but if you can figure out what the code is you can probably get in anyway. Good luck!
+> Welcome to the Fifth Annual Flare-On Challenge! The Minesweeper World Championship is coming soon and we found the registration app. You weren't officially invited but if you can figure out what the code is you can probably get in anyway. Good luck!  
+{: .notice}
 
 **Tool : jd-gui**
 
@@ -57,6 +59,7 @@ flag: `GoldenTicket2018@flare-on.com`
 
 ## Level 2
 > You hacked your way into the Minesweeper Championship, good job. Now its time to compete. Here is the Ultimate Minesweeper binary. Beat it, win the championship, and we'll move you on to greater challenges.
+{: .notice}
 
 **Tool : dnSpy**
 
@@ -162,6 +165,7 @@ flag: `Ch3aters_Alw4ys_W1n@flare-on.com`
 
 ## Level 3
 > When you are finished with your media interviews and talk show appearances after that crushing victory at the Minesweeper Championship, I have another task for you. Nothing too serious, as you'll see, this one is child's play
+{: .notice}
 
 **Tools : IDA Pro, CFF Explorer, x64dbg, LIEF**
 
@@ -317,8 +321,8 @@ for _, _, files in os.walk("."):
             run_binary(f)
 ```
 
-> For some unknown reason I couldn't install LIEF on Windows 10, so I had to seperate the script into two different scripts : one for extracting the passwords ( run under a Linux VM ), another for running the binaries ( run under Win10 )
-
+For some unknown reason I couldn't install LIEF on Windows 10, so I had to seperate the script into two different scripts : one for extracting the passwords ( run under a Linux VM ), another for running the binaries ( run under Win10 )
+{: .notice--warning}
 
 After that those binaries will generate 48 png files, and output something like:
 
@@ -338,6 +342,7 @@ flag: `mor3_awes0m3_th4n_an_awes0me_p0ssum@flare-on.com`
 
 ## Level 4
 > It is time to get serious. Reverse Engineering isn't about toys and games. Sometimes its about malicious software. I recommend you run this next challenge in a VM or someone else's computer you have gained access to, especially if they are a Firefox user.
+{: .notice}
 
 **Tools : dnSpy, Process Monitor, IDA Pro + Windbg,  dll_to_exe, FireFox & Chrome browser**
 
@@ -535,6 +540,7 @@ Bingo ! The flag is : `c0Mm4nD_inJ3c7ioN@flare-on.com`
 
 ## Level 5
 > The future of the internet is here, again. This next challenge will showcase some the exciting new technologies paving the information super-highway for the next generation.
+{: .notice}
 
 **Tools : wabt, FireFox & Chrome browser**
 
@@ -698,6 +704,7 @@ flag: `wasm_rulez_js_droolz@flare-on.com`
 > 1. They are using Lunix, an illegal hacker operating system
 > 2. Are they struggling to maintain contact with the outside world, due to spending their time reading gibberish on the computer screen
 > 
+{: .notice}
 
 **Tools : IDA Pro, capstone & unicorn, pwntools, gdb**
 
@@ -858,8 +865,9 @@ int func0 (char *key, unsigned int int_arr_len, __int64 *int_arr)
 }
 ```
 
-> 🤔...this looks very similar to fibonacci ....
+🤔...this looks very similar to fibonacci ....
 wait a second ... It **IS** fibonacci !! OMG I'm such an idiot 😫
+{: .notice}
 
 ☝ Yeah...that's me after N hours of frustrations...
 
@@ -883,6 +891,7 @@ flag: `mag!iC_mUshr00ms_maY_h4ve_g!ven_uS_Santa_ClaUs@flare-on.com`
 
 ## Level 7
 >Wow, just.... Wow.
+{: .notice}
 
 **Tools : IDA Pro + Windbg**
 
@@ -918,7 +927,8 @@ int main()
 
 Here it will load the 64 bit dll ( 7.dll ) and wait for our input. We then can attach the debugger to this process and press any key to continue the debug process.
 
->EDIT: [dll_to_exe finally support 64 bit dll](https://twitter.com/hasherezade/status/1049800972913045504) ! However it won't work on this one, you'll have to use [PE-bear](https://github.com/hasherezade/releases/releases/tag/0.3.8) to convert the dll to exe ( check out this [hasherezade's blog post](https://hshrzd.wordpress.com/2016/07/21/how-to-turn-a-dll-into-a-standalone-exe/) for more details )
+**EDIT:**  [dll_to_exe finally support 64 bit dll](https://twitter.com/hasherezade/status/1049800972913045504) ! However it won't work on this one, you'll have to use [PE-bear](https://github.com/hasherezade/releases/releases/tag/0.3.8) to convert the dll to exe ( check out this [hasherezade's blog post](https://hshrzd.wordpress.com/2016/07/21/how-to-turn-a-dll-into-a-standalone-exe/) for more details )
+{: .notice--success}  
 
 By reverse & debug the dll file with IDA Pro, we could sort out some stuff in this dll file :
 
@@ -1027,6 +1037,7 @@ flag: `P0rt_Kn0ck1ng_0n_he4v3ns_d00r@flare-on.com`
 
 ## Level 8
 > You are absolutely crushing this. Saved off the first few sectors from a hard drive that some computer genius had back in the 90s. People say the kid used to write his own computer software but that sounds crazy. This little prankster left us a secret message I think.
+{: .notice}
 
 **Tools : qemu, IDA Pro, gdb**
 
@@ -1083,10 +1094,12 @@ flag: `R3_PhD@flare-on.com`
 
 ## Level 9
 > Its getting to the very late stage challenges now, so its probably a good point to just turn back, stop this insanity. What's that? You wanted more ASCII art? Ask and ye shall receive.
+{: .notice}
 
 **Tools : IDA Pro + Windbg, Chrome browser**
 
-> Special thanks to [Lays](https://twitter.com/_L4ys) for helping me on this one
+Special thanks to [Lays](https://twitter.com/_L4ys) for helping me on this one
+{: .notice--success}
 
 We were given a `leet_editr.exe`, which is a PE32 executable (GUI) Intel 80386, for MS Windows. After reverse it with IDA Pro we know that:
 
@@ -1371,12 +1384,14 @@ flag: `scr1pt1ng_sl4ck1ng_and_h4ck1ng@flare-on.com`
 
 ## Level 10
 > How about a nice game of golf? Did you bring a visor? Just kidding, you're not going outside any time soon. You're going to be sitting at your computer all day trying to solve this.
+{: .notice}
 
 hahaha, very funny ☝🙄...
 
 **Tools : IDA Pro + Windbg, TWindbg, Z3**
 
-> Special thanks to [Lucas](https://twitter.com/_wmliang_) for helping me on this one
+Special thanks to [Lucas](https://twitter.com/_wmliang_) for helping me on this one
+{: .notice--success}
 
 We were given a 64 bit PE file. After some reversing, we know that:
 
@@ -1498,6 +1513,7 @@ flag: `We4r_ur_v1s0r_w1th_Fl4R3@flare-on.com`
 
 ## Level 11
 >We captured some malware traffic, and the malware we think was responsible. You know the drill, if you reverse engineer and decode everything appropriately you will reveal a hidden message. This challenge thinks its the 9th but it turned out too hard, so we made it the 11th.
+{: .notice}
 
 **Tools : IDA Pro + Windbg, pwntools, dll_to_exe, Wireshark, dnSpy, Stegsolve**
 
@@ -1590,10 +1606,12 @@ flag: `recover_these_messages_lost_in_the_colorful_bits@flare-on.com`
 
 ## Level 12
 > Now for the final test of your focus and dedication. We found a floppy disk that was given to spies to transmit secret messages. The spies were also given the password, we don't have that information, but see if you can figure out the message anyway. You are saving lives.
+{: .notice}
 
 **Tools : qemu, DOSBox, IDA Pro, Bochs emulator**
 
-> Again thanks to Lays for helping me on this one
+Again thanks to Lays for helping me on this one
+{: .notice--success}
 
 Well here we are, final challenge, our worst nightmare.
 
@@ -1615,7 +1633,8 @@ Since it's an image file, we can actually `mount` it as a directory and look aro
 
 So apparently there's something inside the image file that does the password checking, and it's definitely not `infohelp.exe`. 
 
-> According to Lays, the program hook int 0x21 and jump to the code that does the password checking during the file operation of "message.dat".
+According to Lays, the program hook int 0x21 and jump to the code that does the password checking during the file operation of "message.dat".
+{: .notice--info}
 
 To locate the actual code, I decided to switch my analyzing tool to IDA and [Bochs emulator](https://sourceforge.net/projects/bochs/). By suspending the execution during the password checking stage, we can locate the code and re-implement it with the following pseudo code: 
 
@@ -1859,7 +1878,8 @@ subleq2 a, b     ; Mem[a] = Mem[a] - ACCUM
 
 ![](/assets/images/Flare-on-2018/deeper.jpg)
 
-> EDIT: Ah...so after I read the [official write-up](https://www.fireeye.com/content/dam/fireeye-www/blog/pdfs/FlareOn5_Challenge12_Solution.pdf), it's actually not subleq2 but a [RSSB](https://en.wikipedia.org/wiki/One_instruction_set_computer#Reverse_subtract_and_skip_if_borrow) (Reverse subtract and skip if borrow) VM. It looks kind of like subleq2, and I got confused 😛 
+**EDIT:** Ah...so after I read the [official write-up](https://www.fireeye.com/content/dam/fireeye-www/blog/pdfs/FlareOn5_Challenge12_Solution.pdf), it's actually not subleq2 but a [RSSB](https://en.wikipedia.org/wiki/One_instruction_set_computer#Reverse_subtract_and_skip_if_borrow) (Reverse subtract and skip if borrow) VM. It looks kind of like subleq2, and I got confused 😛 
+{: .notice--danger}
 
 So once again, I had to write another disassebler for ~~subleq2~~ RSSB. Based on the first one and with some modification, I created another [tiny disassembler](https://gist.github.com/bruce30262/1f4ec443c82eb3587440877aa811c767). It can only identify instructions like `MOV`, `ADD`, `SUB`......, but again, we could simplify the code base on some special patterns. After identifying some function calls, I was able to recover the whole program logic, and this time the result is much more reasonable :
 

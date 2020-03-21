@@ -145,7 +145,7 @@ Done.
 We can see that if we show `userB`'s DM after we remove `userA`, the sender's name will become a strange value. This is because while removing `userA`, it will free the `userA->name` pointer, but the program is still able to access the pointer by showing `userB`'s DM **( accessing `userB->messsage->sender->name` )**. A typical Use-After-Free vulnerability.
 
 So now there's a dangling pointer in the program. If we can arrange the heap memory chunk carefully, and make a user's name buffer overlapped with `userB->messsage->sender`:
-```
+<pre>
 
                        +--------------+
 userB->message->sender | char *p_name | userC->name
@@ -161,11 +161,11 @@ userB->message->sender | char *p_name | userC->name
                        |    .      |
                        +-----------+
 
-```
+</pre>
 We can then modify the value of pointer `p_name` by editing `userC->name`, and then leak some address by viewing `userB`'s DM ( sender's name ). This can be done easily if you're familiar with the glibc malloc's fastbin allocation. By changing `p_name` into `__libc_start_main@got.plt` ( `0x603040`, which its first character is `0x40`, a printable character ), we can then leak the libc's base address. 
 
 Now we still need to find a way to do the "write-anywhere" attack. It's kind of hard to find such vulnerability by just reversing the binary, so I decided to start fuzzing the binary, while examine the heap memory at the same time. Finally ( and luckily ! ), I notice that I've made the heap memory chunk arranged like this:
-```
+<pre>
 
           +--------------+
 0x1234050 |              | userC->name
@@ -187,7 +187,7 @@ Now we still need to find a way to do the "write-anywhere" attack. It's kind of 
           |              |
           +--------------+
 
-```
+</pre>
 
 I found that I can corrupt the header of unsortbin chunk `0x1234060` by overflowing the `userC->name` buffer ! Later I realized that this is because program use `strdup` to allocate the buffer of `userC->name`. If we set the name length of `userC` less than 24, it will allocate a buffer with size `0x20` ( fastbin[0] ) . But when we change a user's name, it allow us to input at most 32 characters, which will overflow the name buffer !
 

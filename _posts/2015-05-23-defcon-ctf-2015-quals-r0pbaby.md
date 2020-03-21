@@ -1,15 +1,22 @@
 ---
-title: 'DEFCON CTF 2015 Quals -- r0pbaby'
+title: DEFCON CTF 2015 Quals -- r0pbaby
+layout: single
+comments: true
+share: true
+related: true
+author_profile: true
+permalink: "/:title/"
 date: 2015-05-23 22:38
 tags:
-  - DEFCON
-  - CTF
-  - ROP
-  - Pwnable
-  - Python
+- DEFCON
+- CTF
+- ROP
+- Pwnable
+- Python
 categories:
-  - write-ups
+- write-ups
 ---
+
 **Category:** Baby's First
 **Points:** 1
 > r0pbaby_542ee6516410709a1421141501f03760.quals.shallweplayaga.me:10436
@@ -18,12 +25,13 @@ categories:
 
 64 bit ELF. No stack guard, but it has NX & PIE protection.  
 The service will give you a menu first:  
-> Welcome to an easy Return Oriented Programming challenge...
-> Menu:
-> 1) Get libc address
-> 2) Get address of a libc function
-> 3) Nom nom r0p buffer to stack
-> 4) Exit
+
+> Welcome to an easy Return Oriented Programming challenge...  
+> Menu:  
+> 1) Get libc address  
+> 2) Get address of a libc function  
+> 3) Nom nom r0p buffer to stack  
+> 4) Exit  
 
 Th first one will print out the `libc.so.6`'s address, which contains the **real** libc base address. The second one will ask you to input a libc function's symbol, and print out the function's address. The third one will ask you to input a number(string length) and a string.  
 

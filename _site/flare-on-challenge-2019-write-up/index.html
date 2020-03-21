@@ -1,6 +1,6 @@
 <!doctype html>
 <!--
-  Minimal Mistakes Jekyll Theme 4.16.6 by Michael Rose
+  Minimal Mistakes Jekyll Theme 4.19.1 by Michael Rose
   Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
   Free for personal and commercial use under the MIT license
   https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
@@ -10,7 +10,7 @@
     <meta charset="utf-8">
 
 <!-- begin _includes/seo.html --><title>Flare-on Challenge 2019 Write-up - Hacking Tube 2.0</title>
-<meta name="description" content="Another year of Flare-on challenge ! As a guy who’s interetesed in reverse engineering, this is definitely a great chance for me to practice/sharpen my reversing skills ! This year it has 12 challenges covering Windows PE, Linux ELF, Android apk, NES ROM …… and over 5,700 participants !">
+<meta name="description" content="Another year of Flare-on challenge ! As a guy who’s interetesed in reverse engineering, this is definitely a great chance for me to practice/sharpen my reversing skills ! This year it has 12 challenges covering Windows PE, Linux ELF, Android apk, NES ROM …… and over 5,700 participants !  ">
 
 
   <meta name="author" content="Bruce Chen">
@@ -23,7 +23,7 @@
 <meta property="og:url" content="http://0.0.0.0:4000/flare-on-challenge-2019-write-up/">
 
 
-  <meta property="og:description" content="Another year of Flare-on challenge ! As a guy who’s interetesed in reverse engineering, this is definitely a great chance for me to practice/sharpen my reversing skills ! This year it has 12 challenges covering Windows PE, Linux ELF, Android apk, NES ROM …… and over 5,700 participants !">
+  <meta property="og:description" content="Another year of Flare-on challenge ! As a guy who’s interetesed in reverse engineering, this is definitely a great chance for me to practice/sharpen my reversing skills ! This year it has 12 challenges covering Windows PE, Linux ELF, Android apk, NES ROM …… and over 5,700 participants !  ">
 
 
 
@@ -74,7 +74,7 @@
 <!-- For all browsers -->
 <link rel="stylesheet" href="/assets/css/main.css">
 
-<!--[if IE ]>
+<!--[if IE]>
   <style>
     /* old IE unsupported flexbox fixes */
     .greedy-nav .site-title {
@@ -91,7 +91,6 @@
 
 
   
-    
     <script src="https://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-592d8051fa91b8b6"></script>
   
 
@@ -130,11 +129,11 @@
           
         </a>
         <ul class="visible-links"><li class="masthead__menu-item">
-              <a href="/archives/" >Archives</a>
+              <a href="/archives/">Archives</a>
             </li><li class="masthead__menu-item">
-              <a href="/categories/" >Categories</a>
+              <a href="/categories/">Categories</a>
             </li><li class="masthead__menu-item">
-              <a href="/tags/" >Tags</a>
+              <a href="/tags/">Tags</a>
             </li></ul>
         
         <button class="search__toggle" type="button">
@@ -170,8 +169,6 @@
 
   
     <div class="author__avatar">
-      
-
       
         <img src="/assets/images/other/gravatar.png" alt="Bruce Chen" itemprop="image">
       
@@ -282,10 +279,11 @@
   </div>
 
 
+
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
     <meta itemprop="headline" content="Flare-on Challenge 2019 Write-up">
     <meta itemprop="description" content="Another year of Flare-on challenge ! As a guy who’s interetesed in reverse engineering, this is definitely a great chance for me to practice/sharpen my reversing skills ! This year it has 12 challenges covering Windows PE, Linux ELF, Android apk, NES ROM …… and over 5,700 participants !">
-    <meta itemprop="datePublished" content="September 28, 2019">
+    <meta itemprop="datePublished" content="2019-09-28T13:30:00+08:00">
     
 
     <div class="page__inner-wrap">
@@ -317,6 +315,7 @@
   <li><a href="#level-12">Level 12</a></li>
   <li><a href="#epilogue">Epilogue</a></li>
 </ul>
+
             </nav>
           </aside>
         
@@ -328,9 +327,7 @@
 
 <p>Final rank : <code class="language-plaintext highlighter-rouge">197/5790</code>, not bad for an amateur reverse engineering lover 😄 In fact I’m just glad I was able to finish it this year, since I was kind of busy during the challenge and can only solve those during my free time. Like <a href="https://bruce30262.github.io/flare-on-challenge-2018-write-up/">the previous one</a>, I’ll share my solution of each challenge – how I solve it, what tools did I use, …etc. Feel free to discuss the challenge in the comment sections below 🙂</p>
 
-<blockquote>
-  <p>You can also check the official write-up <a href="https://www.fireeye.com/blog/threat-research/2019/09/2019-flare-on-challenge-solutions.html">here</a></p>
-</blockquote>
+<p class="notice--success">You can also check the official write-up <a href="https://www.fireeye.com/blog/threat-research/2019/09/2019-flare-on-challenge-solutions.html">here</a></p>
 
 <h2 id="level-1">Level 1</h2>
 
@@ -660,9 +657,7 @@ isEcstatic:
 
 <p>We can see that it uses the value from <code class="language-plaintext highlighter-rouge">Program.j(XXX)</code>. Since I was too lazy to implement <code class="language-plaintext highlighter-rouge">Program.j()</code>, I decided to launch the debugger in dnSpy and extract those values from memory. While doing this, I found that the program had trigger the “StackOverflow Exception” while doing <code class="language-plaintext highlighter-rouge">Program.Init()</code>. At first I thought it has something to do with the bug in dnSpy, so I just skip through the code in  <code class="language-plaintext highlighter-rouge">Program.Init()</code>. There were many code in <code class="language-plaintext highlighter-rouge">Program.Init()</code> that I can’t understand, must be some unimportant code ;) ( Boy I was so wrong… ). After that we can just replace those <code class="language-plaintext highlighter-rouge">Program.j()</code> with the value we extracted earlier in our python version of <code class="language-plaintext highlighter-rouge">Program.i()</code>. So far so good.</p>
 
-<blockquote>
-  <p>According to the <a href="https://www.fireeye.com/content/dam/fireeye-www/blog/pdfs/FlareOn6_Challenge6_Solution_BMPHIDE.pdf">offcial write-up of level6</a>, the StackOverflow Exception is actually an anti-debug trick. You can check the write-up for more details.</p>
-</blockquote>
+<p class="notice--danger"><strong>NOTE</strong>: According to the <a href="https://www.fireeye.com/content/dam/fireeye-www/blog/pdfs/FlareOn6_Challenge6_Solution_BMPHIDE.pdf">offcial write-up of level6</a>, the StackOverflow Exception is actually an anti-debug trick. You can check the write-up for more details.</p>
 
 <p>However I soon found out that this isn’t the right approach – my python version of bmphide behaved differently from the .NET version. I’ve checked the logic in each function, and everything seems to be correct, so where’s the problem ? Oh I don’t know, <strong>maybe go check that <code class="language-plaintext highlighter-rouge">Program.Init()</code> function again -_- ?</strong></p>
 
@@ -670,9 +665,7 @@ isEcstatic:
 
 <p>To figure out what’s actually happening I have to attach the debugger to <code class="language-plaintext highlighter-rouge">bmphide.exe</code> so it won’t terminate while doing <code class="language-plaintext highlighter-rouge">Program.Init()</code>.</p>
 
-<blockquote>
-  <p>By providing a large <code class="language-plaintext highlighter-rouge">secret</code> file in command line, we’ll be able to attach the dnSpy debugger to the process just in time.</p>
-</blockquote>
+<p class="notice--info"><strong>TIP:</strong> By providing a large <code class="language-plaintext highlighter-rouge">secret</code> file in command line, we’ll be able to attach the dnSpy debugger to the process just in time.</p>
 
 <p>I first re-extract those values generated by <code class="language-plaintext highlighter-rouge">Program.j()</code>, then start analyzing the code in <code class="language-plaintext highlighter-rouge">Program.h()</code> – and that’s the moment I realized where the problem was : <strong>when I tried to step into <code class="language-plaintext highlighter-rouge">Program.f()</code>, it actually jumped to <code class="language-plaintext highlighter-rouge">Program.g()</code> !</strong> And not only <code class="language-plaintext highlighter-rouge">f()</code>, <code class="language-plaintext highlighter-rouge">a()</code> and <code class="language-plaintext highlighter-rouge">c()</code> also jumped to a different function, what the hell ?! Apparently, <code class="language-plaintext highlighter-rouge">Program.Init()</code> is doing something evil, which make me have to modified my python version of <code class="language-plaintext highlighter-rouge">Program.h()</code> into:</p>
 
@@ -709,9 +702,7 @@ isEcstatic:
 
 <p><strong>It’s actually doing <code class="language-plaintext highlighter-rouge">((idx+1) * 0x126B6FC5)</code> and <code class="language-plaintext highlighter-rouge">((idx+2) * 0xC82C97D)</code></strong>. Again, what the f*ck ?</p>
 
-<blockquote>
-  <p>According to the official write-up, it’s because it uses several obfuscation techniques including JIT hook to overwrite the code during runtime 😮 That’s why the code behavior is different from the one that dnSpy shows us !</p>
-</blockquote>
+<p class="notice--danger"><strong>NOTE:</strong> According to the official write-up, it’s because it uses several obfuscation techniques including JIT hook to overwrite the code during runtime 😮 That’s why the code behavior is different from the one that dnSpy shows us !</p>
 
 <p>So after I modified the <code class="language-plaintext highlighter-rouge">g()</code> function in my python bmphide, <a href="https://gist.github.com/bruce30262/ae755f4e52462f9aae90c1782c096090#file-bmphide-py">the code</a> finally behaves identical to the original version.</p>
 
@@ -1118,7 +1109,7 @@ ret
 
 <p><strong>Tool : IDA Pro + Windbg, x64dbg</strong></p>
 
-<blockquote>
+<blockquote class="notice">
   <p>Hey, at least its not subleq.</p>
 </blockquote>
 
@@ -1255,9 +1246,7 @@ fffff800`02d2b0c3 56              push    rsi
 fffff800`02d2b0c4 57              push    rdi
 </code></pre></div></div>
 
-<blockquote>
-  <p>Later did I know that you can just use Volatility’s <a href="https://github.com/volatilityfoundation/volatility/wiki/Command-Reference-Mal#impscan">impscan</a> command to identify calls to APIs. The command even has an option to generate an IDA .idc file that help us mark the function name in IDA !</p>
-</blockquote>
+<p class="notice--info"><strong>TIP</strong>: Later did I know that you can just use Volatility’s <a href="https://github.com/volatilityfoundation/volatility/wiki/Command-Reference-Mal#impscan">impscan</a> command to identify calls to APIs. The command even has an option to generate an IDA .idc file that help us mark the function name in IDA !</p>
 
 <ul>
   <li>In Windbg we can use <code class="language-plaintext highlighter-rouge">!drvobj \Driver\in 7</code> to analyze a driver object – it will list the location of <code class="language-plaintext highlighter-rouge">DriverEntry</code>, <code class="language-plaintext highlighter-rouge">DriverUnload</code> and the major dispatch function.</li>
@@ -1289,15 +1278,11 @@ fffff800`02d2b0c4 57              push    rdi
 
 <p>To decrypt those DLL, I decided to learn the <a href="https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/javascript-debugger-scripting">JavaScript Debugger Scripting</a> so I can use Javascript in Windbg to do the decryption. After reading some useful article/cheatsheet ( <a href="https://doar-e.github.io/blog/2017/12/01/debugger-data-model/">link1</a>, <a href="https://github.com/hugsy/defcon_27_windbg_workshop/blob/master/windbg_cheatsheet.md">link2</a> ), I came up with a <a href="https://gist.github.com/bruce30262/9f5cd8274666167436ef1b4b12e7f268#file-script-js">script</a> that allows me to decrypt those DLL files.</p>
 
-<blockquote>
-  <p>Gotta say… using Javascript in Windbg is not that intuitive. Like they don’t have API call <code class="language-plaintext highlighter-rouge">writeMemoryValues</code> to let us write value to memory, I have to implement a wrapper which execute the <code class="language-plaintext highlighter-rouge">eb</code> command to do the job. Also I don’t like the way it execute our custom command, we have to run the command like <code class="language-plaintext highlighter-rouge">!cmd ("&lt;hex value&gt;", "&lt;hex value&gt;"...)</code> instead of just <code class="language-plaintext highlighter-rouge">!cmd arg1 arg2</code>.</p>
-</blockquote>
+<p class="notice--warning"><strong>MURMUR:</strong> Gotta say… using Javascript in Windbg is not that intuitive. Like they don’t have API call <code class="language-plaintext highlighter-rouge">writeMemoryValues</code> to let us write value to memory, I have to implement a wrapper which execute the <code class="language-plaintext highlighter-rouge">eb</code> command to do the job. Also I don’t like the way it execute our custom command, we have to run the command like <code class="language-plaintext highlighter-rouge">!cmd ("&lt;hex value&gt;", "&lt;hex value&gt;"...)</code> instead of just <code class="language-plaintext highlighter-rouge">!cmd arg1 arg2</code>.</p>
 
 <p>Notice that since it uses APC injection to start the code, we’ll have to switch to the injected process context before we decrpyt those DLLs. So, execute the <code class="language-plaintext highlighter-rouge">.process &lt;address of process object&gt;</code> command first then run the <code class="language-plaintext highlighter-rouge">!dr4</code> command, we’ll then have our decrypted routine code in the process memory. Dump the code with the <code class="language-plaintext highlighter-rouge">.writemem</code> command, then we can start analyzing those DLL files.</p>
 
-<blockquote>
-  <p>One of the DLL (<code class="language-plaintext highlighter-rouge">k.dll</code>) does not need to be decrypted though, it’s actually un-encrypted in the process memory.</p>
-</blockquote>
+<p class="notice--info"><strong>NOTE:</strong> One of the DLL (<code class="language-plaintext highlighter-rouge">k.dll</code>) does not need to be decrypted though, it’s actually un-encrypted in the process memory.</p>
 
 <p>After some reverse engineering we can classify those DLL with the following table:</p>
 
@@ -1378,17 +1363,13 @@ REG_DWORD                     : (S) 0
 
 <p>Simple huh ? Except it’s not …… for some unknown reason, those encrypted packets were <strong>encrypted again with another unknown encryption method</strong> 😕 <del>This is the moment when the challenge starting to get guessy –</del> no matter how I tried, I just couldn’t find where the hell they got encrypted. In the end I have to guess how it got encrypted by analyzing those packet data.</p>
 
-<blockquote>
-  <p>EDIT: WOW, so after I read the <a href="https://www.fireeye.com/content/dam/fireeye-www/blog/pdfs/FlareOn6_Challenge12_Solution_help.pdf">official write-up</a>, you actually have to use <code class="language-plaintext highlighter-rouge">!poolfind FLAR</code> and <code class="language-plaintext highlighter-rouge">!object \Driver</code> to locate another driver which uses WFP ( Windows Filtering Platform ) APIs to  modify network traffic on the infected system ! 😲</p>
-</blockquote>
+<p class="notice--danger"><strong>EDIT:</strong> WOW, so after I read the <a href="https://www.fireeye.com/content/dam/fireeye-www/blog/pdfs/FlareOn6_Challenge12_Solution_help.pdf">official write-up</a>, you actually have to use <code class="language-plaintext highlighter-rouge">!poolfind FLAR</code> and <code class="language-plaintext highlighter-rouge">!object \Driver</code> to locate another driver which uses WFP ( Windows Filtering Platform ) APIs to  modify network traffic on the infected system ! 😲</p>
 
 <p>Some of them are pretty simple. For those in port 4444, you can easily infer that it’s just a simple XOR operation, with a 64 bit value key. XOR those data with the key then you’ll get the raw data of the attacker’s request. For those in port 6666 and 8888, you’ll notice that it somehow send the data twice in row: one with the data encrypted, another one without being encrypted. Just extract the latter and decrypt + decompress it, you’ll get the raw data ( filename, file content, key logger data…etc. )</p>
 
 <p>The packets in port 7777 are the most confusing. After hours of failing I decided to ask some help from the flare-on master <a href="https://twitter.com/alex_k_polyakov">@alex_k_polyakov</a>, who told me to focus on XOR and RC4 ( which is good to know because I was starting to think it might be some AES-192 shit or something like that……. ). After analyzing those packets, I noticed that at some point it started to repeat the same 8 bytes data over and over again. With common sense, I treated the 8 bytes data as the key and XORed it with those packets. <strong>Then it just gave me the raw BMP image file…without needing to decrypt &amp; decompress it…</strong></p>
 
-<blockquote>
-  <p>Still don’t know how I got that. But as long as it works…meh <code class="language-plaintext highlighter-rouge">¯\_(ツ)_/¯</code></p>
-</blockquote>
+<p class="notice">Still don’t know how I got that. But as long as it works…meh <code class="language-plaintext highlighter-rouge">¯\_(ツ)_/¯</code></p>
 
 <p>Now we can start analyze those data and try figure out what the attacker was trying to do. By looking at the data in port 4444, we can figure out that the attacker would constantly took screenshots of victim’s desktop, then after few moment, retrieved the key logger data. It kept doing this until it got the following screenshots:</p>
 
@@ -1730,10 +1711,10 @@ REG_DWORD                     : (S) 0
     
   <script>
     var disqus_config = function () {
-      this.page.url = "http://0.0.0.0:4000/flare-on-challenge-2019-write-up/";  // Replace PAGE_URL with your page's canonical URL variable
-      this.page.identifier = "/flare-on-challenge-2019-write-up"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+      this.page.url = "http://0.0.0.0:4000/flare-on-challenge-2019-write-up/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/flare-on-challenge-2019-write-up"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
     };
-    (function() { // DON'T EDIT BELOW THIS LINE
+    (function() { /* DON'T EDIT BELOW THIS LINE */
       var d = document, s = d.createElement('script');
       s.src = 'https://bruce30262logdown.disqus.com/embed.js';
       s.setAttribute('data-timestamp', +new Date());

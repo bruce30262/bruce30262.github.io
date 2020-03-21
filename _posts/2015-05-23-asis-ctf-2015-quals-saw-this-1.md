@@ -15,16 +15,16 @@ tags:
 - C
 categories:
 - write-ups
-date: '2015-05-23 22:37:00 +0000'
+date: '2015-05-23 06:37:00'
 ---
 
 **Category:** pwn
 **Points:** 100 (Saw this-1), 400 (Saw this-2)
 
-> Survive and get the flag!
-> Note: This challenge contains two flags, one of them is easier to fetch, the other is harder. 
-> The easier flag will be clearly indicated as "Flag 1", the harder flag as "Flag 2"
-> nc 87.107.123.3 31337
+> Survive and get the flag!  
+> Note: This challenge contains two flags, one of them is easier to fetch, the other is harder.   
+> The easier flag will be clearly indicated as "Flag 1", the harder flag as "Flag 2"  
+> nc 87.107.123.3 31337  
 
 <!-- more -->
 

@@ -79,7 +79,7 @@ read_n(users[id]->desc, text_len + 1);
 So `user->desc + text_len` must < `user` (both `user->desc` and `user` are pointers). Guess it use this protection to avoid heap overflow.
 
 But what if we have the following heap memory layout?
-```
+<pre>
 
             +-----------------------+
 userD->desc |                       |
@@ -100,7 +100,7 @@ userD->desc |                       |
             |                       |
             |                       |
             +-----------------------+
-```
+</pre>
 According to the protection, `userD->desc + text_len` should less than `userD`, **which means it will be ok to overwrite the whole `userB` and `userC`**.
 
 It is possible to arrange the above heap memory layout if we're familiar with malloc's memory allocation. We can then exploit the heap overflow vulnerability and modify the `userB->desc` pointer, making us able to do the **read/write anywhere** attack. After that is pretty simple, we leak the libc's base address and hijack `free`'s GOT to get the shell.
