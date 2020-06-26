@@ -326,8 +326,8 @@ mirror 2 : nc 217.218.48.84 12429</p>
 <span class="k">def</span> <span class="nf">my_recvuntil</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">delim</span><span class="p">):</span>
     <span class="n">res</span> <span class="o">=</span> <span class="s">""</span>
     <span class="k">while</span> <span class="n">delim</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
-        <span class="n">c</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">sys</span><span class="p">.</span><span class="n">stdout</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
         <span class="n">res</span> <span class="o">+=</span> <span class="n">c</span>
     <span class="k">if</span> <span class="n">LOG</span><span class="p">:</span>
         <span class="k">print</span> <span class="n">res</span>
@@ -342,31 +342,31 @@ mirror 2 : nc 217.218.48.84 12429</p>
 
 <span class="n">r</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="n">HOST</span><span class="p">,</span> <span class="n">PORT</span><span class="p">)</span>
 
-<span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"challenge?</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
-<span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">"yes</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+<span class="n">r</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"challenge?</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+<span class="n">r</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="s">"yes</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
 
 <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"Round: "</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">cnt</span><span class="p">))</span>
+    <span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"Round: "</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">cnt</span><span class="p">))</span>
     <span class="n">cnt</span> <span class="o">+=</span> <span class="mi">1</span>
-    <span class="n">ps</span> <span class="o">=</span> <span class="n">log</span><span class="o">.</span><span class="n">progress</span><span class="p">(</span><span class="s">"getting points from server..."</span><span class="p">)</span>
+    <span class="n">ps</span> <span class="o">=</span> <span class="n">log</span><span class="p">.</span><span class="n">progress</span><span class="p">(</span><span class="s">"getting points from server..."</span><span class="p">)</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">my_recvuntil</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="s">"area? "</span><span class="p">)</span>
 
     <span class="c1"># parse the vertex list
-</span>    <span class="n">list_str</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s">"[["</span><span class="p">):</span><span class="n">s</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s">"What's"</span><span class="p">):]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-    <span class="n">real_list</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">list_str</span><span class="p">)</span>
+</span>    <span class="n">list_str</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">s</span><span class="p">.</span><span class="n">index</span><span class="p">(</span><span class="s">"[["</span><span class="p">):</span><span class="n">s</span><span class="p">.</span><span class="n">index</span><span class="p">(</span><span class="s">"What's"</span><span class="p">):].</span><span class="n">strip</span><span class="p">()</span>
+    <span class="n">real_list</span> <span class="o">=</span> <span class="n">ast</span><span class="p">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">list_str</span><span class="p">)</span>
     
     <span class="c1"># get the convex hull point
 </span>    <span class="n">points</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">real_list</span><span class="p">)</span>
     <span class="n">hull</span> <span class="o">=</span> <span class="n">ConvexHull</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
-    <span class="n">hull_points</span> <span class="o">=</span> <span class="p">[</span> <span class="n">real_list</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">hull</span><span class="o">.</span><span class="n">vertices</span><span class="p">]</span>
+    <span class="n">hull_points</span> <span class="o">=</span> <span class="p">[</span> <span class="n">real_list</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">hull</span><span class="p">.</span><span class="n">vertices</span><span class="p">]</span>
 
     <span class="n">final</span> <span class="o">=</span> <span class="n">cal_area</span><span class="p">(</span><span class="n">hull_points</span><span class="p">)</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"answer: "</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">final</span><span class="p">))</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">final</span><span class="p">)</span><span class="o">+</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
-    <span class="k">print</span> <span class="n">r</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+    <span class="n">log</span><span class="p">.</span><span class="n">success</span><span class="p">(</span><span class="s">"answer: "</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">final</span><span class="p">))</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">final</span><span class="p">)</span><span class="o">+</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span> <span class="n">r</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
 
-<span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
+<span class="n">r</span><span class="p">.</span><span class="n">interactive</span><span class="p">()</span>
 
 </code></pre></div></div>
 

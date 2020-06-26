@@ -374,7 +374,7 @@ For instance, as for the expression</p>
 	<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">input_str</span><span class="p">:</span>
 		<span class="n">asc</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
 		
-		<span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="o">==</span> <span class="bp">True</span><span class="p">:</span>
+		<span class="k">if</span> <span class="n">c</span><span class="p">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="o">==</span> <span class="bp">True</span><span class="p">:</span>
 			<span class="k">if</span> <span class="n">inCal</span> <span class="o">==</span> <span class="bp">False</span><span class="p">:</span>
 				<span class="n">inCal</span> <span class="o">=</span> <span class="bp">True</span>
 
@@ -383,24 +383,24 @@ For instance, as for the expression</p>
 		<span class="k">else</span><span class="p">:</span>
 			<span class="k">if</span> <span class="n">inCal</span> <span class="o">==</span> <span class="bp">True</span><span class="p">:</span>
 				<span class="n">inCal</span> <span class="o">=</span> <span class="bp">False</span>
-				<span class="n">expression</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cur_num</span><span class="p">)</span>
+				<span class="n">expression</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">cur_num</span><span class="p">)</span>
 				<span class="n">cur_num</span> <span class="o">=</span> <span class="mi">0</span>
 				
 			<span class="k">if</span> <span class="n">asc</span> <span class="o">==</span> <span class="mi">226</span> <span class="ow">or</span> <span class="n">asc</span> <span class="o">==</span> <span class="mi">136</span> <span class="ow">or</span> <span class="n">asc</span> <span class="o">==</span> <span class="mi">194</span> <span class="ow">or</span> <span class="n">asc</span> <span class="o">==</span> <span class="mi">120</span><span class="p">:</span> <span class="c1">#ignore, continue
 </span>				<span class="k">continue</span>
 			<span class="k">elif</span> <span class="n">asc</span> <span class="o">==</span> <span class="mi">168</span><span class="p">:</span> <span class="c1"># OR
-</span>				<span class="n">expression</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">124</span><span class="p">)</span>
+</span>				<span class="n">expression</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mi">124</span><span class="p">)</span>
 			<span class="k">elif</span> <span class="n">asc</span> <span class="o">==</span> <span class="mi">167</span><span class="p">:</span> <span class="c1"># AND
-</span>				<span class="n">expression</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">38</span><span class="p">)</span>
+</span>				<span class="n">expression</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mi">38</span><span class="p">)</span>
 			<span class="k">elif</span> <span class="n">asc</span> <span class="o">==</span> <span class="mi">172</span><span class="p">:</span> <span class="c1"># NOT
-</span>				<span class="n">expression</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">126</span><span class="p">)</span>
+</span>				<span class="n">expression</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mi">126</span><span class="p">)</span>
 			<span class="k">elif</span> <span class="n">asc</span> <span class="o">==</span> <span class="mi">10</span><span class="p">:</span> <span class="c1"># end of expression, break
 </span>				<span class="k">break</span><span class="p">;</span>
 			<span class="k">elif</span> <span class="n">asc</span> <span class="o">==</span> <span class="mi">40</span><span class="p">:</span> <span class="c1"># '(', count variable number
 </span>				<span class="n">max_num</span> <span class="o">+=</span> <span class="mi">1</span>
-				<span class="n">expression</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">asc</span><span class="p">)</span>
+				<span class="n">expression</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">asc</span><span class="p">)</span>
 			<span class="k">else</span><span class="p">:</span>
-				<span class="n">expression</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">asc</span><span class="p">)</span>
+				<span class="n">expression</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">asc</span><span class="p">)</span>
 
 	<span class="k">return</span> <span class="n">expression</span><span class="p">,</span> <span class="n">max_num</span>
 
@@ -419,7 +419,7 @@ For instance, as for the expression</p>
 
 	<span class="k">for</span> <span class="n">index</span><span class="p">,</span><span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">eval_list</span><span class="p">):</span>
 		<span class="k">if</span> <span class="n">item</span> <span class="o">&lt;=</span> <span class="n">cur_max</span><span class="p">:</span>
-			<span class="n">index_list</span><span class="p">[</span><span class="n">item</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+			<span class="n">index_list</span><span class="p">[</span><span class="n">item</span><span class="o">-</span><span class="mi">1</span><span class="p">].</span><span class="n">append</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
 	
 	<span class="n">cnt</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="n">cur_max</span>
 
@@ -440,19 +440,19 @@ For instance, as for the expression</p>
 #		print "result: " + str(eval(eval_str))
 </span>		
 		<span class="k">if</span> <span class="nb">eval</span><span class="p">(</span><span class="n">eval_str</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> <span class="c1"># found the answer!
-</span>			<span class="k">return</span> <span class="s">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">x_list</span><span class="p">)</span>
+</span>			<span class="k">return</span> <span class="s">""</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">x_list</span><span class="p">)</span>
 		<span class="k">else</span><span class="p">:</span> <span class="c1"># add 1 bit and run the next string
 </span>			<span class="n">carry</span><span class="p">(</span><span class="n">x_list</span><span class="p">,</span> <span class="n">cur_max</span><span class="p">)</span>
 
 
 <span class="n">sock</span> <span class="o">=</span> <span class="n">socket</span><span class="p">(</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">SOCK_STREAM</span><span class="p">)</span> <span class="c1">#create socket (IP, TCP)
-</span><span class="n">sock</span><span class="o">.</span><span class="n">connect</span><span class="p">((</span><span class="s">"asis-ctf.ir"</span> <span class="p">,</span> <span class="mi">12435</span><span class="p">))</span>
+</span><span class="n">sock</span><span class="p">.</span><span class="n">connect</span><span class="p">((</span><span class="s">"asis-ctf.ir"</span> <span class="p">,</span> <span class="mi">12435</span><span class="p">))</span>
 
-<span class="k">print</span> <span class="n">sock</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
-<span class="n">sock</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">"Sattelite</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">sock</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+<span class="n">sock</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="s">"Sattelite</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
 
 <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
-	<span class="n">res</span> <span class="o">=</span> <span class="n">sock</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+	<span class="n">res</span> <span class="o">=</span> <span class="n">sock</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
 	<span class="k">print</span> <span class="n">res</span>
 	
 	<span class="k">if</span> <span class="s">"ASIS"</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span> <span class="c1"># get the flag
@@ -461,14 +461,14 @@ For instance, as for the expression</p>
 	<span class="n">eval_list</span><span class="p">,</span> <span class="n">cur_max</span> <span class="o">=</span> <span class="n">string_to_expression</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="c1"># convert input expression to list
 </span>	<span class="n">eval_str</span> <span class="o">=</span> <span class="n">cal_ok</span><span class="p">(</span><span class="n">eval_list</span><span class="p">,</span> <span class="n">cur_max</span><span class="p">)</span> <span class="c1"># calculate the right answer
 </span>	<span class="k">print</span> <span class="s">"ans: "</span> <span class="o">+</span> <span class="n">eval_str</span>
-	<span class="n">sock</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">eval_str</span><span class="o">+</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
-	<span class="n">ok</span> <span class="o">=</span> <span class="n">sock</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+	<span class="n">sock</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">eval_str</span><span class="o">+</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
+	<span class="n">ok</span> <span class="o">=</span> <span class="n">sock</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
 	<span class="k">print</span> <span class="n">ok</span>
 
 	<span class="k">if</span> <span class="s">"OK"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ok</span><span class="p">:</span>
 		<span class="k">break</span>	
 
-<span class="n">sock</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="n">sock</span><span class="p">.</span><span class="n">close</span><span class="p">()</span>
 </code></pre></div></div>
 
 <p>Finally, we get the flag!</p>

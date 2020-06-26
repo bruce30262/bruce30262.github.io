@@ -332,15 +332,15 @@ name. Notice that sometimes google API will respond a wrong country(mostly it re
 <span class="n">TIME</span> <span class="o">=</span> <span class="mf">0.8</span>
 
 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">'level0.json'</span><span class="p">)</span> <span class="k">as</span> <span class="n">alpha2_file</span><span class="p">:</span>
-    <span class="n">alpha2</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">alpha2_file</span><span class="p">)</span>
+    <span class="n">alpha2</span> <span class="o">=</span> <span class="n">json</span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="n">alpha2_file</span><span class="p">)</span>
 
 <span class="n">r</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="n">HOST</span><span class="p">,</span> <span class="n">PORT</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">get_alpha2</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
     <span class="k">global</span> <span class="n">alpha2</span>
     <span class="k">for</span> <span class="n">country</span> <span class="ow">in</span> <span class="n">alpha2</span><span class="p">:</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="n">country</span><span class="p">[</span><span class="s">"Name"</span><span class="p">]</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">'utf-8'</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">'utf-8'</span><span class="p">)</span> <span class="o">==</span> <span class="n">s</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">'utf-8'</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">country</span><span class="p">[</span><span class="s">"Name"</span><span class="p">].</span><span class="n">encode</span><span class="p">(</span><span class="s">'utf-8'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="s">'utf-8'</span><span class="p">)</span> <span class="o">==</span> <span class="n">s</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="s">'utf-8'</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">country</span><span class="p">[</span><span class="s">"Code"</span><span class="p">]</span>  
 
 <span class="k">def</span> <span class="nf">solve_level1</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
@@ -365,36 +365,36 @@ name. Notice that sometimes google API will respond a wrong country(mostly it re
 		
 	<span class="k">global</span> <span class="n">url</span><span class="p">,</span> <span class="n">values</span>
 	<span class="n">values</span><span class="p">[</span><span class="s">'address'</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span>
-	<span class="n">data</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">urlencode</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
-	<span class="n">resp</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="o">+</span><span class="s">'?'</span><span class="o">+</span><span class="n">data</span><span class="p">))</span>
+	<span class="n">data</span> <span class="o">=</span> <span class="n">urllib</span><span class="p">.</span><span class="n">urlencode</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+	<span class="n">resp</span> <span class="o">=</span> <span class="n">json</span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="n">urllib2</span><span class="p">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="o">+</span><span class="s">'?'</span><span class="o">+</span><span class="n">data</span><span class="p">))</span>
 
 	<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">resp</span><span class="p">[</span><span class="s">"results"</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s">"address_components"</span><span class="p">]:</span>
 		<span class="k">if</span> <span class="n">c</span><span class="p">[</span><span class="s">"types"</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s">"country"</span><span class="p">:</span>
 			<span class="k">print</span> <span class="n">c</span><span class="p">[</span><span class="s">"short_name"</span><span class="p">]</span>
 			<span class="k">return</span> <span class="n">c</span><span class="p">[</span><span class="s">"short_name"</span><span class="p">]</span>
 
-<span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Tell me the Alpha-2 code of country."</span><span class="p">)</span>
+<span class="n">r</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Tell me the Alpha-2 code of country."</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">20</span><span class="p">):</span>
-    <span class="n">res</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">r</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
     <span class="k">print</span> <span class="s">"res"</span><span class="p">,</span> <span class="n">res</span>
     <span class="c1">#country = re.search("--- Round (\d+) ---\n(\S+ ):", res).groups(0)[1]
-</span>    <span class="n">country</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="n">res</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s">"-</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span><span class="o">+</span><span class="mi">2</span><span class="p">:</span><span class="n">res</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s">":"</span><span class="p">):]</span>
+</span>    <span class="n">country</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="n">res</span><span class="p">.</span><span class="n">index</span><span class="p">(</span><span class="s">"-</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span><span class="o">+</span><span class="mi">2</span><span class="p">:</span><span class="n">res</span><span class="p">.</span><span class="n">index</span><span class="p">(</span><span class="s">":"</span><span class="p">):]</span>
     <span class="k">print</span> <span class="s">"now:"</span><span class="p">,</span> <span class="n">country</span>
     <span class="n">ans</span> <span class="o">=</span> <span class="n">get_alpha2</span><span class="p">(</span><span class="n">country</span><span class="p">)</span>
     <span class="k">print</span> <span class="s">"ans:"</span><span class="p">,</span> <span class="n">ans</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">ans</span><span class="o">+</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
-    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">TIME</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">ans</span><span class="o">+</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
+    <span class="n">time</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">TIME</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">70</span><span class="p">):</span>
-    <span class="n">res</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">r</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
     <span class="k">print</span> <span class="s">"res"</span><span class="p">,</span> <span class="n">res</span>
-    <span class="n">country</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="n">res</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s">"-</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span><span class="o">+</span><span class="mi">2</span><span class="p">:</span><span class="n">res</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s">":"</span><span class="p">):]</span>
+    <span class="n">country</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="n">res</span><span class="p">.</span><span class="n">index</span><span class="p">(</span><span class="s">"-</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span><span class="o">+</span><span class="mi">2</span><span class="p">:</span><span class="n">res</span><span class="p">.</span><span class="n">index</span><span class="p">(</span><span class="s">":"</span><span class="p">):]</span>
     <span class="k">print</span> <span class="s">"now:"</span><span class="p">,</span> <span class="n">country</span>
     <span class="n">ans</span> <span class="o">=</span> <span class="n">solve_level1</span><span class="p">(</span><span class="n">country</span><span class="p">)</span>
     <span class="k">print</span> <span class="s">"ans:"</span><span class="p">,</span> <span class="n">ans</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">ans</span><span class="o">+</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
-    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">TIME</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">ans</span><span class="o">+</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
+    <span class="n">time</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">TIME</span><span class="p">)</span>
 
 <span class="c1"># level2, not all the case
 </span><span class="n">Congo_River</span> <span class="o">=</span> <span class="p">[</span><span class="s">"AO"</span><span class="p">,</span> <span class="s">"BI"</span><span class="p">,</span> <span class="s">"CM"</span><span class="p">,</span> <span class="s">"CF"</span><span class="p">,</span> <span class="s">"CD"</span><span class="p">,</span> <span class="s">"GA"</span><span class="p">,</span> <span class="s">"CG"</span><span class="p">,</span> <span class="s">"RW"</span><span class="p">,</span> <span class="s">"TZ"</span><span class="p">,</span> <span class="s">"ZM"</span><span class="p">]</span>
@@ -408,75 +408,75 @@ name. Notice that sometimes google API will respond a wrong country(mostly it re
 <span class="n">Apennine</span> <span class="o">=</span> <span class="p">[</span><span class="s">"IT"</span><span class="p">,</span> <span class="s">"SM"</span><span class="p">]</span>
 
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">70</span><span class="p">,</span> <span class="mi">75</span><span class="p">):</span>
-	<span class="n">res</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+	<span class="n">res</span> <span class="o">=</span> <span class="n">r</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
 	<span class="k">print</span> <span class="s">"res"</span><span class="p">,</span> <span class="n">res</span>
 
 	<span class="k">if</span> <span class="s">"Congo River"</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
 		<span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">Congo_River</span><span class="p">):</span>
 			<span class="k">print</span> <span class="s">"send:"</span><span class="p">,</span> <span class="n">c</span>
-			<span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">c</span><span class="o">+</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
-			<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">TIME</span><span class="p">)</span>
+			<span class="n">r</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">c</span><span class="o">+</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
+			<span class="n">time</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">TIME</span><span class="p">)</span>
 			<span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">Congo_River</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span> <span class="k">break</span>
-			<span class="k">print</span> <span class="n">r</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+			<span class="k">print</span> <span class="n">r</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
 	<span class="k">if</span> <span class="s">"Alps"</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
 		<span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">Alps</span><span class="p">):</span>
 			<span class="k">print</span> <span class="s">"send:"</span><span class="p">,</span> <span class="n">c</span>
-			<span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">c</span><span class="o">+</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
-			<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">TIME</span><span class="p">)</span>
+			<span class="n">r</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">c</span><span class="o">+</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
+			<span class="n">time</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">TIME</span><span class="p">)</span>
 			<span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">Alps</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span> <span class="k">break</span>
-			<span class="k">print</span> <span class="n">r</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+			<span class="k">print</span> <span class="n">r</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
 	<span class="k">if</span> <span class="s">"Andes"</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
 		<span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">Andes</span><span class="p">):</span>
 			<span class="k">print</span> <span class="s">"send:"</span><span class="p">,</span> <span class="n">c</span>
-			<span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">c</span><span class="o">+</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
-			<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">TIME</span><span class="p">)</span>
+			<span class="n">r</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">c</span><span class="o">+</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
+			<span class="n">time</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">TIME</span><span class="p">)</span>
 			<span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">Andes</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span> <span class="k">break</span>
-			<span class="k">print</span> <span class="n">r</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+			<span class="k">print</span> <span class="n">r</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
 	<span class="k">if</span> <span class="s">"Himalayas"</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
 		<span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">Himalayas</span><span class="p">):</span>
 			<span class="k">print</span> <span class="s">"send:"</span><span class="p">,</span> <span class="n">c</span>
-			<span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">c</span><span class="o">+</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
-			<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">TIME</span><span class="p">)</span>
+			<span class="n">r</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">c</span><span class="o">+</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
+			<span class="n">time</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">TIME</span><span class="p">)</span>
 			<span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">Himalayas</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span> <span class="k">break</span>
-			<span class="k">print</span> <span class="n">r</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+			<span class="k">print</span> <span class="n">r</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
 	<span class="k">if</span> <span class="s">"Mekong River"</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
 		<span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">Mekong_River</span><span class="p">):</span>
 			<span class="k">print</span> <span class="s">"send:"</span><span class="p">,</span> <span class="n">c</span>
-			<span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">c</span><span class="o">+</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
-			<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">TIME</span><span class="p">)</span>
+			<span class="n">r</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">c</span><span class="o">+</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
+			<span class="n">time</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">TIME</span><span class="p">)</span>
 			<span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">Mekong_River</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span> <span class="k">break</span>
-			<span class="k">print</span> <span class="n">r</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+			<span class="k">print</span> <span class="n">r</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
 	<span class="k">if</span> <span class="s">"Rocky Mountain"</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
 		<span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">Rocky_Mountain</span><span class="p">):</span>
 			<span class="k">print</span> <span class="s">"send:"</span><span class="p">,</span> <span class="n">c</span>
-			<span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">c</span><span class="o">+</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
-			<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">TIME</span><span class="p">)</span>
+			<span class="n">r</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">c</span><span class="o">+</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
+			<span class="n">time</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">TIME</span><span class="p">)</span>
 			<span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">Rocky_Mountain</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span> <span class="k">break</span>
-			<span class="k">print</span> <span class="n">r</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+			<span class="k">print</span> <span class="n">r</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
 	<span class="k">if</span> <span class="s">"Nile"</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
 		<span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">Nile</span><span class="p">):</span>
 			<span class="k">print</span> <span class="s">"send:"</span><span class="p">,</span> <span class="n">c</span>
-			<span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">c</span><span class="o">+</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
-			<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">TIME</span><span class="p">)</span>
+			<span class="n">r</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">c</span><span class="o">+</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
+			<span class="n">time</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">TIME</span><span class="p">)</span>
 			<span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">Nile</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span> <span class="k">break</span>
-			<span class="k">print</span> <span class="n">r</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+			<span class="k">print</span> <span class="n">r</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
 	<span class="k">if</span> <span class="s">"Parana River"</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
 		<span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">Parana_River</span><span class="p">):</span>
 			<span class="k">print</span> <span class="s">"send:"</span><span class="p">,</span> <span class="n">c</span>
-			<span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">c</span><span class="o">+</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
-			<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">TIME</span><span class="p">)</span>
+			<span class="n">r</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">c</span><span class="o">+</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
+			<span class="n">time</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">TIME</span><span class="p">)</span>
 			<span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">Parana_River</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span> <span class="k">break</span>
-			<span class="k">print</span> <span class="n">r</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+			<span class="k">print</span> <span class="n">r</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
 	<span class="k">if</span> <span class="s">"Apennine Mountains"</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
 		<span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">Apennine</span><span class="p">):</span>
 			<span class="k">print</span> <span class="s">"send:"</span><span class="p">,</span> <span class="n">c</span>
-			<span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">c</span><span class="o">+</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
-			<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">TIME</span><span class="p">)</span>
+			<span class="n">r</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">c</span><span class="o">+</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
+			<span class="n">time</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">TIME</span><span class="p">)</span>
 			<span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">Apennine</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span> <span class="k">break</span>
-			<span class="k">print</span> <span class="n">r</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+			<span class="k">print</span> <span class="n">r</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
 	<span class="k">else</span><span class="p">:</span> <span class="c1"># solve by hand
-</span>		<span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
-	<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">TIME</span><span class="p">)</span>
+</span>		<span class="n">r</span><span class="p">.</span><span class="n">interactive</span><span class="p">()</span>
+	<span class="n">time</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">TIME</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>After answering all the questions, we get the flag: <code class="language-plaintext highlighter-rouge">0CTF{eNj0y_geography_l0v3_7hE_w0lRd}</code></p>

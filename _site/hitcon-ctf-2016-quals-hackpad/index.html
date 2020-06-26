@@ -387,27 +387,27 @@ c72068bc1b96df045d3fa12cc2a9dcd1
 <span class="kn">import</span> <span class="nn">sys</span>
 
 <span class="k">def</span> <span class="nf">myexec</span><span class="p">(</span><span class="n">cmd</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">subprocess</span><span class="p">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
 <span class="c1"># "cat ./ggg": print out all the last attacker ciphertext
-</span><span class="n">resp</span> <span class="o">=</span> <span class="n">myexec</span><span class="p">(</span><span class="s">"cat ./ggg"</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+</span><span class="n">resp</span> <span class="o">=</span> <span class="n">myexec</span><span class="p">(</span><span class="s">"cat ./ggg"</span><span class="p">).</span><span class="n">split</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
 <span class="k">del</span> <span class="n">resp</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
 <span class="n">temp</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">resp</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="c1"># first line is encrypt(secret), ignore
 </span>        <span class="k">continue</span>
-    <span class="n">d</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">"="</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">c</span><span class="p">.</span><span class="n">split</span><span class="p">(</span><span class="s">"="</span><span class="p">)[</span><span class="mi">1</span><span class="p">].</span><span class="n">strip</span><span class="p">()</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="o">==</span> <span class="mi">64</span>
-    <span class="n">temp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+    <span class="n">temp</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
 
 <span class="n">last_c</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="n">enc</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">temp</span><span class="p">:</span>
-    <span class="n">last_c</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">32</span><span class="p">])</span>
-    <span class="n">enc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="mi">32</span><span class="p">::])</span>
+    <span class="n">last_c</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">32</span><span class="p">])</span>
+    <span class="n">enc</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="mi">32</span><span class="p">::])</span>
 
-<span class="n">enc</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s">"3ed2e01c1d1248125c67ac637384a22d"</span><span class="p">)</span>
+<span class="n">enc</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s">"3ed2e01c1d1248125c67ac637384a22d"</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">fix_len</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
@@ -418,8 +418,8 @@ c72068bc1b96df045d3fa12cc2a9dcd1
 <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">plain</span> <span class="o">=</span> <span class="s">""</span>
 <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">last_c</span><span class="p">:</span>
-    <span class="n">c</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">'hex'</span><span class="p">)</span>
-    <span class="n">pad</span> <span class="o">=</span> <span class="s">"10101010101010101010101010101010"</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">'hex'</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">c</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="s">'hex'</span><span class="p">)</span>
+    <span class="n">pad</span> <span class="o">=</span> <span class="s">"10101010101010101010101010101010"</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="s">'hex'</span><span class="p">)</span>
     <span class="n">s</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">pad</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
         <span class="n">s</span> <span class="o">|=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">c1</span><span class="p">)</span><span class="o">^</span><span class="nb">ord</span><span class="p">(</span><span class="n">c2</span><span class="p">)</span>
@@ -428,15 +428,15 @@ c72068bc1b96df045d3fa12cc2a9dcd1
     <span class="n">sss</span> <span class="o">=</span> <span class="n">fix_len</span><span class="p">(</span><span class="n">sss</span><span class="p">)</span>
 
     <span class="n">s</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">sss</span> <span class="o">=</span> <span class="n">sss</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">'hex'</span><span class="p">)</span>
-    <span class="n">eee</span> <span class="o">=</span> <span class="n">enc</span><span class="p">[</span><span class="n">cnt</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">'hex'</span><span class="p">)</span>
+    <span class="n">sss</span> <span class="o">=</span> <span class="n">sss</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="s">'hex'</span><span class="p">)</span>
+    <span class="n">eee</span> <span class="o">=</span> <span class="n">enc</span><span class="p">[</span><span class="n">cnt</span><span class="p">].</span><span class="n">decode</span><span class="p">(</span><span class="s">'hex'</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">eee</span><span class="p">,</span> <span class="n">sss</span><span class="p">):</span>
         <span class="n">s</span> <span class="o">|=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">c1</span><span class="p">)</span><span class="o">^</span><span class="nb">ord</span><span class="p">(</span><span class="n">c2</span><span class="p">)</span>
         <span class="n">s</span><span class="o">&lt;&lt;=</span><span class="mi">8</span>
     <span class="n">f</span> <span class="o">=</span> <span class="nb">hex</span><span class="p">(</span><span class="n">s</span><span class="o">&gt;&gt;</span><span class="mi">8</span><span class="p">)[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">:]</span>
     <span class="n">f</span> <span class="o">=</span> <span class="n">fix_len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 
-    <span class="n">plain</span> <span class="o">+=</span> <span class="n">f</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">'hex'</span><span class="p">)</span>
+    <span class="n">plain</span> <span class="o">+=</span> <span class="n">f</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="s">'hex'</span><span class="p">)</span>
     <span class="n">cnt</span> <span class="o">+=</span> <span class="mi">1</span>
 
 <span class="k">print</span> <span class="n">plain</span>

