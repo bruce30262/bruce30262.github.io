@@ -4,7 +4,7 @@
   <id>http://0.0.0.0:4000/</id>
   <title>Hacking Tube 2.0</title>
   <subtitle>Binary exploitation, Reverse Engineering, CTF...etc</subtitle>
-  <updated>2021-07-19T21:11:05+08:00</updated>
+  <updated>2021-07-19T21:15:02+08:00</updated>
   <author>
     <name>Bruce Chen</name>
     <uri>http://0.0.0.0:4000/</uri>
@@ -24,7 +24,7 @@
     <link href="http://0.0.0.0:4000/flare-on-challenge-2019-write-up/" rel="alternate" type="text/html" title="Flare-on Challenge 2019 Write-up" />
     <published>2019-09-28T13:30:00+08:00</published>
   
-    <updated>2020-03-21T17:09:40+08:00</updated>
+    <updated>2021-07-19T21:12:41+08:00</updated>
   
     <id>http://0.0.0.0:4000/flare-on-challenge-2019-write-up/</id>
     <content src="http://0.0.0.0:4000/flare-on-challenge-2019-write-up/" />
@@ -64,7 +64,7 @@ Final rank : 197/5790, not bad for an amateur reverse engineering lover 😄 In 
     <link href="http://0.0.0.0:4000/flare-on-challenge-2018-write-up/" rel="alternate" type="text/html" title="Flare-on Challenge 2018 Write-up" />
     <published>2018-10-06T15:29:15+08:00</published>
   
-    <updated>2020-03-21T17:09:40+08:00</updated>
+    <updated>2021-07-19T21:12:41+08:00</updated>
   
     <id>http://0.0.0.0:4000/flare-on-challenge-2018-write-up/</id>
     <content src="http://0.0.0.0:4000/flare-on-challenge-2018-write-up/" />
@@ -102,7 +102,7 @@ Final rank : 197/5790, not bad for an amateur reverse engineering lover 😄 In 
     <link href="http://0.0.0.0:4000/some-notes-on-migrating-to-jekyll/" rel="alternate" type="text/html" title="Some notes on migrating to Jekyll" />
     <published>2018-09-28T00:00:00+08:00</published>
   
-    <updated>2018-10-04T01:03:12+08:00</updated>
+    <updated>2021-07-19T21:12:41+08:00</updated>
   
     <id>http://0.0.0.0:4000/some-notes-on-migrating-to-jekyll/</id>
     <content src="http://0.0.0.0:4000/some-notes-on-migrating-to-jekyll/" />
@@ -146,7 +146,7 @@ Since I’m migrating to Jekyll, I had to clean my bruce30262.github.io reposito
     <link href="http://0.0.0.0:4000/Chakrazy-exploiting-type-confusion-bug-in-ChakraCore/" rel="alternate" type="text/html" title="Chakrazy -- exploiting type confusion bug in ChakraCore engine" />
     <published>2017-12-26T19:12:00+08:00</published>
   
-    <updated>2020-03-21T17:09:40+08:00</updated>
+    <updated>2021-07-19T21:12:41+08:00</updated>
   
     <id>http://0.0.0.0:4000/Chakrazy-exploiting-type-confusion-bug-in-ChakraCore/</id>
     <content src="http://0.0.0.0:4000/Chakrazy-exploiting-type-confusion-bug-in-ChakraCore/" />
@@ -188,7 +188,7 @@ It is recommanded that the reader ha...
     <link href="http://0.0.0.0:4000/Learning-browser-exploitation-via-33C3-CTF-feuerfuchs-challenge/" rel="alternate" type="text/html" title="Learning browser exploitation via 33C3 CTF  feuerfuchs challenge" />
     <published>2017-12-16T05:24:00+08:00</published>
   
-    <updated>2020-03-21T17:09:40+08:00</updated>
+    <updated>2021-07-19T21:12:41+08:00</updated>
   
     <id>http://0.0.0.0:4000/Learning-browser-exploitation-via-33C3-CTF-feuerfuchs-challenge/</id>
     <content src="http://0.0.0.0:4000/Learning-browser-exploitation-via-33C3-CTF-feuerfuchs-challenge/" />
