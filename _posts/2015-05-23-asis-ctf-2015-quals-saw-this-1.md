@@ -1,10 +1,6 @@
 ---
 title: ASIS CTF 2015 Quals -- Saw this (1 & 2)
-layout: single
 comments: true
-share: true
-related: true
-author_profile: true
 permalink: "/:title/"
 tags:
 - ASIS
@@ -18,7 +14,7 @@ categories:
 date: '2015-05-23 06:37:00'
 ---
 
-**Category:** pwn
+**Category:** pwn  
 **Points:** 100 (Saw this-1), 400 (Saw this-2)
 
 > Survive and get the flag!  

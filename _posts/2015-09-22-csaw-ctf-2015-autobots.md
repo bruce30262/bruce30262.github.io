@@ -1,17 +1,18 @@
 ---
 title: CSAW CTF 2015 -- autobots
 tags:
-  - Python
-  - CSAW
-  - CTF
-  - PPC
-  - Pwnable
-  - ROP
+- Python
+- CSAW
+- CTF
+- PPC
+- Pwnable
+- ROP
 categories:
-  - write-ups
-date: 2015-09-22 15:33:00
+- write-ups
+date: '2015-09-22 15:33:00 +0000'
 ---
-**Category:** Exploitable
+
+**Category:** Exploitable  
 **Points:** 350  
 
 > I hear bots are playing ctfs now.

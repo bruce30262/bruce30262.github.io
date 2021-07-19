@@ -1,10 +1,6 @@
 ---
 title: MMA 2nd CTF 2016 -- Interpreter
-layout: single
 comments: true
-share: true
-related: true
-author_profile: true
 permalink: "/:title/"
 tags:
 - Python
@@ -16,12 +12,13 @@ categories:
 date: '2016-09-12 16:45:00 +0000'
 ---
 
-**Category:** pwn
+**Category:** pwn  
 **Points:** 200  
 
 <!-- more -->  
   
 64 bit ELF, with **FULL RELRO**, **NX**, **stack guard** & **PIE** enabled.  
+
 After doing some reversing, we found that it's a [Befunge-93 program](https://en.wikipedia.org/wiki/Befunge) interpreter. It will first read some [Befunge-93 instructions](https://en.wikipedia.org/wiki/Befunge#Befunge-93_instruction_list) (at most 20000 characters), then interpret & execute those instructions. The program will store those instructions at the `program` buffer, and the maximum of the executed instructions is 10000.  
   
 Here's the pseudo code of the main function:  
@@ -311,4 +308,5 @@ v                                    <
 flag : `TWCTF{It_1s_eMerG3nCy}`  
   
 After I pass the challenge and ask a girl from HITCON CTF team, she told me that there's a symbol call `environ` in libc, which also store a stack address! And that's the moment I realized I totally forgot to search the stack address in libc while debugging the program!  
+
 So the (way) more elegant way to solve this challenge is to leak the stack address via the `environ` symbol after we leak the libc's base address. Guess I've still got a lot to learn in the pwn area :P

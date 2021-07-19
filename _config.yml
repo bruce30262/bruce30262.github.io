@@ -1,156 +1,163 @@
-# Welcome to Jekyll!
-#
-# This config file is meant for settings that affect your whole blog, values
-# which you are expected to set up once and rarely edit after that. If you find
-# yourself editing this file very often, consider using Jekyll's data files
-# feature for the data you need to update frequently.
-#
-# For technical reasons, this file is *NOT* reloaded automatically when you use
-# 'bundle exec jekyll serve'. If you change this file, please restart the server process.
+# The Site Configuration
 
-# Site settings
-# These are used to personalize your new site. If you look in the HTML files,
-# you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
-# You can create any custom variable you would like, and they will be accessible
-# in the templates via {{ site.myvariable }}.
-title: "Hacking Tube 2.0"
-name: "Bruce Chen"
-description: >- # this means to ignore newlines until "baseurl:"
-    Security and stuff
-repository: "bruce30262/bruce30262.github.io"
-url: "https://bruce30262.github.io" # the base hostname & protocol for your site, e.g. http://example.com
-baseurl: "" # the subpath of your site, e.g. /blog
+# Import the theme
+theme: jekyll-theme-chirpy
+ignore_theme_config: true # FIX jekyll-admin's error ( https://github.com/jekyll/jekyll-admin/issues/595 )
 
-# Author
-author:
-  name     : "Bruce Chen"
-  avatar   : "/assets/images/other/gravatar.png"
-  bio      : "Vulnerability Researcher / CTFer"
-  location : "Taiwan" 
-  links:
-    - label: "About"
-      icon: "fas fa-fw fa-user"
-      url: "/about"
-    - label: "Twitter"
-      icon: "fab fa-fw fa-twitter-square"
-      url: "https://twitter.com/bruce30262"
-    - label: "GitHub"
-      icon: "fab fa-fw fa-github"
-      url: "https://github.com/bruce30262"
-    - label: "RSS"
-      icon: "fas fa-fw fa-rss-square"
-      url: "/feed.xml"
+# Only if your site type is GitHub Project sites and doesn't have a custom domain,
+# change below value to '/projectname'.
+baseurl: ''
 
+# the HTML language tag › https://www.w3.org/International/questions/qa-choosing-language-tags
+lang: zh-TW
+
+# Change to your timezone › http://www.timezoneconverter.com/cgi-bin/findzone/findzone
 timezone: Asia/Taipei
 
-# Build settings
-markdown: kramdown
-# Markdown Processing
+# jekyll-seo-tag settings › https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
+# --------------------------
+title: "Hacking Tube 2.0"
+tagline: Security and stuff   # it will display as the sub-title
+description: >- # used by seo meta and the atom feed
+    Binary exploitation, Reverse Engineering, CTF...etc
+
+# fill in the protocol & hostname for your site, e.g., 'https://username.github.io'
+url: 'https://bruce30262.github.io'
+
+github:
+  username: bruce30262             # change to your github username
+
+twitter:
+  username: bruce30262            # change to your twitter username
+
+social:
+  # Change to your full name.
+  # It will be displayed as the default author of the posts and the copyright owner in the Footer
+  name: Bruce Chen
+  email: bruce30262@pm.me             # change to your email address
+  links:
+    # The first element serves as the copyright owner's link
+    - https://twitter.com/bruce30262      # change to your twitter homepage
+    - https://github.com/bruce30262       # change to your github homepage
+    # Uncomment below to add more social links
+    # - https://www.facebook.com/username
+    # - https://www.linkedin.com/in/username
+
+#google_site_verification: google_meta_tag_verification # change to your verification string
+# --------------------------
+
+google_analytics:
+  id: 'G-DWVMJEKBPB' # fill in your Google Analytics ID
+  # Google Analytics pageviews report settings
+  pv:
+    proxy_endpoint:   # fill in the Google Analytics superProxy endpoint of Google App Engine
+    cache_path:       # the local PV cache data, friendly to visitors from GFW region
+
+# Prefer color scheme setting.
+#
+# Note: Keep empty will follow the system prefer color by default,
+# and there will be a toggle to switch the theme between dark and light
+# on the bottom left of the sidebar.
+#
+# Available options:
+#
+#     light  - Use the light color scheme
+#     dark   - Use the dark color scheme
+#
+theme_mode: dark
+
+# The CDN endpoint for images.
+# Notice that once it is assigned, the CDN url
+# will be added to all image (site avatar & posts' images) paths starting with '/'
+#
+# e.g. 'https://cdn.com'
+#img_cdn: ''
+
+# the avatar on sidebar, support local or CORS resources
+#avatar: https://cdn.jsdelivr.net/gh/cotes2020/chirpy-images/commons/avatar.jpg
+avatar   : "/assets/images/other/gravatar.png"
+
+# boolean type, the global switch for ToC in posts.
+toc: true
+
+disqus:
+  comments: true  # boolean type, the global switch for posts comments.
+  shortname: "bruce30262logdown"
+
+paginate: 10
+
+# ------------ The following options are not recommended to be modified ------------------
+
 kramdown:
-  input: GFM
-  hard_wrap: false
-  auto_ids: true
-  footnote_nr: 1
-  entity_output: as_char
-  toc_levels: 1..6
-  smart_quotes: lsquo,rsquo,ldquo,rdquo
-  enable_coderay: false
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:   # Rouge Options › https://github.com/jneen/rouge#full-options
+    css_class: highlight
+    # default_lang: console
+    span:
+      line_numbers: false
+    block:
+      line_numbers: true
+      start_line: 1
 
-# theme settings
-remote_theme: bruce30262/minimal-mistakes
-minimal_mistakes_skin: "air" # "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum" "sunrise"
-# Plugins
-plugins:
-  - jekyll-feed
-  - jekyll-sitemap
-  - jemoji
-  - jekyll-include-cache
+collections:
+  tabs:
+    output: true
+    sort_by: order
 
-# set pages link
-include: ["_pages"]
-
-# category & tags
-category_archive:
-  type: liquid
-  path: /categories/
-tag_archive:
-  type: liquid
-  path: /tags/
-
-# paginate
-paginate: 5
-paginate_path: /page:num/
-
-# some default setting
 defaults:
-  # _posts
-  - scope:
-      path: ""
+  -
+    scope:
+      path: ''          # An empty string here means all files in the project
       type: posts
     values:
-      layout: single
-      comments: true
-      share: true
-      related: true
-      author_profile: true
+      layout: post
+      comments: true    # Enable comments in posts.
+      toc: true         # Display TOC column in posts.
+      # DO NOT modify the following parameter unless you are confident enough
+      # to update the code of all other post links in this project.
       permalink: /:title/
-  # _pages
-  - scope:
-      path: ""
-      type: pages
+  -
+    scope:
+      path: _drafts
     values:
-      layout: single
-      author_profile: true
+      comments: false
+  -
+    scope:
+      path: ''
+      type: tabs             # see `site.collections`
+    values:
+      layout: page
+      permalink: /:title/
+      dynamic_title: true    # Hide title in mobile screens.
 
-# footer
-footer:
-  links:
-    - label: ""
-      icon: "fab fa-fw fa-creative-commons"
-      url: "https://creativecommons.org/licenses/by-nc-sa/4.0/"
-    - label: ""
-      icon: "fab fa-fw fa-creative-commons-by"
-      url: "https://creativecommons.org/licenses/by-nc-sa/4.0/"
-    - label: ""
-      icon: "fab fa-fw fa-creative-commons-nc"
-      url: "https://creativecommons.org/licenses/by-nc-sa/4.0/"
-    - label: ""
-      icon: "fab fa-fw fa-creative-commons-sa"
-      url: "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+sass:
+  style: compressed
 
-# search
-search: true
+compress_html:
+  clippings: all
+  comments: all
+  endings: all
+  profile: false
+  blanklines: false
+  ignore:
+    envs: [development]
 
-# site script
-head_scripts:
-    - https://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-607ec7d9a6f0f271
-
-# google analytics
-analytics:
-  provider: "google"
-  google:
-    tracking_id: "UA-100090256-1"
-    anonymize_ip: false # default
-
-# Disqus
-comments:
-  provider: "disqus"
-  disqus:
-    shortname: "bruce30262logdown"
-
-
-# MISC
-encoding: "utf-8"
-
-# Exclude from processing.
-# The following items will not be processed, by default. Create a custom list
-# to override the default setting.
 exclude:
-    - patch_theme/
-#   - Gemfile
-#   - Gemfile.lock
-#   - node_modules
-#   - vendor/bundle/
-#   - vendor/cache/
-#   - vendor/gems/
-#   - vendor/ruby/
+  - '*.gem'
+  - '*.gemspec'
+  - tools
+  - docs
+  - README.md
+  - LICENSE
+  - gulpfile.js
+  - node_modules
+  - '*.json'
+
+jekyll-archives:
+  enabled: [categories, tags]
+  layouts:
+    category: category
+    tag: tag
+  permalinks:
+    tag: /tags/:name/
+    category: /categories/:name/

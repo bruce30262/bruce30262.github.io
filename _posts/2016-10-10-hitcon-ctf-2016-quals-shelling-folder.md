@@ -1,10 +1,6 @@
 ---
 title: HITCON CTF 2016 Quals -- Shelling Folder
-layout: single
 comments: true
-share: true
-related: true
-author_profile: true
 permalink: "/:title/"
 tags:
 - CTF
@@ -18,7 +14,7 @@ categories:
 date: '2016-10-10 16:11:00 +0000'
 ---
 
-**Category:** pwn
+**Category:** pwn  
 **Points:** 200
 
 <!-- more -->  

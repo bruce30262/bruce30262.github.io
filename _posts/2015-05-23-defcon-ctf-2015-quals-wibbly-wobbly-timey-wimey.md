@@ -1,10 +1,6 @@
 ---
 title: DEFCON CTF 2015 Quals -- wibbly-wobbly-timey-wimey
-layout: single
 comments: true
-share: true
-related: true
-author_profile: true
 permalink: "/:title/"
 tags:
 - Python
@@ -19,7 +15,7 @@ categories:
 date: '2015-05-23 22:40:00 +0000'
 ---
 
-**Category:** Pwnable
+**Category:** Pwnable  
 **Points:** 2
 > Wibbly Wobbly Timey Wimey
 > Don't blink!

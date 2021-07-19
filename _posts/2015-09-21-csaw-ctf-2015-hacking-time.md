@@ -1,17 +1,18 @@
 ---
-title: 'CSAW CTF 2015 -- Hacking Time'
+title: CSAW CTF 2015 -- Hacking Time
 date: 2015-09-21 12:50
 tags:
-  - Python
-  - CSAW
-  - CTF
-  - Z3
-  - Reversing
-  - NES
+- Python
+- CSAW
+- CTF
+- Z3
+- Reversing
+- NES
 categories:
-  - write-ups
+- write-ups
 ---
-**Category:** Reversing
+
+**Category:** Reversing  
 **Points:** 200
 
 This challenge gave us a [NES ROM](https://github.com/ctfs/write-ups-2015/blob/master/csaw-ctf-2015/reverse/hacking-time-200/HackingTime_03e852ace386388eb88c39a02f88c773.nes). After we launch it with NES debugger [FCEUX](http://sourceforge.net/projects/fceultra/?source=typ_redirect), we found out that it eventually want us to input a password with 24 characters in length .
@@ -99,4 +100,3 @@ solv()
 ```  
 
 Finally, we get the password ( which is also the flag ): `NOHACK4UXWRATHOFKFUHRERX`
-

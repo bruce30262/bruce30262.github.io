@@ -1,15 +1,16 @@
 ---
 title: Hack.lu CTF 2015 -- secret library
 tags:
-  - Hack.lu
-  - Reversing
-  - CTF
-  - Python
+- Hack.lu
+- Reversing
+- CTF
+- Python
 categories:
-  - write-ups
-date: 2015-10-22 11:48:00
+- write-ups
+date: '2015-10-22 11:48:00 +0000'
 ---
-**Category:** Reversing
+
+**Category:** Reversing  
 **Points:** 200  
 
 [64 bit ELF](https://school.fluxfingers.net/static/chals/secret_library_75904fb763267c629e729fa4a5c4d967)

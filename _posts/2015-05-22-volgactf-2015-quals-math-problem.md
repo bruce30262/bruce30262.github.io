@@ -1,16 +1,16 @@
 ---
-title: 'VolgaCTF 2015 Quals -- math problem'
+title: VolgaCTF 2015 Quals -- math problem
 date: 2015-05-22 13:49
 tags:
-  - Python
-  - CTF
-  - VolgaCTF
-  - PPC
+- Python
+- CTF
+- VolgaCTF
+- PPC
 categories:
-  - write-ups
+- write-ups
 ---
 
-**Category:** PPC
+**Category:** PPC  
 **Points:** 300
 > nc mathproblem.2015.volgactf.ru 8888
 
@@ -74,4 +74,3 @@ while True:
 ```
 
 Flag: `{you_count_as_fast_as_a_calculator}`
-

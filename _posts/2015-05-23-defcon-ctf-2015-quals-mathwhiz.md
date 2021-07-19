@@ -1,15 +1,16 @@
 ---
-title: 'DEFCON CTF 2015 Quals -- mathwhiz'
+title: DEFCON CTF 2015 Quals -- mathwhiz
 date: 2015-05-23 22:39
 tags:
-  - Python
-  - DEFCON
-  - CTF
-  - PPC
+- Python
+- DEFCON
+- CTF
+- PPC
 categories:
-  - write-ups
+- write-ups
 ---
-**Category:** Baby's First
+
+**Category:** Baby's First  
 **Points:** 1
 > mathwhiz_c951d46fed68687ad93a84e702800b7a.quals.shallweplayaga.me:21249
 

@@ -1,10 +1,6 @@
 ---
 title: VolgaCTF 2015 Quals -- my little pwnie
-layout: single
 comments: true
-share: true
-related: true
-author_profile: true
 permalink: "/:title/"
 tags:
 - VolgaCTF
@@ -19,10 +15,12 @@ categories:
 date: '2015-05-22 14:08:00 +0000'
 ---
 
-**Category:** Pwn
+**Category:** Pwn  
 **Points:** 250
 > Just another pwn task. Break in!
-> nc pwnie.2015.volgactf.ru 7777
+>   
+> nc pwnie.2015.volgactf.ru 7777  
+> 
 > [my_little_pwnie](http://files.2015.volgactf.ru/my_little_pwnie/my_little_pwnie)
 
 I solve the challenge after the end of the CTF, because I think this is a great challenge for practicing **format string** and **sprintf BOF vulnerability**. Special thanks to [Lays](http://blog.l4ys.tw) for putting the exploit on the trello and let me have time to study the challenge. 

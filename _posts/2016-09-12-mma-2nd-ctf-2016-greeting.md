@@ -1,10 +1,6 @@
 ---
 title: MMA 2nd CTF 2016 -- greeting
-layout: single
 comments: true
-share: true
-related: true
-author_profile: true
 permalink: "/:title/"
 tags:
 - MMA
@@ -17,7 +13,7 @@ categories:
 date: '2016-09-12 15:49:00 +0000'
 ---
 
-**Category:** pwn
+**Category:** pwn  
 **Points:** 150  
 
 <!-- more -->  
