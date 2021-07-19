@@ -1,10 +1,6 @@
 ---
 title: DEFCON CTF 2015 Quals -- catwestern
-layout: single
 comments: true
-share: true
-related: true
-author_profile: true
 permalink: "/:title/"
 tags:
 - Python
@@ -18,7 +14,7 @@ categories:
 date: '2015-05-23 22:39:00 +0000'
 ---
 
-**Category:** Coding Challenge
+**Category:** Coding Challenge  
 **Points:** 1
 > meow
 > catwestern_631d7907670909fc4df2defc13f2057c.quals.shallweplayaga.me 9999

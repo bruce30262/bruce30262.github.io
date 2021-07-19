@@ -1,10 +1,6 @@
 ---
 title: HITCON CTF 2016 Quals -- Secret Holder
-layout: single
 comments: true
-share: true
-related: true
-author_profile: true
 permalink: "/:title/"
 tags:
 - Python
@@ -19,7 +15,7 @@ categories:
 date: '2016-10-10 08:10:00 +0000'
 ---
 
-**Category:** pwn
+**Category:** pwn  
 **Points:** 100
 
 <!-- more -->  

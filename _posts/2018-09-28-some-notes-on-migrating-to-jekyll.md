@@ -1,21 +1,15 @@
 ---
 title: Some notes on migrating to Jekyll
-layout: single
 comments: true
-share: true
-related: true
-author_profile: true
 permalink: "/:title/"
 tags:
 - Jekyll
-- Ruby
+- ruby
 - git
 - docker
 categories:
 - note
 toc: true
-toc_label: Table of Contents
-toc_sticky: true
 ---
 
 Recently I've decided to migrate my blogging framework from [Hexo](https://hexo.io/zh-tw/) to [Jekyll](https://jekyllrb.com/). Here are some notes that I took for recording the migration process.

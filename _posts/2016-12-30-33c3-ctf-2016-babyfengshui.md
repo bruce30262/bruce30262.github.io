@@ -1,10 +1,6 @@
 ---
 title: 33C3 CTF 2016 -- babyfengshui
-layout: single
 comments: true
-share: true
-related: true
-author_profile: true
 permalink: "/:title/"
 date: 2016-12-30 00:27
 tags:
@@ -18,7 +14,7 @@ categories:
 - write-ups
 ---
 
-**Category:** pwn
+**Category:** pwn  
 **Points:** 150
 
 <!-- more -->  

@@ -1,10 +1,6 @@
 ---
 title: SECCON CTF 2016 -- chat
-layout: single
 comments: true
-share: true
-related: true
-author_profile: true
 permalink: "/:title/"
 tags:
 - SECCON
@@ -19,7 +15,7 @@ categories:
 date: '2016-12-12 08:03:00 +0000'
 ---
 
-**Category:** Exploit
+**Category:** Exploit  
 **Points:** 500
 
 <!-- more -->  

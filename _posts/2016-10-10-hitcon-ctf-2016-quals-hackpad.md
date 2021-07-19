@@ -1,17 +1,18 @@
 ---
 title: HITCON CTF 2016 Quals -- Hackpad
 tags:
-  - Python
-  - CTF
-  - HITCON
-  - Crypto
-  - Forensic
-  - padding_oracle_attack
+- Python
+- CTF
+- HITCON
+- Crypto
+- Forensic
+- padding_oracle_attack
 categories:
-  - write-ups
-date: 2016-10-10 16:08:00
+- write-ups
+date: '2016-10-10 16:08:00 +0000'
 ---
-**Category:** Crypto & Forensics
+
+**Category:** Crypto & Forensics  
 **Points:** 150
 
 <!-- more -->  

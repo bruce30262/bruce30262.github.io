@@ -1,10 +1,6 @@
 ---
 title: AIS3 2015 pre-exam -- complete writeup
-layout: single
 comments: true
-share: true
-related: true
-author_profile: true
 permalink: "/:title/"
 tags:
 - AIS3
@@ -22,7 +18,6 @@ categories:
 - write-ups
 date: '2015-08-06 12:15:00 +0000'
 toc: true
-toc_label: Table of Contents
 ---
 
 考量到參與 AIS3 2015 pre-exam 的人幾乎都是台灣人  

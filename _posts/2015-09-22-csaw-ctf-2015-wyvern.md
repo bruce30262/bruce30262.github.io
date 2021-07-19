@@ -1,17 +1,18 @@
 ---
 title: CSAW CTF 2015 -- wyvern
 tags:
-  - ruby
-  - CTF
-  - CSAW
-  - Reversing
-  - pin
-  - side-channel-attack
+- ruby
+- CTF
+- CSAW
+- Reversing
+- pin
+- side-channel-attack
 categories:
-  - write-ups
-date: 2015-09-22 04:24:00
+- write-ups
+date: '2015-09-22 04:24:00 +0000'
 ---
-**Category:** Reversing
+
+**Category:** Reversing  
 **Points:** 500 
 
 Here they gave us another [64 bit ELF](https://github.com/ctfs/write-ups-2015/blob/master/csaw-ctf-2015/reverse/wyvern-500/wyvern_c85f1be480808a9da350faaa6104a19b), which is apparently written in **C++**.  

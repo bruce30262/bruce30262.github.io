@@ -1,10 +1,6 @@
 ---
 title: HITCON CTF 2016 Quals -- flame
-layout: single
 comments: true
-share: true
-related: true
-author_profile: true
 permalink: "/:title/"
 tags:
 - ruby
@@ -21,7 +17,7 @@ categories:
 date: '2016-10-10 16:06:00 +0000'
 ---
 
-**Category:** PPC ( more like Reverse )
+**Category:** PPC ( more like Reverse )  
 **Points:** 150
 
 <!-- more -->  

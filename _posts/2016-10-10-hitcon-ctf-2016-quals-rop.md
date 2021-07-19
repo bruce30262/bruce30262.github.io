@@ -1,10 +1,6 @@
 ---
 title: HITCON CTF 2016 Quals -- ROP
-layout: single
 comments: true
-share: true
-related: true
-author_profile: true
 permalink: "/:title/"
 tags:
 - CTF
@@ -16,7 +12,7 @@ categories:
 date: '2016-10-10 16:07:00 +0000'
 ---
 
-**Category:** Reverse
+**Category:** Reverse  
 **Points:** 250
 
 <!-- more -->  

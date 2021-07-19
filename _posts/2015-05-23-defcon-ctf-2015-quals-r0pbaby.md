@@ -1,10 +1,6 @@
 ---
 title: DEFCON CTF 2015 Quals -- r0pbaby
-layout: single
 comments: true
-share: true
-related: true
-author_profile: true
 permalink: "/:title/"
 date: 2015-05-23 22:38
 tags:
@@ -17,7 +13,7 @@ categories:
 - write-ups
 ---
 
-**Category:** Baby's First
+**Category:** Baby's First  
 **Points:** 1
 > r0pbaby_542ee6516410709a1421141501f03760.quals.shallweplayaga.me:10436
 

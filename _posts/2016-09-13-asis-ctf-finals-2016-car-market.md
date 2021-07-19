@@ -1,10 +1,6 @@
 ---
 title: ASIS CTF Finals 2016 -- car market
-layout: single
 comments: true
-share: true
-related: true
-author_profile: true
 permalink: "/:title/"
 tags:
 - CTF
@@ -19,7 +15,7 @@ categories:
 date: '2016-09-13 08:54:00 +0000'
 ---
 
-**Category:** pwn
+**Category:** pwn  
 **Points:** 177  
 
 <!-- more -->    

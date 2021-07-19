@@ -1,10 +1,6 @@
 ---
 title: MeePwn CTF 2017 -- anotherarena
-layout: single
 comments: true
-share: true
-related: true
-author_profile: true
 permalink: "/:title/"
 tags:
 - CTF

@@ -1,10 +1,6 @@
 ---
 title: ASIS CTF Finals 2014 -- SATELLITE
-layout: single
 comments: true
-share: true
-related: true
-author_profile: true
 permalink: "/:title/"
 tags:
 - CTF
