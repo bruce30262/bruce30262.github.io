@@ -85,6 +85,14 @@ comments:
     disqus:
         shortname: "bruce30262logdown"
 
+# Self-hosted static assets, optional › https://github.com/cotes2020/chirpy-static-assets
+assets:
+  self_host:
+    enabled:      # boolean, keep empty means false
+    # specify the Jekyll environment, empty means both
+    # only works if `assets.self_host.enabled` is 'true'
+    env:          # [development|production]
+
 paginate: 10
 
 # ------------ The following options are not recommended to be modified ------------------
