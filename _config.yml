@@ -9,7 +9,7 @@ ignore_theme_config: true # FIX jekyll-admin's error ( https://github.com/jekyll
 baseurl: ''
 
 # the HTML language tag › https://www.w3.org/International/questions/qa-choosing-language-tags
-lang: zh-TW
+lang: en
 
 # Change to your timezone › http://www.timezoneconverter.com/cgi-bin/findzone/findzone
 timezone: Asia/Taipei
