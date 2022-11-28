@@ -309,9 +309,8 @@ for _, _, files in os.walk("."):
             run_binary(f)
 ```
 
-<div class="alert alert-secondary" role="alert" markdown=1>
-For some unknown reason I couldn't install LIEF on Windows 10, so I had to seperate the script into two different scripts : one for extracting the passwords ( run under a Linux VM ), another for running the binaries ( run under Win10 )
-</div>
+>For some unknown reason I couldn't install LIEF on Windows 10, so I had to seperate the script into two different scripts : one for extracting the passwords ( run under a Linux VM ), another for running the binaries ( run under Win10 )
+{: .prompt-warning }
 
 After that those binaries will generate 48 png files, and output something like:
 
@@ -851,11 +850,10 @@ int func0 (char *key, unsigned int int_arr_len, __int64 *int_arr)
 }
 ```
 
-<div class="alert alert-primary" role="alert" markdown=1>
-🤔...this looks very similar to fibonacci ....  
-
-Wait a second ... It **IS** fibonacci !! OMG I'm such an idiot 😫 
-</div>
+>🤔...this looks very similar to fibonacci ....  
+>
+>Wait a second ... It **IS** fibonacci !! OMG I'm such an idiot 😫 
+{: .prompt-info }
 
 ☝ Yeah...that's me after N hours of frustrations...
 
@@ -914,9 +912,8 @@ int main()
 
 Here it will load the 64 bit dll ( 7.dll ) and wait for our input. We then can attach the debugger to this process and press any key to continue the debug process.
 
-<div class="alert alert-success" role="alert" markdown=1>
-**EDIT:**  [dll_to_exe finally support 64 bit dll](https://twitter.com/hasherezade/status/1049800972913045504) ! However it won't work on this one, you'll have to use [PE-bear](https://github.com/hasherezade/releases/releases/tag/0.3.8) to convert the dll to exe ( check out this [hasherezade's blog post](https://hshrzd.wordpress.com/2016/07/21/how-to-turn-a-dll-into-a-standalone-exe/) for more details )
-</div>
+>**EDIT:**  [dll_to_exe finally support 64 bit dll](https://twitter.com/hasherezade/status/1049800972913045504) ! However it won't work on this one, you'll have to use [PE-bear](https://github.com/hasherezade/releases/releases/tag/0.3.8) to convert the dll to exe ( check out this [hasherezade's blog post](https://hshrzd.wordpress.com/2016/07/21/how-to-turn-a-dll-into-a-standalone-exe/) for more details )
+{: .prompt-tip }
 
 By reverse & debug the dll file with IDA Pro, we could sort out some stuff in this dll file :
 
@@ -1614,9 +1611,8 @@ Since it's an image file, we can actually `mount` it as a directory and look aro
 So apparently there's something inside the image file that does the password checking, and it's definitely not `infohelp.exe`. 
 
 
-<div class="alert alert-primary" role="alert" markdown=1>
-According to Lays, the program hook int 0x21 and jump to the code that does the password checking during the file operation of "message.dat".
-</div>
+>According to Lays, the program hook int 0x21 and jump to the code that does the password checking during the file operation of "message.dat".
+{: .prompt-info }
 
 To locate the actual code, I decided to switch my analyzing tool to IDA and [Bochs emulator](https://sourceforge.net/projects/bochs/). By suspending the execution during the password checking stage, we can locate the code and re-implement it with the following pseudo code: 
 
@@ -1861,9 +1857,8 @@ subleq2 a, b     ; Mem[a] = Mem[a] - ACCUM
 ![](/assets/images/Flare-on-2018/deeper.jpg)
 
 
-<div class="alert alert-danger" role="alert" markdown=1>
-**EDIT:** Ah...so after I read the [official write-up](https://www.fireeye.com/content/dam/fireeye-www/blog/pdfs/FlareOn5_Challenge12_Solution.pdf), it's actually not subleq2 but a [RSSB](https://en.wikipedia.org/wiki/One_instruction_set_computer#Reverse_subtract_and_skip_if_borrow) (Reverse subtract and skip if borrow) VM. It looks kind of like subleq2, and I got confused 😛 
-</div>
+>**EDIT:** Ah...so after I read the [official write-up](https://www.fireeye.com/content/dam/fireeye-www/blog/pdfs/FlareOn5_Challenge12_Solution.pdf), it's actually not subleq2 but a [RSSB](https://en.wikipedia.org/wiki/One_instruction_set_computer#Reverse_subtract_and_skip_if_borrow) (Reverse subtract and skip if borrow) VM. It looks kind of like subleq2, and I got confused 😛 
+{: .prompt-danger }
 
 So once again, I had to write another disassebler for ~~subleq2~~ RSSB. Based on the first one and with some modification, I created another [tiny disassembler](https://gist.github.com/bruce30262/1f4ec443c82eb3587440877aa811c767). It can only identify instructions like `MOV`, `ADD`, `SUB`......, but again, we could simplify the code base on some special patterns. After identifying some function calls, I was able to recover the whole program logic, and this time the result is much more reasonable :
 
