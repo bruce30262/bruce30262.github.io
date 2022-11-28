@@ -7,7 +7,7 @@ order: 4
 
 ## About me
 * A guy from Taiwan who loves hacking a lot.
-* Vulnerability Researcher / CTF player.
+* Vulnerability Researcher / CTF player ( 99% retired 👴 ).
 * RE / PWN / Binary bitch ✌(´◓q◔`)✌.
 
 ## About this blog
