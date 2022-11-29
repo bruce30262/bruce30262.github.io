@@ -14,9 +14,9 @@ tags:
 
 ## Intro
 
-`Fourchain - Hypervisor` is a pwnable challenge created by Billy ( @st424204 ) for HITCON CTF 2022. It's a VM Escape challenge -- challenger will have to escape a VirtualBox VM and achieve code execution on the host. As the challenge verifier, I spent lots of time learning VirtualBox internal and developing exploits. Although the vulnerability is obvious, it's still not an easy task to solve, and I learned tons of stuff while trying to solve it. 
+`Fourchain - Hypervisor` is a pwnable challenge created by Billy ( @st424204 ) for HITCON CTF 2022. It serves as the 4th stage of the Fourchain series -- a VM Escape challenge which requires challengers to escape a VirtualBox VM and achieve code execution on the host. 
 
-Here in this post I'll share the solutions and other details of this challenge, including three different methods I used for exploitation. You can find all my exploit kernel module in [this link](https://gist.github.com/bruce30262/bcb1f78db231bc082f12adb7510a9973). Feel free to correct me if I got something wrong in this post, since I'm a VirtualBox noob ( and still is TBH ) before I met this challenge. 
+As the challenge verifier, I spent lots of time learning VirtualBox internal and developing exploits. Although the vulnerability is obvious, it's still not an easy task to solve, and I learned tons of stuff while trying to solve it. Here in this post I'll share the solutions and other details of this challenge, including three different methods I used for exploitation. You can find all my exploit kernel module in [this link](https://gist.github.com/bruce30262/bcb1f78db231bc082f12adb7510a9973). Feel free to correct me if I got something wrong in this post, since I'm a VirtualBox noob ( and still is TBH ) before I met this challenge. 
 
 <!-- more -->
 

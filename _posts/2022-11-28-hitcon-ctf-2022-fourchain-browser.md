@@ -16,9 +16,11 @@ tags:
 - Chrome
 ---
 
-Fourchain is a series of pwn challenges created by me and Billy ( @st424204 ) for HITCON CTF 2022. In this post I'll cover some details about the browser part of the challenge. I wouldn't call this a write-up since only some of them are about how to solve the challenges, the rest are just me rambling 😬.
+Fourchain is a series of challenges created by me and Billy ( @st424204 ) for HITCON CTF 2022. The series consists of five pwnable challenges -- `Hole` ( V8 pwn ), `Sandbox` ( Chromium sandbox escaping ), `Kernel` ( Linux kernel LPE ), `Hypervisor` ( VirtualBox VM escaping ) and `One For All` ( From browser RCE to VM escape ). As you can see, challengers will have to pwn each service respectively, and create a fullchain exploits for all the vulnerable services in the final challenge.
 
-If you want to see the whole fullchain exploit, [here's the link](https://gist.github.com/bruce30262/e1db7ebfb17c4724c5aee8629fb25f27).
+In this post I'll cover some details about the browser part of the challenge. This won't be a full write-up since only some of them are about how to solve the challenges, the rest are just me rambling 😬.
+
+If you want to see the whole browser fullchain exploit, [here's the link](https://gist.github.com/bruce30262/e1db7ebfb17c4724c5aee8629fb25f27).
 
 <!-- more -->
 
