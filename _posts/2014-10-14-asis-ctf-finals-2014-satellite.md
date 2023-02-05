@@ -195,6 +195,6 @@ sock.close()
 
 Finally, we get the flag!
 
-![sat.PNG](http://user-image.logdown.io/user/10044/blog/9742/post/237394/9GgabEuXTOSzTIYSEpmw_sat.PNG)
+![](/assets/images/ASIS-CTF-Finals-2014-SATELLITE/sat.png)
 
 flag: `ASIS_5b5e15ec25479ac8b743c6e818d75464`
