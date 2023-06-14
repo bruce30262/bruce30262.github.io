@@ -16,6 +16,6 @@ order: 4
 * Some stuff about other stuff.
 
 ## License
-![](/assets/images/other/cc_by_nc_sa_4.0.png)  
+![](/assets/images/other/CC_BY-SA.png)  
 
-Unless there's a special statement in the post, all blog posts in this site are licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International license](https://creativecommons.org/licenses/by-nc-sa/4.0/) by default.
+Unless there's a special statement in the post, all blog posts in this site are licensed under a [Creative Commons Attribution-ShareAlike 4.0 International license](https://creativecommons.org/licenses/by-sa/4.0/) by default.
