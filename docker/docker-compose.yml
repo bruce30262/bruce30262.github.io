@@ -1,0 +1,13 @@
+services:
+  jekyll-blog:
+    image: bruce30262/jekyll-blog # image name
+    container_name: jekyll-blog
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    ports:
+      - "4000:4000"
+    volumes:
+      - ..:/srv/jekyll # mount blog root dir to /srv/jekyll
+    environment:
+      - JEKYLL_ENV=production
