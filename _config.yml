@@ -43,15 +43,27 @@ social:
     # - https://www.facebook.com/username
     # - https://www.linkedin.com/in/username
 
-google_site_verification: BrvXlBL5CJCrUVlTAZHizeeP3wkZnxj6XvmS8oI_Pxo # change to your verification string
-# --------------------------
+# Site Verification Settings
+webmaster_verifications:
+  google: BrvXlBL5CJCrUVlTAZHizeeP3wkZnxj6XvmS8oI_Pxo
+    # https://search.google.com/u/0/search-console/welcome
+    # search console > domain or url prefix
+  bing: # fill in your Bing verification code
+  alexa: # fill in your Alexa verification code
+  yandex: # fill in your Yandex verification code
+  baidu: # fill in your Baidu verification code
+  facebook: # fill in your Facebook verification code
 
-google_analytics:
-  id: 'G-DWVMJEKBPB' # fill in your Google Analytics ID
+# Web Analytics Settings
+analytics:
+  google:
+    id: 'G-DWVMJEKBPB' # fill in your Google Analytics ID
   # Google Analytics pageviews report settings
-  pv:
-    proxy_endpoint:   # fill in the Google Analytics superProxy endpoint of Google App Engine
-    cache_path:       # the local PV cache data, friendly to visitors from GFW region
+
+# Page views settings
+pageviews:
+  provider: # now only supports 'goatcounter'
+
 
 # Prefer color scheme setting.
 #
@@ -81,7 +93,7 @@ avatar   : "/assets/images/other/gravatar.png"
 toc: true
 
 comments:
-    active: 'disqus'
+    provider: disqus
     disqus:
         shortname: "bruce30262logdown"
 
