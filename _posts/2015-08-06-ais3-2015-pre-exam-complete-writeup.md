@@ -659,7 +659,7 @@ if __name__ == '__main__':
 因此在這裡卡了一段時間  
 
 之後才發現有個 attack 叫做 Length Extension Attack (LEA)  
-詳情可參考 [這篇](https://blog.skullsecurity.org/2012/everything-you-need-to-know-about-hash-length-extension-attacks) 和 [這篇](http://ddaa.logdown.com/posts/194524-plaid-ctf-2014-crypto-250-parlor)
+詳情可參考 [這篇](https://blog.skullsecurity.org/2012/everything-you-need-to-know-about-hash-length-extension-attacks) 和 [這篇](https://ddaa.tw/plaidctf_crypto_250_parlor.html)
 簡單來說就是如果我有辦法知道 `md5(a)` 的值  
 那麼我就可以預測 `md5(a + padding + append)` 的值  
 其中 `padding` 字串須透過計算來得到  
@@ -746,7 +746,7 @@ flag: `AIS3{give_me_mdfive}`
 其實還蠻可惜的，本來最高衝到第四說  
 主要是第二天晚上看到電視在播不可能的任務4，就放掉耍廢了XD  
 一覺醒來直接掉到十名外，嘖嘖  
-看到同是 BambooFox 的 [ddaa](http://ddaa.tw/), [Lays](http://l4ys.tw/) 和 [AngelBoy ( malloc )](http://angelboy.logdown.com/) 等人都在第二天相繼破台  
+看到同是 BambooFox 的 [ddaa](https://ddaa.tw/), [Lays](https://l4ys.tw/) 和 [AngelBoy ( malloc )](https://4ngelboy.blogspot.com/) 等人都在第二天相繼破台  
 自己卻還差他們一截，就覺得自己還有許多不足的地方  
 能夠拿來說嘴的頂多就是這次 PWN3D 是第二個 AK 的   
 ( 第一天晚上睡覺前看到 PWN3D3 只有 2 個人解應該沒有錯 )  
