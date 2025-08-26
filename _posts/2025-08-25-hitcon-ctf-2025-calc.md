@@ -52,9 +52,16 @@ Displaying notes found in: .note.gnu.property
 
 We can see that the binary has both PAC and BTI enabled. For those interested in learning more about PAC and BTI, here are some recommended resources: ( [link1](https://community.arm.com/arm-community-blogs/b/architectures-and-processors-blog/posts/enabling-pac-and-bti-on-aarch64), [link2](https://sipearl.com/wp-content/uploads/2023/10/SiPearl-White_Paper_Control_Flow_Integrity-on-Arm64.pdf) ). Below is a brief overview:
 
-* PAC ( Pointer Authentication Code ) : This security feature is designed to protect sensitive pointers ( such as return addresses ) from being overwritten, making stack-based attacks like buffer overflows significantly more difficult. RET2 Systems has an [excellent article](https://blog.ret2.io/2021/06/16/intro-to-pac-arm64/) that explains this mechanism in detail.
+* PAC ( Pointer Authentication Code ) : This security feature is designed to protect sensitive pointers ( e.g., return addresses, function pointers in vtables, etc. ) from being overwritten or forged, thereby making memory corruption attacks significantly more difficult. RET2 Systems has an [excellent article](https://blog.ret2.io/2021/06/16/intro-to-pac-arm64/) that explains this mechanism in detail.
 
-* BTI ( Branch Target Identification ) : This is a mitigation targets indirect branch exploits, such as those using BR or BLR instructions. Similar to [Intel's CET](https://lpc.events/event/2/contributions/147/attachments/72/83/CET-LPC-2018.pdf), with BTI enabled, all indirect branches must land on valid branch target landing pads, such as `bti c` instructions or PAC-related instructions ( e.g., `paciasp` ). **This makes ROP attack nearly impossible, as you can no longer jump into the middle of a function.**
+* BTI ( Branch Target Identification ) : This is a mitigation targets indirect branch exploits, such as those using `BR` or `BLR` instructions. Similar to [Intel's CET](https://lpc.events/event/2/contributions/147/attachments/72/83/CET-LPC-2018.pdf), with BTI enabled, all indirect branches must land on valid branch target landing pads, such as `bti c` instructions or PAC-related instructions ( e.g., `paciasp` ). ~~**This makes ROP attack nearly impossible, as you can no longer jump into the middle of a function.**~~ Because of this, you can't use `BR`/`BLR` to jump into the middle of a function -- making exploitation more difficult.
+
+> **UPDATE ( 2025-08-26 ) :**  
+> About BTI -- **return instructions** ( like `RET` ) are actually **NOT affected** by the mitigation. This is because return instructions are expected to target the instruction immediately following the call, which typically lies in the middle of a function. Restricting return instructions to only jump to the start of a function wouldn’t make sense. So BTI doesn’t really affect ROP -- it’s **PAC** that actually has an impact.
+> 
+> Special thanks to `gallileo` from [organisers](https://ctftime.org/team/42934/) for pointing that out on Discord !
+{: .prompt-info }
+
 
 The QEMU environment used in this challenge also supports PAC and BTI. To confirm this, we can modify the `initramfs.cpio.gz` to gain access to the QEMU VM. After that, run `cat /proc/cpuinfo` to check for the relevant features:
 
